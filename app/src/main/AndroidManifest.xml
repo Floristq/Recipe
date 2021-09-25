@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.recipe" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.recipe"> <!-- TODO -->
+    <!--     Either adjust the minSDK property or use another library -->
+    <uses-sdk tools:overrideLibrary="com.github.dhaval2404.imagepicker" />
 
     <application
         android:allowBackup="true"
@@ -8,7 +11,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".ImagePickerTesting"
+            android:exported="true" />
         <activity
             android:name=".AddRecipe"
             android:exported="true" />
@@ -16,7 +22,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
