@@ -2,6 +2,8 @@ package com.example.recipe;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
@@ -18,6 +23,8 @@ public class AddRecipe extends AppCompatActivity {
 
     private FloatingActionButton cameraBtn;
     private FloatingActionButton galleryBtn;
+    private LinearLayout uploadImgBtnContainer;
+    private ImageView recipeImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +33,8 @@ public class AddRecipe extends AppCompatActivity {
 
         cameraBtn = findViewById(R.id.cameraBtn);
         galleryBtn = findViewById(R.id.galleryBtn);
+        recipeImg = findViewById((R.id.recipeImg));
+        uploadImgBtnContainer = findViewById(R.id.uploadImgBtnContainer);
 
         getSupportActionBar().setTitle("Add Recipe");
 
@@ -38,12 +47,11 @@ public class AddRecipe extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            Uri uri = data.getData();
-
+            recipeImg.setImageURI(data.getData());
+            LayoutParams params = (LayoutParams) uploadImgBtnContainer.getLayoutParams();
+            params.topMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -65,8 +73,8 @@ public class AddRecipe extends AppCompatActivity {
         }
 
         picker.crop()
-            .compress(1024)
-            .maxResultSize(1080, 1080)
-            .start();
+                .compress(1024)
+                .maxResultSize(1080, 1080)
+                .start();
     }
 }
