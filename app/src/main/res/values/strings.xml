@@ -18,4 +18,5 @@
         <item>Ham</item>
         <item>Broccoli</item>
     </string-array>
+    <string name="title_activity_add_recipe">AddRecipe</string>
 </resources>
