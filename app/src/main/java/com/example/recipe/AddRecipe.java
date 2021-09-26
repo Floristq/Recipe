@@ -6,8 +6,15 @@ import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MultiAutoCompleteTextView;
@@ -17,6 +24,8 @@ import com.example.recipe.autocompleteadapter.*;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +36,10 @@ public class AddRecipe extends AppCompatActivity {
     private LinearLayout uploadImgBtnContainer;
     private ImageView recipeImg;
     private MultiAutoCompleteTextView recipeTagInput;
+    private Button submitBtn;
 
     private AutoCompleteAdapter recipeTagsAdapter;
+    private Uri imageUri = null;
 
     // TODO
     // Remove temporaryTags and use server/firebase retrieved tags
@@ -49,6 +60,7 @@ public class AddRecipe extends AppCompatActivity {
         recipeImg = findViewById((R.id.recipeImg));
         uploadImgBtnContainer = findViewById(R.id.uploadImgBtnContainer);
         recipeTagInput = findViewById(R.id.recipeTagInput);
+        submitBtn = findViewById(R.id.submitBtn);
 
         // Setting page title
         getSupportActionBar().setTitle("Add Recipe");
@@ -70,7 +82,26 @@ public class AddRecipe extends AppCompatActivity {
         // Attaching events
         cameraBtn.setOnClickListener(this::onCameraBtnClick);
         galleryBtn.setOnClickListener(this::onGalleryBtnClick);
+        submitBtn.setOnClickListener(this::onSubmit);
     }
+
+    // Handle submission
+    private void onSubmit(View view) {
+        String name = ((EditText) findViewById(R.id.recipeName)).getText().toString();
+        String instructions = ((EditText) findViewById(R.id.instructions)).getText().toString();
+        // We already have imageUri
+        String tags = recipeTagInput.getText().toString();
+
+        if (name.toString() == "" || instructions.toString() == "" || imageUri == null || tags.toString() == "") {
+            // TODO
+            // Let the user know which fields to fill specifically
+            Toast.makeText(this, "Please fill in all the fields!", Toast.LENGTH_LONG).show();
+        } else {
+            // TODO
+            // Post data to firebase
+        }
+    }
+
 
     // TODO
     // Document functions and their parameters
@@ -80,7 +111,8 @@ public class AddRecipe extends AppCompatActivity {
 
         if (resultCode == Activity.RESULT_OK) {
             // Loading image on the interface
-            recipeImg.setImageURI(data.getData());
+            imageUri = data.getData();
+            recipeImg.setImageURI(imageUri);
             LayoutParams params = (LayoutParams) uploadImgBtnContainer.getLayoutParams();
             params.topMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
