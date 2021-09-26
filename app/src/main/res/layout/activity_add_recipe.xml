@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="30dp"
+    android:layout_marginBottom="60dp"
     tools:context=".AddRecipe">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,13 +98,14 @@
             tools:ignore="TextContrastCheck" />
 
         <MultiAutoCompleteTextView
-            android:id="@+id/tags"
+            android:id="@+id/recipeTagInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/fab_margin"
             android:layout_marginLeft="@dimen/fab_margin"
             android:layout_marginEnd="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
+            android:completionThreshold="1"
             android:hint="@string/recipe_tag_hint"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
