@@ -1,4 +1,4 @@
-package com.example.recipe.ui.home;
+package com.example.recipes.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.recipe.Input_Ingredient;
-import com.example.recipe.R;
+import com.example.recipes.Input_Ingredient;
+import com.example.recipes.R;
 
 public class HomeFragment extends Fragment {
 
