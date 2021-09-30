@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.recipes.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 public class GalleryFragment extends Fragment {
 
@@ -22,14 +22,17 @@ public class GalleryFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         galleryViewModel =
                 ViewModelProviders.of(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        View root = inflater.inflate(R.layout.fragment_profile, container, false);
+        final TextView name = root.findViewById(R.id.profile_name);
+        final TextView email = root.findViewById(R.id.profile_email);
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getContext());
+        if (acct != null) {
+            String personName = acct.getDisplayName();
+            String personEmail = acct.getEmail();
+            name.setText(personName);
+            email.setText(personEmail);
+        }
         return root;
     }
 }
