@@ -1,33 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
-
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".ui.home.HomeFragment"
+    android:background = "#fff">
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:id="@+id/button_Input_Ingredients"
+        android:layout_width="240dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginLeft="113dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="113dp"
+        android:layout_marginRight="113dp"
         android:text="Input Ingredients"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:background="@drawable/custom_button"/>
+
+    <Button
+        android:layout_below = "@+id/button_Input_Ingredients"
+        android:id="@+id/button_Add_Recipe"
+        android:layout_width="240dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginLeft="113dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="113dp"
+        android:layout_marginRight="113dp"
+        android:background="@drawable/custom_button"
+        android:text="Add Recipe"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
+
+    <Button
+        android:layout_below = "@+id/button_Add_Recipe"
+        android:id="@+id/button_View_Recipe"
+        android:layout_width="240dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginLeft="113dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="113dp"
+        android:layout_marginRight="113dp"
+        android:text="View Recipe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:background="@drawable/custom_button"/>
+
+    <Button
+        android:layout_below = "@+id/button_View_Recipe"
+        android:id="@+id/button_Favorites"
+        android:layout_width="240dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginLeft="113dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="113dp"
+        android:layout_marginRight="113dp"
+        android:text="Favorites"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.545"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:background="@drawable/custom_button"/>
+
+</RelativeLayout>

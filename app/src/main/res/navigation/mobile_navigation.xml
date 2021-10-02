@@ -22,4 +22,14 @@
         android:name="com.example.recipeapp.ui.settings.SettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/input_Ingredients"
+        android:name="com.example.recipeapp.Input_Ingredients"
+        android:label="fragment_input_ingredients"
+        tools:layout="@layout/fragment_input_ingredients" />
+    <fragment
+        android:id="@+id/view_Recipe"
+        android:name="com.example.recipeapp.View_Recipe"
+        android:label="fragment_view__recipe"
+        tools:layout="@layout/fragment_view_recipe" />
 </navigation>

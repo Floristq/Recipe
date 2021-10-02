@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Input_Ingredients"
+    android:background = "#fff">
+
+    <EditText
+        android:layout_below = "@+id/textView2"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:id = "@+id/First_Ingredient"
+        android:hint="First Ingredient (Mandatory)"/>
+
+    <EditText
+        android:layout_below = "@+id/First_Ingredient"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:id = "@+id/Second_Ingredient"
+        android:hint="second Ingredient (Mandatory)"/>
+
+    <EditText
+        android:layout_below = "@+id/Second_Ingredient"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:id = "@+id/Third_Ingredient"
+        android:hint="Third Ingredient (Optional)" />
+
+    <EditText
+        android:layout_below = "@+id/Third_Ingredient"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:id = "@+id/Fourth_Ingredient"
+        android:hint="Fourth Ingredient (Optional)" />
+
+    <EditText
+        android:layout_below = "@+id/Fourth_Ingredient"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:id = "@+id/Fifth_Ingredient"
+        android:hint="Fifth Ingredient (Optional)" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="352dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="What ingredient do you have?"
+        android:textSize="26sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <Button
+        android:layout_below = "@+id/Fifth_Ingredient"
+        android:id="@+id/button"
+        android:layout_width="240dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginLeft="113dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="113dp"
+        android:layout_marginRight="113dp"
+        android:text="Submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:background="@drawable/custom_button"/>
+</RelativeLayout>
