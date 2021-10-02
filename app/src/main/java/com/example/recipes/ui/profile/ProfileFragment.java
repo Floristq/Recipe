@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.recipes.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class ProfileFragment extends Fragment {
 
@@ -23,15 +25,15 @@ public class ProfileFragment extends Fragment {
         profileViewModel =
                 ViewModelProviders.of(this).get(ProfileViewModel.class);
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
-        final TextView name = root.findViewById(R.id.profile_name);
-        final TextView email = root.findViewById(R.id.profile_email);
+        final TextView name = root.findViewById(R.id.profile_display_name);
+        final TextInputLayout email = root.findViewById(R.id.profile_textfield_email);
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getContext());
         if (acct != null) {
             String personName = acct.getDisplayName();
             String personEmail = acct.getEmail();
             name.setText(personName);
-            email.setText(personEmail);
+            email.getEditText().setText(personEmail);
         }
         return root;
     }
