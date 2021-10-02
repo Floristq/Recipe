@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "819769335176-5akf37kfn84ttc27g2prj7fetmhufsng.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.recipeapp",
+            "certificate_hash": "44e056804ac265b56865b762c9df7ab1a7e8b5e4"
+          }
+        },
+        {
           "client_id": "819769335176-blh55niea9namqh948p0e9mt3dvp1qe2.apps.googleusercontent.com",
           "client_type": 3
         }
