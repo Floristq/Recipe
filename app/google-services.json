@@ -34,6 +34,72 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819769335176:android:b9f197d7a379afa825ee3d",
+        "android_client_info": {
+          "package_name": "com.example.recipeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819769335176-1dipp7c59l6vhmueuqsr7ugaevf7aest.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.recipeapp",
+            "certificate_hash": "9cf5265ebf90b38fe63c8eaa7a9bb7bd6ecc9444"
+          }
+        },
+        {
+          "client_id": "819769335176-blh55niea9namqh948p0e9mt3dvp1qe2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVP4vKtuMic0Qo6NT_D6_NiGUwdPddI7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819769335176-blh55niea9namqh948p0e9mt3dvp1qe2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819769335176:android:14f94255b4671feb25ee3d",
+        "android_client_info": {
+          "package_name": "com.example.recipes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819769335176-blh55niea9namqh948p0e9mt3dvp1qe2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVP4vKtuMic0Qo6NT_D6_NiGUwdPddI7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819769335176-blh55niea9namqh948p0e9mt3dvp1qe2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
