@@ -81,11 +81,4 @@ public class Input_Ingredients extends Fragment {
 
         return v;
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Input Ingredients");
-    }
 }

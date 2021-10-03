@@ -25,7 +25,7 @@
     <fragment
         android:id="@+id/input_Ingredients"
         android:name="com.example.recipeapp.Input_Ingredients"
-        android:label="fragment_input_ingredients"
+        android:label="Input Ingredients"
         tools:layout="@layout/fragment_input_ingredients" />
     <fragment
         android:id="@+id/addRecipe"
