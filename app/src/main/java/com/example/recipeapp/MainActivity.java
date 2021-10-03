@@ -1,12 +1,15 @@
 package com.example.recipeapp;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -79,6 +82,8 @@ public class MainActivity extends AppCompatActivity  {
         View header = navigationView.getHeaderView(0);
         TextView name = (TextView) header.findViewById(R.id.name);
         TextView email = (TextView) header.findViewById(R.id.email);
+        ImageView image = header.findViewById(R.id.profileImage);
+
         navigationView.getMenu().findItem(R.id.sign_out_button).setOnMenuItemClickListener(menuItem -> {
             signOut();
             return true;
@@ -97,6 +102,9 @@ public class MainActivity extends AppCompatActivity  {
 
             name.setText(personName);
             email.setText(personEmail);
+            Glide.with(MainActivity.this)
+                    .load(user.getPhotoUrl())
+                    .into(image);
         }
 
     }
