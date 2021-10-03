@@ -13,6 +13,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -51,6 +52,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
 
     implementation 'com.github.dhaval2404:imagepicker:2.1'
+    implementation "androidx.multidex:multidex:2.0.1"
 }
 
 android {
