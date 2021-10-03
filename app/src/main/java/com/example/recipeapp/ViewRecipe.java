@@ -24,6 +24,8 @@ public class ViewRecipe extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private View root = null;
+
     public ViewRecipe() {
         // Required empty public constructor
     }
@@ -59,6 +61,8 @@ public class ViewRecipe extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_recipe, container, false);
+        root = inflater.inflate(R.layout.fragment_view_recipe, container, false);
+
+        return root;
     }
 }
