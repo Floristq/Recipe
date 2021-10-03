@@ -76,7 +76,7 @@ public class Input_Ingredients extends Fragment {
         button.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putString("key", First_Ingredient.getText().toString());
-            Navigation.findNavController(view).navigate(R.id.view_Recipe, bundle);
+            Navigation.findNavController(view).navigate(R.id.viewRecipe, bundle);
         });
 
         return v;
