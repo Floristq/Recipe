@@ -19,8 +19,8 @@
             android:id="@+id/profile_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher_round"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_launcher_round" />
 
         <TextView
             android:id="@+id/profile_display_name"
@@ -144,7 +144,8 @@
             android:layout_marginBottom="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:enabled="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Hungry Jack"
@@ -160,7 +161,8 @@
             android:layout_marginBottom="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:enabled="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="ilovehungryjack@gmail.com"
@@ -169,13 +171,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Check Allergy"
-            android:fontFamily="monospace"
-            android:textColor="#fff"
-            android:background="@color/colorPrimary"/>
 
     </LinearLayout>
 
