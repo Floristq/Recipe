@@ -20,4 +20,17 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_add_recipe">AddRecipe</string>
+    <string name="recipe_tag">Tag your recipe</string>
+    <string name="recipe_image_desc">Image of the recipe.</string>
+    <string name="recipe_tag_hint">Type to find tags</string>
+    <string name="recipe_instruction_hint">How to prepare the recipe...</string>
+    <string name="recipe_instruction_text">Instructions</string>
+    <string name="recipe_name_hint">Name of the recipe</string>
+    <string name="recipe_name_text">Recipe Name</string>
+    <string name="recipe_upload_image_text">Upload Image</string>
+    <string name="recipe_camera_image_desc">Take a picture and upload.</string>
+    <string name="recipe_gallery_image_desc">Pick an image from gallery</string>
+    <string name="auto_complete_item_image">Image indicating the item of the dropdown.</string>
+    <string name="submit">Submit</string>
 </resources>
