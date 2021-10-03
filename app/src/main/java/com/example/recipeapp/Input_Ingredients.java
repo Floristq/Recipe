@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,20 +69,14 @@ public class Input_Ingredients extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View v = inflater.inflate(R.layout.fragment_input_ingredients,container,false);
+        View v = inflater.inflate(R.layout.fragment_input_ingredients, container,false);
         button = v.findViewById(R.id.button);
         First_Ingredient = v.findViewById(R.id.First_Ingredient);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString("key",First_Ingredient.getText().toString());
-                View_Recipe fragment = new View_Recipe();
-                fragment.setArguments(bundle);
-                getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,fragment).commit();
-
-            }
+        button.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("key", First_Ingredient.getText().toString());
+            Navigation.findNavController(view).navigate(R.id.view_Recipe, bundle);
         });
 
         return v;

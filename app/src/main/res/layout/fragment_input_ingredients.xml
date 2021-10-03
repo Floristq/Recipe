@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Input_Ingredients"
-    android:background = "#fff">
+    tools:context=".Input_Ingredients">
 
     <EditText
         android:layout_below = "@+id/textView2"

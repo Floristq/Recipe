@@ -63,15 +63,14 @@ public class View_Recipe extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_view_recipe,container,false);
         textView = v.findViewById(R.id.textView);
         Bundle bundle = this.getArguments();
+
         String data = bundle.getString("key");
         textView.setText(data);
 
-
-
-        // Inflate the layout for this fragment
         return v;
     }
 
