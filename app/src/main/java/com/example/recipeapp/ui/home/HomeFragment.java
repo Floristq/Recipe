@@ -44,6 +44,10 @@ public class HomeFragment extends Fragment {
         binding.buttonInputIngredients.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.input_Ingredients);
         });
+
+        binding.buttonAddRecipe.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.addRecipe);
+        });
     }
 
     // to avoid memory leakage

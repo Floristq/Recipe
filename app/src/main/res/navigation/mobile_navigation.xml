@@ -28,6 +28,11 @@
         android:label="fragment_input_ingredients"
         tools:layout="@layout/fragment_input_ingredients" />
     <fragment
+        android:id="@+id/addRecipe"
+        android:name="com.example.recipeapp.AddRecipe"
+        android:label="Add Recipe"
+        tools:layout="@layout/fragment_add_recipe" />
+    <fragment
         android:id="@+id/view_Recipe"
         android:name="com.example.recipeapp.View_Recipe"
         android:label="fragment_view__recipe"
