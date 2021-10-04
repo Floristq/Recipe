@@ -71,7 +71,7 @@
 
     <Button
         android:layout_below = "@+id/Fifth_Ingredient"
-        android:id="@+id/button"
+        android:id="@+id/SubmitButton"
         android:layout_width="240dp"
         android:layout_height="60dp"
         android:layout_marginStart="113dp"

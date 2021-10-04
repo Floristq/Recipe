@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.recipeapp.autocompleteadapter.AdapterItem;
 
@@ -78,6 +79,11 @@ public class ViewRecipe extends Fragment {
 
         LinearLayout cuisinesContainer = root.findViewById(R.id.cuisineContainer);
         Activity activity = getActivity();
+
+        Bundle bundle = this.getArguments();
+        String Ingredient1 = bundle.getString("Ingredient1");
+        String Ingredient2 = bundle.getString("Ingredient2");
+        Toast.makeText(getActivity(), Ingredient1 + " and " + Ingredient2, Toast.LENGTH_LONG).show();
 
         for (String cuisine: temporaryCuisines) {
             CheckBox box = new CheckBox(activity);
