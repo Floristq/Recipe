@@ -1,14 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".View_Recipe">
+    android:orientation="vertical"
+    tools:context=".ViewRecipe">
 
-
-    <TextView
-        android:id="@+id/textView"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
-</FrameLayout>
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        >
+
+        <EditText
+            android:id="@+id/editTextTextPersonName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="20"
+            android:inputType="textPersonName"
+            android:hint="Search"
+            />
+
+        <!--
+            TODO
+            - Rounded corners
+            - Spacious / padded ripple effect
+        -->
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="-30dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:background="@android:drawable/ic_search_category_default"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:id="@+id/cuisineContainer"
+        android:orientation="vertical"/>
+
+
+</LinearLayout>
