@@ -17,7 +17,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/item_number"
+        android:id="@+id/recipeName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceListItem"
@@ -29,6 +29,7 @@
         use a placeholder instead of background
     !-->
     <ImageView
+        android:id="@+id/recipeImage"
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:background="@drawable/side_nav_bar"

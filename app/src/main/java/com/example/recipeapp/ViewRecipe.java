@@ -1,19 +1,20 @@
 package com.example.recipeapp;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.example.recipeapp.autocompleteadapter.AdapterItem;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,11 +35,12 @@ public class ViewRecipe extends Fragment {
     // TODO
     // Remove temporaryCuisines and use server/firebase retrieved tags
     final private String[] temporaryCuisines = {
-            "Chinese", "English", "Indian", "French", "American",
-            "Japanese", "Mexican"
+            "Chinese", "English", "Indian", "French",
+            // "American", "Japanese", "Mexican"
     };
 
     private View root = null;
+    private RecyclerView recipeListContainer;
 
     public ViewRecipe() {
         // Required empty public constructor
@@ -83,7 +85,6 @@ public class ViewRecipe extends Fragment {
         Bundle bundle = this.getArguments();
         String Ingredient1 = bundle.getString("Ingredient1");
         String Ingredient2 = bundle.getString("Ingredient2");
-        Toast.makeText(getActivity(), Ingredient1 + " and " + Ingredient2, Toast.LENGTH_LONG).show();
 
         for (String cuisine: temporaryCuisines) {
             CheckBox box = new CheckBox(activity);
@@ -103,6 +104,36 @@ public class ViewRecipe extends Fragment {
             cuisinesContainer.addView(box);
         }
 
+        loadRecipeList();
+
         return root;
+    }
+
+    private void loadRecipeList() {
+        // TODO
+        // Integrate with database
+        List<RecipeItem> data = new ArrayList<RecipeItem>();
+        data.add(new RecipeItem("1", "Custard Pie", null));
+        data.add(new RecipeItem("2", "Chocolate Cake", null));
+        data.add(new RecipeItem("3", "Pastry", null));
+        data.add(new RecipeItem("4", "Chicken Pop Pie", null));
+        data.add(new RecipeItem("5", "Ice-Cream Cake", null));
+
+        // TODO
+        // Remove the following workaround and implement a better approach
+        ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
+    }
+
+    public static class RecipeItem {
+        public String id;
+        public String name;
+        public Uri imageUri;
+
+        public RecipeItem(String id, String name, Uri imageUri) {
+            this.id = id;
+            this.name = name;
+            this.imageUri = imageUri;
+        }
+
     }
 }

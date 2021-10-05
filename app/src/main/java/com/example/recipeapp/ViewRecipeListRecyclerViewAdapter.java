@@ -3,25 +3,20 @@ package com.example.recipeapp;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.recipeapp.placeholder.PlaceholderContent.PlaceholderItem;
 import com.example.recipeapp.databinding.FragmentViewRecipeItemBinding;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class ViewRecipeListRecyclerViewAdapter extends RecyclerView.Adapter<ViewRecipeListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<PlaceholderItem> mValues;
+    private final List<ViewRecipe.RecipeItem> data;
 
-    public ViewRecipeListRecyclerViewAdapter(List<PlaceholderItem> items) {
-        mValues = items;
+    public ViewRecipeListRecyclerViewAdapter(List<ViewRecipe.RecipeItem> items) {
+        data = items;
     }
 
     @Override
@@ -33,30 +28,30 @@ public class ViewRecipeListRecyclerViewAdapter extends RecyclerView.Adapter<View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        ViewRecipe.RecipeItem curItem = holder.item = data.get(position);
+        holder.recipeNameText.setText(curItem.name);
+        holder.recipeImage.setImageURI(curItem.imageUri);
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return data.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public PlaceholderItem mItem;
+        public final TextView recipeNameText;
+        public final ImageView recipeImage;
+        public ViewRecipe.RecipeItem item;
 
         public ViewHolder(FragmentViewRecipeItemBinding binding) {
             super(binding.getRoot());
-            mIdView = binding.itemNumber;
-            mContentView = binding.content;
+            recipeNameText = binding.recipeName;
+            recipeImage = binding.recipeImage;
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + item.id + "'";
         }
     }
 }

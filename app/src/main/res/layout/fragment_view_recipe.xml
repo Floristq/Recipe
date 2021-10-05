@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/fragment_view_recipe"
     tools:context=".ViewRecipe">
 
     <LinearLayout
@@ -47,6 +48,13 @@
         android:layout_marginTop="@dimen/fab_margin"
         android:id="@+id/cuisineContainer"
         android:orientation="vertical"/>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.example.recipeapp.ViewRecipeListFragment"
+        />
+
 
 
 </LinearLayout>
