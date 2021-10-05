@@ -37,4 +37,9 @@
         android:name="com.example.recipeapp.ViewRecipe"
         android:label="View Recipe"
         tools:layout="@layout/fragment_view_recipe" />
+    <fragment
+        android:id="@+id/recipe_Item"
+        android:name="com.example.recipeapp.Recipe_Item"
+        android:label="fragment_recipe_item"
+        tools:layout="@layout/fragment_recipe_item" />
 </navigation>
