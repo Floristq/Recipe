@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    TODO
+    Static margin / padding (like 8sp) should be avoided,
+    considering it's being set as half of "@dimen/fab_margin",
+    we should have a dynamic approach or a convenient
+    one where we wont need to update a lot of code if we
+    decide to change "@dimen/fab_margin" value
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:paddingLeft="@dimen/fab_margin"
+    android:paddingRight="@dimen/fab_margin"
+    android:paddingTop="8sp"
+    android:paddingBottom="8sp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/item_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:text="Recipe Name"
+        />
 
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+    <!--
+        TODO
+        use a placeholder instead of background
+    !-->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="@drawable/side_nav_bar"
+        android:layout_marginTop="8sp"
+        />
+
+
 </LinearLayout>
