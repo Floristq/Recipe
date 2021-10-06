@@ -42,6 +42,8 @@ public class ProfileFragment extends Fragment {
             user_name.getEditText().setText(personName);
             email.getEditText().setText(personEmail);
             Glide.with(this).load(user.getPhotoUrl()).into(img);
+
+            // TODO: extract data recipe num and comment num from firebase
         }
         return root;
     }

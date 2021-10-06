@@ -1,8 +1,11 @@
 package com.example.recipeapp;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.ImageView;
@@ -105,6 +108,20 @@ public class MainActivity extends AppCompatActivity  {
             Glide.with(MainActivity.this)
                     .load(user.getPhotoUrl())
                     .into(image);
+        }
+
+        // Request for the permission ACCESS_FINE_LOCATION
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_DENIED) {
+
+                Log.d("permission", "permission denied to LOCATION - requesting it");
+                String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
+
+                requestPermissions(permissions, 1);
+
+            }
         }
 
     }

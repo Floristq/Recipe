@@ -3,6 +3,7 @@
     package="com.example.recipeapp"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- TODO -->
     <!--     Either adjust the minSDK property or use another library -->
