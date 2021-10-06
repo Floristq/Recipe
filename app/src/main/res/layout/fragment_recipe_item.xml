@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Recipe_Item">
+
+    <TextView
+        android:id="@+id/Recipe_Name"
+        android:layout_width="352dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="[Recipe Name]"
+        android:textSize="26sp" />
+    
+    <ImageView
+        android:id="@+id/Image"
+        android:layout_below = "@+id/Recipe_Name"
+        android:layout_width="380dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/pasta"
+        android:layout_centerInParent="true"
+        android:scaleType="fitXY"/>
+
+    <TextView
+        android:layout_below = "@+id/Image"
+        android:id="@+id/Instructions"
+        android:layout_width="352dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Instructions"
+        android:textSize="26sp" />
+
+    <TextView
+        android:layout_below = "@+id/Instructions"
+        android:id="@+id/Comments"
+        android:layout_width="352dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="64dp"
+        android:text="Comments"
+        android:textSize="26sp" />
+</RelativeLayout>

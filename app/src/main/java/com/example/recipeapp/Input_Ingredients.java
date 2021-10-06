@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,7 +21,8 @@ import android.widget.EditText;
 public class Input_Ingredients extends Fragment {
 
     EditText First_Ingredient;
-    Button button;
+    EditText Second_Ingredient;
+    private Button button;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,6 +32,8 @@ public class Input_Ingredients extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private View root = null;
 
     public Input_Ingredients() {
         // Required empty public constructor
@@ -69,23 +73,27 @@ public class Input_Ingredients extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View v = inflater.inflate(R.layout.fragment_input_ingredients, container,false);
-        button = v.findViewById(R.id.button);
-        First_Ingredient = v.findViewById(R.id.First_Ingredient);
-
-        button.setOnClickListener(view -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("key", First_Ingredient.getText().toString());
-            Navigation.findNavController(view).navigate(R.id.view_Recipe, bundle);
-        });
-
-        return v;
+        root = inflater.inflate(R.layout.fragment_input_ingredients, container,false);
+        button = root.findViewById(R.id.SubmitButton);
+        First_Ingredient = root.findViewById(R.id.First_Ingredient);
+        Second_Ingredient = root.findViewById(R.id.Second_Ingredient);
+        button.setOnClickListener(this::onSubmit);
+        return root;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Input Ingredients");
+    private void onSubmit(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putString("Ingredient1", First_Ingredient.getText().toString());
+        bundle.putString("Ingredient2", Second_Ingredient.getText().toString());
+        String Ingredient_1 = ((EditText) root.findViewById(R.id.First_Ingredient)).getText().toString();
+        String Ingredient_2 = ((EditText) root.findViewById(R.id.Second_Ingredient)).getText().toString();
+
+
+        if (Ingredient_1.toString().equals("") || Ingredient_2.toString().equals("")) {
+            Toast.makeText(getActivity(), "Please submit at least 2 ingredients!", Toast.LENGTH_LONG).show();
+        } else {
+            Navigation.findNavController(view).navigate(R.id.viewRecipe, bundle);
+        }
     }
 }
