@@ -86,6 +86,26 @@ public class ViewRecipe extends Fragment {
         String Ingredient1 = bundle.getString("Ingredient1");
         String Ingredient2 = bundle.getString("Ingredient2");
 
+        if (!bundle.getString("Ingredient3").equals("")){
+            String Ingredient3 = bundle.getString("Ingredient3");
+        }else{
+            String Ingredient3 = "";
+        }
+
+        if (!bundle.getString("Ingredient4").equals("")){
+            String Ingredient4 = bundle.getString("Ingredient4");
+        }else{
+            String Ingredient4 = "";
+        }
+
+        if (!bundle.getString("Ingredient5").equals("")){
+            String Ingredient5 = bundle.getString("Ingredient5");
+        }else{
+            String Ingredient5 = "";
+        }
+
+
+
         for (String cuisine: temporaryCuisines) {
             CheckBox box = new CheckBox(activity);
             box.setText(cuisine);

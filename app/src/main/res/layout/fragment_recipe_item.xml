@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/Recipe_Name"
-        android:layout_width="352dp"
+        android:layout_width="380dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
@@ -23,14 +23,14 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/pasta"
+        android:background="@drawable/ic_menu_camera"
         android:layout_centerInParent="true"
         android:scaleType="fitXY"/>
 
     <TextView
         android:layout_below = "@+id/Image"
         android:id="@+id/Instructions"
-        android:layout_width="352dp"
+        android:layout_width="380dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
@@ -41,7 +41,7 @@
     <TextView
         android:layout_below = "@+id/Instructions"
         android:id="@+id/Comments"
-        android:layout_width="352dp"
+        android:layout_width="380dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"

@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.regex.Pattern;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Input_Ingredients#newInstance} factory method to
@@ -22,6 +24,9 @@ public class Input_Ingredients extends Fragment {
 
     EditText First_Ingredient;
     EditText Second_Ingredient;
+    EditText Third_Ingredient;
+    EditText Fourth_Ingredient;
+    EditText Fifth_Ingredient;
     private Button button;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -77,6 +82,9 @@ public class Input_Ingredients extends Fragment {
         button = root.findViewById(R.id.SubmitButton);
         First_Ingredient = root.findViewById(R.id.First_Ingredient);
         Second_Ingredient = root.findViewById(R.id.Second_Ingredient);
+        Third_Ingredient = root.findViewById(R.id.Third_Ingredient);
+        Fourth_Ingredient = root.findViewById(R.id.Fourth_Ingredient);
+        Fifth_Ingredient = root.findViewById(R.id.Fifth_Ingredient);
         button.setOnClickListener(this::onSubmit);
         return root;
     }
@@ -84,11 +92,31 @@ public class Input_Ingredients extends Fragment {
 
     private void onSubmit(View view) {
         Bundle bundle = new Bundle();
-        bundle.putString("Ingredient1", First_Ingredient.getText().toString());
-        bundle.putString("Ingredient2", Second_Ingredient.getText().toString());
+
+
         String Ingredient_1 = ((EditText) root.findViewById(R.id.First_Ingredient)).getText().toString();
         String Ingredient_2 = ((EditText) root.findViewById(R.id.Second_Ingredient)).getText().toString();
+        String Ingredient_3 = ((EditText) root.findViewById(R.id.Third_Ingredient)).getText().toString();
+        String Ingredient_4 = ((EditText) root.findViewById(R.id.Fourth_Ingredient)).getText().toString();
+        String Ingredient_5 = ((EditText) root.findViewById(R.id.Fifth_Ingredient)).getText().toString();
 
+        bundle.putString("Ingredient1", First_Ingredient.getText().toString());
+        bundle.putString("Ingredient2", Second_Ingredient.getText().toString());
+        bundle.putString("Ingredient3", Third_Ingredient.getText().toString());
+        bundle.putString("Ingredient4", Fourth_Ingredient.getText().toString());
+        bundle.putString("Ingredient5", Fifth_Ingredient.getText().toString());
+
+//        if (!Ingredient_3.toString().equals("")){
+//
+//        }
+//
+//        if (!Ingredient_4.toString().equals("")){
+//
+//        }
+//
+//        if (!Ingredient_5.toString().equals("")){
+//
+//        }
 
         if (Ingredient_1.toString().equals("") || Ingredient_2.toString().equals("")) {
             Toast.makeText(getActivity(), "Please submit at least 2 ingredients!", Toast.LENGTH_LONG).show();

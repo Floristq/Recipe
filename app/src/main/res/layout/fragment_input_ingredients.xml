@@ -8,6 +8,7 @@
 
     <EditText
         android:layout_below = "@+id/textView2"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:layout_marginLeft="16dp"
@@ -18,6 +19,7 @@
 
     <EditText
         android:layout_below = "@+id/First_Ingredient"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:layout_marginLeft="16dp"
@@ -28,6 +30,7 @@
 
     <EditText
         android:layout_below = "@+id/Second_Ingredient"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:layout_marginLeft="16dp"
@@ -38,6 +41,7 @@
 
     <EditText
         android:layout_below = "@+id/Third_Ingredient"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:layout_marginLeft="16dp"
@@ -48,6 +52,7 @@
 
     <EditText
         android:layout_below = "@+id/Fourth_Ingredient"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:layout_marginLeft="16dp"
