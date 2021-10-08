@@ -179,16 +179,17 @@
             android:id="@+id/submitBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:paddingLeft="30dp"
-            android:paddingTop="@dimen/fab_margin"
+            android:paddingTop="8dp"
             android:paddingRight="30dp"
-            android:paddingBottom="@dimen/fab_margin"
+            android:paddingBottom="8dp"
+            android:textSize="16sp"
             android:text="@string/submit"
-            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recipeTagInput" />
+            app:layout_constraintTop_toBottomOf="@+id/recipeTagInput"
+            android:backgroundTint="@color/design_default_color_secondary_variant"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
