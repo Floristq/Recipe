@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,49 +82,47 @@ public class ViewRecipe extends Fragment {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_view_recipe, container, false);
 
-        LinearLayout cuisinesContainer = root.findViewById(R.id.cuisineContainer);
+        ChipGroup cuisinesContainer = root.findViewById(R.id.cuisineContainer);
         Activity activity = getActivity();
 
         Bundle bundle = this.getArguments();
-        String Ingredient1 = bundle.getString("Ingredient1");
-        String Ingredient2 = bundle.getString("Ingredient2");
+//        String Ingredient1 = bundle.getString("Ingredient1");
+//        String Ingredient2 = bundle.getString("Ingredient2");
+//
+//        if (!bundle.getString("Ingredient3").equals("")){
+//            String Ingredient3 = bundle.getString("Ingredient3");
+//        }else{
+//            String Ingredient3 = "";
+//        }
+//
+//        if (!bundle.getString("Ingredient4").equals("")){
+//            String Ingredient4 = bundle.getString("Ingredient4");
+//        }else{
+//            String Ingredient4 = "";
+//        }
+//
+//        if (!bundle.getString("Ingredient5").equals("")){
+//            String Ingredient5 = bundle.getString("Ingredient5");
+//        }else{
+//            String Ingredient5 = "";
+//        }
 
-        if (!bundle.getString("Ingredient3").equals("")){
-            String Ingredient3 = bundle.getString("Ingredient3");
-        }else{
-            String Ingredient3 = "";
-        }
-
-        if (!bundle.getString("Ingredient4").equals("")){
-            String Ingredient4 = bundle.getString("Ingredient4");
-        }else{
-            String Ingredient4 = "";
-        }
-
-        if (!bundle.getString("Ingredient5").equals("")){
-            String Ingredient5 = bundle.getString("Ingredient5");
-        }else{
-            String Ingredient5 = "";
-        }
-
-
-
+        int cuisineId = 0; // TODO: Use a proper identifier
         for (String cuisine: temporaryCuisines) {
-            CheckBox box = new CheckBox(activity);
-            box.setText(cuisine);
+            CheckBox chip = new Chip(activity);
+            chip.setText(cuisine);
+            chip.setId(cuisineId);
 
-            // TODO
-            // Need to put them one after another horizontally, then vertically
-            // when they reach the end of a horizontal line, and continue the
-            // process
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
+            cuisineId += 1;
+
+            ChipGroup.LayoutParams layoutParams = new ChipGroup.LayoutParams(
+                    ChipGroup.LayoutParams.WRAP_CONTENT,
+                    ChipGroup.LayoutParams.WRAP_CONTENT
             );
             layoutParams.rightMargin = 30;
-            box.setLayoutParams(layoutParams);
+            chip.setLayoutParams(layoutParams);
 
-            cuisinesContainer.addView(box);
+            cuisinesContainer.addView(chip);
         }
 
         loadRecipeList();
