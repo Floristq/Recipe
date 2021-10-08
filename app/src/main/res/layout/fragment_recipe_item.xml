@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Recipe_Item">
 
-    <TextView
-        android:id="@+id/Recipe_Name"
-        android:layout_width="380dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="[Recipe Name]"
-        android:textSize="26sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/Recipe_Name"
+            android:layout_width="380dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:text="[Recipe Name]"
+            android:textSize="26sp" />
     
     <ImageView
         android:id="@+id/Image"
@@ -28,22 +31,23 @@
     <TextView
         android:layout_below = "@+id/Image"
         android:id="@+id/Instructions"
+        android:autoSizeTextType="uniform"
         android:layout_width="380dp"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:layout_centerInParent="true"
         android:layout_marginTop="16dp"
-        android:text="Instructions"
         android:textSize="26sp" />
+
 
     <Button
         android:layout_below = "@+id/Instructions"
-        android:id="@+id/Edit_Instruction"
+        android:id="@+id/Edit_Recipe"
         android:layout_width="180dp"
         android:layout_height="60dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:text="Edit Instruction"
+        android:text="Edit Recipe"
         android:textSize="20sp"
         android:textColor="#FFFFFF"
         android:textAllCaps="false"
@@ -51,11 +55,11 @@
 
     <Button
         android:layout_below = "@+id/Instructions"
-        android:id="@+id/Comment"
+        android:id="@+id/CommentsButton"
         android:layout_width="180dp"
         android:layout_height="60dp"
-        android:layout_marginStart="220dp"
-        android:layout_marginLeft="220dp"
+        android:layout_marginStart="215dp"
+        android:layout_marginLeft="215dp"
         android:layout_marginTop="20dp"
         android:text="Comments"
         android:textSize="20sp"
@@ -64,14 +68,17 @@
         android:background="@drawable/custom_button"
          />
 
-<!--    <TextView-->
-<!--        android:layout_below = "@+id/Instructions"-->
-<!--        android:id="@+id/Comments"-->
-<!--        android:layout_width="380dp"-->
-<!--        android:layout_height="45dp"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        android:layout_marginLeft="16dp"-->
-<!--        android:layout_marginTop="64dp"-->
-<!--        android:text="Comments"-->
-<!--        android:textSize="26sp" />-->
-</RelativeLayout>
+    <Button
+        android:layout_below = "@+id/Edit_Recipe"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Need more ingredients!"
+        android:textColor="#FFFFFF"
+
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:background="@drawable/bottom_button"/>
+    </RelativeLayout>
+</ScrollView>

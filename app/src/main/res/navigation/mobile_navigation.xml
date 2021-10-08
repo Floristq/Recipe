@@ -40,6 +40,11 @@
     <fragment
         android:id="@+id/recipe_Item"
         android:name="com.example.recipeapp.Recipe_Item"
-        android:label="fragment_recipe_item"
+        android:label="Recipe Item"
         tools:layout="@layout/fragment_recipe_item" />
+    <fragment
+        android:id="@+id/comments"
+        android:name="com.example.recipeapp.Comments"
+        android:label="Comments"
+        tools:layout="@layout/fragment_comments" />
 </navigation>

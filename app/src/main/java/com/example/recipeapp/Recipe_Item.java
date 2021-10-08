@@ -3,11 +3,18 @@ package com.example.recipeapp;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,12 +23,17 @@ import android.widget.TextView;
  */
 public class Recipe_Item extends Fragment {
 
-    TextView Recipe_Name;
-    TextView Instruction;
-    TextView Comments;
+    TextView mNameTextView;
+    TextView mInsturctionTextView;
 
+    private Button CommentButton;
 
+    public static final String NAME_KEY = "Name";
+    public static final String INSTRUCTION_KEY = "Instruction";
 
+    private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("recipes/Greek lemon roast potatoes");
+
+    private View root = null;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,7 +69,10 @@ public class Recipe_Item extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
+
+
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
@@ -67,6 +82,40 @@ public class Recipe_Item extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipe_item, container, false);
+
+
+        root = inflater.inflate(R.layout.fragment_recipe_item, container,false);
+
+        mInsturctionTextView = root.findViewById(R.id.Instructions);
+        mNameTextView = root.findViewById(R.id.Recipe_Name);
+
+        CommentButton = root.findViewById(R.id.CommentsButton);
+
+        CommentButton.setOnClickListener(this::Go_Comments);
+
+        mDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    String NameText = documentSnapshot.getString(NAME_KEY);
+                    String InsturctionText = documentSnapshot.getString(INSTRUCTION_KEY);
+                    mNameTextView.setText(NameText);
+                    mInsturctionTextView.setText(InsturctionText);
+
+                }
+            }
+        });
+
+
+        return root;
+
     }
+
+    private void Go_Comments(View view){
+        Bundle bundle = new Bundle();
+
+        Navigation.findNavController(view).navigate(R.id.comments, bundle);
+    }
+
+
 }
