@@ -23,10 +23,10 @@
             <TextView
                 android:id="@+id/txtdashboard"
                 android:layout_width="wrap_content"
-                android:textSize="20dp"
+                android:layout_height="wrap_content"
+                android:text=""
                 android:textColor="#FFF"
-                android:text="Home Page"
-                android:layout_height="wrap_content"/>
+                android:textSize="20dp" />
 
             <ImageView
                 android:layout_width="82dp"
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:rowCount="3"
-            android:columnCount="2"
+            android:columnCount="1"
             android:columnOrderPreserved="false"
             android:alignmentMode="alignMargins"
             >
@@ -73,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:textColor="#000"
-                        android:text="Filter by Ingredient"/>
+                        android:text="Filter by Ingredients"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -139,6 +139,8 @@
                         android:text="View Recipe"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+
 
 
 
