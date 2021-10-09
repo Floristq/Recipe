@@ -2,11 +2,14 @@ package com.example.recipeapp;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,13 +79,14 @@ public class ViewRecipe extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_view_recipe, container, false);
 
-        ChipGroup cuisinesContainer = root.findViewById(R.id.cuisineContainer);
+        ChipGroup cuisineContainer = root.findViewById(R.id.cuisineContainer);
         Activity activity = getActivity();
 
         Bundle bundle = this.getArguments();
@@ -107,22 +111,13 @@ public class ViewRecipe extends Fragment {
 //            String Ingredient5 = "";
 //        }
 
-        int cuisineId = 0; // TODO: Use a proper identifier
         for (String cuisine: temporaryCuisines) {
-            CheckBox chip = new Chip(activity);
+            Chip chip = new Chip(activity);
             chip.setText(cuisine);
-            chip.setId(cuisineId);
+            chip.setId(root.generateViewId());
+            chip.setCheckable(true);
 
-            cuisineId += 1;
-
-            ChipGroup.LayoutParams layoutParams = new ChipGroup.LayoutParams(
-                    ChipGroup.LayoutParams.WRAP_CONTENT,
-                    ChipGroup.LayoutParams.WRAP_CONTENT
-            );
-            layoutParams.rightMargin = 30;
-            chip.setLayoutParams(layoutParams);
-
-            cuisinesContainer.addView(chip);
+            cuisineContainer.addView(chip);
         }
 
         loadRecipeList();
