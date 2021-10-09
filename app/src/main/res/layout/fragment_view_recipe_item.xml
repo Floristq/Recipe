@@ -22,6 +22,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceListItem"
         android:text="Recipe Name"
+        android:textStyle="bold"
+        android:textSize="18sp"
         />
 
     <!--
@@ -30,9 +32,10 @@
     !-->
     <ImageView
         android:id="@+id/recipeImage"
+        android:layout_gravity="start"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:background="@drawable/side_nav_bar"
+        android:src="@drawable/pasta"
         android:layout_marginTop="8sp"
         />
 

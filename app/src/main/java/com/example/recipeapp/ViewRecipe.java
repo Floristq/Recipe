@@ -2,16 +2,22 @@ package com.example.recipeapp;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,55 +79,45 @@ public class ViewRecipe extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_view_recipe, container, false);
 
-        LinearLayout cuisinesContainer = root.findViewById(R.id.cuisineContainer);
+        ChipGroup cuisineContainer = root.findViewById(R.id.cuisineContainer);
         Activity activity = getActivity();
 
         Bundle bundle = this.getArguments();
-        String Ingredient1 = bundle.getString("Ingredient1");
-        String Ingredient2 = bundle.getString("Ingredient2");
-
-        if (!bundle.getString("Ingredient3").equals("")){
-            String Ingredient3 = bundle.getString("Ingredient3");
-        }else{
-            String Ingredient3 = "";
-        }
-
-        if (!bundle.getString("Ingredient4").equals("")){
-            String Ingredient4 = bundle.getString("Ingredient4");
-        }else{
-            String Ingredient4 = "";
-        }
-
-        if (!bundle.getString("Ingredient5").equals("")){
-            String Ingredient5 = bundle.getString("Ingredient5");
-        }else{
-            String Ingredient5 = "";
-        }
-
-
+//        String Ingredient1 = bundle.getString("Ingredient1");
+//        String Ingredient2 = bundle.getString("Ingredient2");
+//
+//        if (!bundle.getString("Ingredient3").equals("")){
+//            String Ingredient3 = bundle.getString("Ingredient3");
+//        }else{
+//            String Ingredient3 = "";
+//        }
+//
+//        if (!bundle.getString("Ingredient4").equals("")){
+//            String Ingredient4 = bundle.getString("Ingredient4");
+//        }else{
+//            String Ingredient4 = "";
+//        }
+//
+//        if (!bundle.getString("Ingredient5").equals("")){
+//            String Ingredient5 = bundle.getString("Ingredient5");
+//        }else{
+//            String Ingredient5 = "";
+//        }
 
         for (String cuisine: temporaryCuisines) {
-            CheckBox box = new CheckBox(activity);
-            box.setText(cuisine);
+            Chip chip = new Chip(activity);
+            chip.setText(cuisine);
+            chip.setId(root.generateViewId());
+            chip.setCheckable(true);
 
-            // TODO
-            // Need to put them one after another horizontally, then vertically
-            // when they reach the end of a horizontal line, and continue the
-            // process
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            layoutParams.rightMargin = 30;
-            box.setLayoutParams(layoutParams);
-
-            cuisinesContainer.addView(box);
+            cuisineContainer.addView(chip);
         }
 
         loadRecipeList();

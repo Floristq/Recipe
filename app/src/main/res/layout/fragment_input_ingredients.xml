@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="@dimen/fab_margin"
+    android:paddingRight="@dimen/fab_margin"
     tools:context=".Input_Ingredients">
 
     <EditText
@@ -13,7 +15,6 @@
         android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:layout_marginTop="16dp"
-        android:textSize="18sp"
         android:id = "@+id/First_Ingredient"
         android:hint="First Ingredient (Mandatory)"/>
 
@@ -24,7 +25,6 @@
         android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:layout_marginTop="16dp"
-        android:textSize="18sp"
         android:id = "@+id/Second_Ingredient"
         android:hint="second Ingredient (Mandatory)"/>
 
@@ -35,7 +35,6 @@
         android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:layout_marginTop="16dp"
-        android:textSize="18sp"
         android:id = "@+id/Third_Ingredient"
         android:hint="Third Ingredient (Optional)" />
 
@@ -46,7 +45,6 @@
         android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:layout_marginTop="16dp"
-        android:textSize="18sp"
         android:id = "@+id/Fourth_Ingredient"
         android:hint="Fourth Ingredient (Optional)" />
 
@@ -57,19 +55,17 @@
         android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:layout_marginTop="16dp"
-        android:textSize="18sp"
         android:id = "@+id/Fifth_Ingredient"
         android:hint="Fifth Ingredient (Optional)" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="352dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="What ingredient do you have?"
-        android:textSize="26sp"
+        android:text="What ingredients do you have?"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -77,18 +73,40 @@
     <Button
         android:layout_below = "@+id/Fifth_Ingredient"
         android:id="@+id/SubmitButton"
-        android:layout_width="240dp"
-        android:layout_height="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="160dp"
+        android:paddingLeft="30dp"
+        android:paddingTop="8dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="8dp"
 
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:layout_centerInParent="true"
 
         android:text="Submit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textColor="#FFFFFF"
         android:textAllCaps="false"
-        android:background="@drawable/custom_button"/>
+        android:backgroundTint="@color/design_default_color_secondary_variant" />
+
+    <Button
+        android:layout_below = "@+id/SubmitButton"
+        android:id="@+id/Recipe_Item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="160dp"
+        android:paddingLeft="30dp"
+        android:paddingTop="8dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="8dp"
+
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_centerInParent="true"
+
+        android:text="Recipe item"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/design_default_color_secondary_variant" />
 </RelativeLayout>

@@ -29,7 +29,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/profile_image"
-            android:fontFamily="monospace"
             android:includeFontPadding="false"
             android:text="Hungry Jack"
             android:textColor="#fff"
@@ -68,7 +67,6 @@
                     android:textColor="#fff"
                     android:textSize="20sp"
                     android:includeFontPadding="false"
-                    android:fontFamily="monospace"
                     android:layout_centerInParent="true"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -111,7 +109,6 @@
                     android:textColor="#fff"
                     android:textSize="20sp"
                     android:includeFontPadding="false"
-                    android:fontFamily="monospace"
                     android:layout_centerInParent="true"/>
                 <TextView
                     android:layout_width="wrap_content"
