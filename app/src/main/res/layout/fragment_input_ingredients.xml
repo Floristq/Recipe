@@ -11,8 +11,8 @@
     <EditText
         android:layout_below = "@+id/textView2"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:layout_width="350dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginTop="16dp"
         android:id = "@+id/First_Ingredient"
@@ -21,9 +21,8 @@
     <EditText
         android:layout_below = "@+id/First_Ingredient"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:id = "@+id/Second_Ingredient"
         android:hint="second Ingredient (Mandatory)"/>
@@ -31,9 +30,8 @@
     <EditText
         android:layout_below = "@+id/Second_Ingredient"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:id = "@+id/Third_Ingredient"
         android:hint="Third Ingredient (Optional)" />
@@ -41,9 +39,8 @@
     <EditText
         android:layout_below = "@+id/Third_Ingredient"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:id = "@+id/Fourth_Ingredient"
         android:hint="Fourth Ingredient (Optional)" />
@@ -51,16 +48,15 @@
     <EditText
         android:layout_below = "@+id/Fourth_Ingredient"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:id = "@+id/Fifth_Ingredient"
         android:hint="Fifth Ingredient (Optional)" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="352dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="What ingredients do you have?"
