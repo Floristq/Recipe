@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity  {
     private GoogleSignInClient mSignInClient;
     private FirebaseAuth mFirebaseAuth;
     private AppBarConfiguration mAppBarConfiguration;
-
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
