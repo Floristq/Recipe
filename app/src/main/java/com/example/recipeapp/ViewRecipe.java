@@ -42,7 +42,7 @@ public class ViewRecipe extends Fragment {
     // Remove temporaryCuisines and use server/firebase retrieved tags
     final private String[] temporaryCuisines = {
             "Chinese", "English", "Indian", "French",
-            // "American", "Japanese", "Mexican"
+             "American", "Japanese", "Mexican"
     };
 
     private View root = null;
