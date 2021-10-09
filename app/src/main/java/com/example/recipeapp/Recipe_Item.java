@@ -2,6 +2,7 @@ package com.example.recipeapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -10,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -93,7 +96,8 @@ public class Recipe_Item extends Fragment {
 
         CommentButton.setOnClickListener(this::Go_Comments);
 
-        mDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        mDocRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()){
@@ -104,7 +108,19 @@ public class Recipe_Item extends Fragment {
 
                 }
             }
-        });
+
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "Unavailable to get data from firebase!", Toast.LENGTH_LONG).show();
+                    }
+                })
+
+
+        ;
+
+
 
 
         return root;
