@@ -16,8 +16,10 @@
             android:id="@+id/Recipe_Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:text="Name"
+            android:textSize="20sp"
+            android:textColor="#000"
             />
     
         <ImageView
@@ -32,9 +34,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Instructions"
-            android:textSize="21dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:layout_marginTop="@dimen/fab_margin"
+            android:textSize="19dp"
+            android:textColor="#000"
             />
 
         <TextView
@@ -43,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="40dp"
-            android:textSize="20sp"
+            android:textSize="18sp"
             />
 
         <LinearLayout
