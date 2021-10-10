@@ -11,8 +11,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -22,9 +20,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,19 +28,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 
 /**
@@ -140,8 +130,6 @@ public class Comments extends Fragment {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YY HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now(ZoneId.of("GMT+11:00"));
 
-
-
                 map.put("Author", personName + " @ " + dtf.format(now));
                 map.put("Content",editText.getText().toString());
 
@@ -194,10 +182,6 @@ public class Comments extends Fragment {
                 }
 
                 listView.setAdapter(adapter);
-
-//                ArrayAdapter<String>adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_selectable_list_item,namesList);
-//                adapter.notifyDataSetChanged();
-//                listView.setAdapter(adapter);
 
 
             }
