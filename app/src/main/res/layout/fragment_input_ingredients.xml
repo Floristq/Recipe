@@ -81,10 +81,14 @@
         android:layout_centerInParent="true"
 
         android:text="Submit"
+        android:textColor="#17308E"
         android:textSize="16sp"
-        android:textColor="#FFFFFF"
+        app:strokeColor="@color/colorPrimaryDark"
+        app:strokeWidth="2dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+
         android:textAllCaps="false"
-        android:backgroundTint="@color/design_default_color_secondary_variant" />
+        />
 
     <Button
         android:layout_below = "@+id/SubmitButton"
@@ -101,8 +105,11 @@
         android:layout_centerInParent="true"
 
         android:text="Recipe item"
+        android:textColor="#17308E"
         android:textSize="16sp"
-        android:textColor="#FFFFFF"
+        app:strokeColor="@color/colorPrimaryDark"
+        app:strokeWidth="2dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:textAllCaps="false"
-        android:backgroundTint="@color/design_default_color_secondary_variant" />
+        />
 </RelativeLayout>
