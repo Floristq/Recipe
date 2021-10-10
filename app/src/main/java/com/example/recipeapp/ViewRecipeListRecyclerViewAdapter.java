@@ -2,11 +2,16 @@ package com.example.recipeapp;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.recipeapp.databinding.FragmentViewRecipeItemBinding;
 
 import java.util.List;
@@ -30,7 +35,14 @@ public class ViewRecipeListRecyclerViewAdapter extends RecyclerView.Adapter<View
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ViewRecipe.RecipeItem curItem = holder.item = data.get(position);
         holder.recipeNameText.setText(curItem.name);
-        holder.recipeImage.setImageURI(curItem.imageUri);
+
+        ImageView img = holder.recipeImage;
+
+        Glide.with(img.getContext())
+            .load(curItem.imageUrl)
+            .placeholder(R.drawable.recipe_placeholder)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(img);
     }
 
     @Override

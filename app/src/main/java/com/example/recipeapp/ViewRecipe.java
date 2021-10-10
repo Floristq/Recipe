@@ -105,7 +105,9 @@ public class ViewRecipe extends Fragment {
 
     private void loadRecipeList() {
 
-        recipeCollectionRef.get()
+        recipeCollectionRef
+            .whereNotEqualTo("Image", "")
+            .get()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     ArrayList<RecipeItem> data = new ArrayList<RecipeItem>();
@@ -116,7 +118,7 @@ public class ViewRecipe extends Fragment {
                         data.add(new RecipeItem(
                             document.getId(),
                             String.valueOf(item.get("Name")),
-                            null
+                            String.valueOf(item.get("Image"))
                         ));
                     }
 
@@ -133,12 +135,12 @@ public class ViewRecipe extends Fragment {
     public static class RecipeItem {
         public String id;
         public String name;
-        public Uri imageUri;
+        public String imageUrl;
 
-        public RecipeItem(String id, String name, Uri imageUri) {
+        public RecipeItem(String id, String name, String imageUrl) {
             this.id = id;
             this.name = name;
-            this.imageUri = imageUri;
+            this.imageUrl = imageUrl;
         }
 
     }

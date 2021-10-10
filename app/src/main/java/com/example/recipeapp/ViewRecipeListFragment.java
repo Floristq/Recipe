@@ -51,8 +51,6 @@ public class ViewRecipeListFragment extends Fragment {
         recyclerView = (RecyclerView) view;
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        // recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(PlaceholderContent.ITEMS));
-
         return view;
     }
 
