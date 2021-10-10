@@ -27,7 +27,6 @@ public class ProfileFragment extends Fragment {
         profileViewModel =
                 ViewModelProviders.of(this).get(ProfileViewModel.class);
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
-        final TextView name = root.findViewById(R.id.profile_display_name);
         final TextInputLayout email = root.findViewById(R.id.profile_textfield_email);
         final TextInputLayout user_name = root.findViewById(R.id.profile_textfield_name);
         final ImageView img = root.findViewById(R.id.profile_image);
@@ -38,7 +37,6 @@ public class ProfileFragment extends Fragment {
         if (user != null) {
             String personName = user.getDisplayName();
             String personEmail = user.getEmail();
-            name.setText(personName);
             user_name.getEditText().setText(personName);
             email.getEditText().setText(personEmail);
             Glide.with(this).load(user.getPhotoUrl()).into(img);

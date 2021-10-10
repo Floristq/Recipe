@@ -6,33 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileFragment"
     android:orientation="vertical"
-    android:background="#fff"
+    android:background="@drawable/back"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:padding="20dp"
-        android:background="@color/colorPrimary">
+        android:padding="20dp">
 
         <ImageView
             android:id="@+id/profile_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerVertical="true"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="120dp"
             android:src="@mipmap/ic_launcher_round" />
-
-        <TextView
-            android:id="@+id/profile_display_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/profile_image"
-            android:includeFontPadding="false"
-            android:text="Hungry Jack"
-            android:textColor="#fff"
-            android:textSize="20sp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -46,7 +34,7 @@
             android:layout_height="125dp"
             android:layout_weight="1"
             android:layout_margin="10dp"
-            app:cardBackgroundColor="@color/colorPrimary"
+            app:cardBackgroundColor="#01080C"
             app:cardElevation="10dp">
 
             <RelativeLayout
@@ -88,7 +76,7 @@
             android:layout_height="125dp"
             android:layout_weight="1"
             android:layout_margin="10dp"
-            app:cardBackgroundColor="@color/colorPrimary"
+            app:cardBackgroundColor="#01080C"
             app:cardElevation="10dp">
 
             <RelativeLayout
@@ -130,41 +118,42 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/profile_textfield_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Display Name"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:hint="Display Name">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:focusable="false"
-                android:focusableInTouchMode="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Hungry Jack"
                 android:drawableLeft="@drawable/ic_profile_person"
-                android:drawablePadding="10dp"/>
+                android:drawablePadding="10dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="Hungry Jack" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/profile_textfield_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:hint="Email">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:focusable="false"
-                android:focusableInTouchMode="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ilovehungryjack@gmail.com"
                 android:drawableLeft="@drawable/ic_profile_email"
-                android:drawablePadding="10dp"/>
+                android:drawablePadding="10dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="ilovehungryjack@gmail.com" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
