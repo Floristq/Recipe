@@ -32,5 +32,6 @@
     <string name="recipe_camera_image_desc">Take a picture and upload.</string>
     <string name="recipe_gallery_image_desc">Pick an image from gallery</string>
     <string name="auto_complete_item_image">Image indicating the item of the dropdown.</string>
+    <string name="google_maps_API_key">AIzaSyADaIOUCQUuKrJcmpmhgdTzIfufKQ2GY5Q</string>
     <string name="submit">Submit</string>
 </resources>
