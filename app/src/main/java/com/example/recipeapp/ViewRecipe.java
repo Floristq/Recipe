@@ -13,14 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,20 +31,14 @@ import java.util.List;
  */
 public class ViewRecipe extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference recipeCollectionRef = db.collection("recipes");
 
     // TODO
     // Remove temporaryCuisines and use server/firebase retrieved tags
     final private String[] temporaryCuisines = {
             "Chinese", "English", "Indian", "French",
-             "American", "Japanese", "Mexican"
+            "American", "Japanese", "Mexican"
     };
 
     private View root = null;
@@ -52,31 +48,13 @@ public class ViewRecipe extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ViewRecipe.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ViewRecipe newInstance(String param1, String param2) {
-        ViewRecipe fragment = new ViewRecipe();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static ViewRecipe newInstance() {
+        return new ViewRecipe();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -126,18 +104,30 @@ public class ViewRecipe extends Fragment {
     }
 
     private void loadRecipeList() {
-        // TODO
-        // Integrate with database
-        List<RecipeItem> data = new ArrayList<RecipeItem>();
-        data.add(new RecipeItem("1", "Custard Pie", null));
-        data.add(new RecipeItem("2", "Chocolate Cake", null));
-        data.add(new RecipeItem("3", "Pastry", null));
-        data.add(new RecipeItem("4", "Chicken Pop Pie", null));
-        data.add(new RecipeItem("5", "Ice-Cream Cake", null));
 
-        // TODO
-        // Remove the following workaround and implement a better approach
-        ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
+        recipeCollectionRef.get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    ArrayList<RecipeItem> data = new ArrayList<RecipeItem>();
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Map<String, Object> item = document.getData();
+
+                        data.add(new RecipeItem(
+                            document.getId(),
+                            String.valueOf(item.get("Name")),
+                            null
+                        ));
+                    }
+
+                    // TODO
+                    // Remove the following workaround and implement a better approach
+                    ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
+                } else {
+                    Log.d("Firestore failure", "Error getting documents: ", task.getException());
+                }
+            });
+
     }
 
     public static class RecipeItem {
