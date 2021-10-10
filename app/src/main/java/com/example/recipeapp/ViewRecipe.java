@@ -13,12 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +46,9 @@ public class ViewRecipe extends Fragment {
     };
 
     private View root = null;
+    private ChipGroup cuisineContainer;
     private RecyclerView recipeListContainer;
+    private Button searchRecipeBtn;
 
     public ViewRecipe() {
         // Required empty public constructor
@@ -64,7 +70,8 @@ public class ViewRecipe extends Fragment {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_view_recipe, container, false);
 
-        ChipGroup cuisineContainer = root.findViewById(R.id.cuisineContainer);
+        searchRecipeBtn = root.findViewById(R.id.searchRecipeBtn);
+        cuisineContainer = root.findViewById(R.id.cuisineContainer);
         Activity activity = getActivity();
 
         Bundle bundle = this.getArguments();
@@ -98,6 +105,8 @@ public class ViewRecipe extends Fragment {
             cuisineContainer.addView(chip);
         }
 
+        searchRecipeBtn.setOnClickListener(this::onSearch);
+
         loadRecipeList();
 
         return root;
@@ -105,31 +114,62 @@ public class ViewRecipe extends Fragment {
 
     private void loadRecipeList() {
 
-        recipeCollectionRef
-            .whereNotEqualTo("Image", "")
-            .get()
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    ArrayList<RecipeItem> data = new ArrayList<RecipeItem>();
+        // TODO
+        // Display a loader
 
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Map<String, Object> item = document.getData();
+        // Starting with emptying the recyclerView
+        ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(new ArrayList<RecipeItem>()));
 
-                        data.add(new RecipeItem(
-                            document.getId(),
-                            String.valueOf(item.get("Name")),
-                            String.valueOf(item.get("Image"))
-                        ));
-                    }
+        // Getting selected cuisines
+        List<Integer> ids = cuisineContainer.getCheckedChipIds();
+        List<CharSequence> selectedCuisines = new ArrayList<CharSequence>();
+        for (Integer id:ids){
+            Chip chip = cuisineContainer.findViewById(id);
+            selectedCuisines.add(chip.getText());
+        }
 
-                    // TODO
-                    // Remove the following workaround and implement a better approach
-                    ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
-                } else {
-                    Log.d("Firestore failure", "Error getting documents: ", task.getException());
+        Task<QuerySnapshot> snap;
+
+        // Building query and subsequent query snapshot
+        if (selectedCuisines.size() > 0) {
+            snap = recipeCollectionRef
+                    .whereIn("Cuisine", selectedCuisines)
+                    .get();
+        } else {
+            snap = recipeCollectionRef
+                    // .whereNotEqualTo("Image", "")
+                    .get();
+        }
+
+        snap.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<RecipeItem> data = new ArrayList<RecipeItem>();
+
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Map<String, Object> item = document.getData();
+
+                    data.add(new RecipeItem(
+                        document.getId(),
+                        String.valueOf(item.get("Name")),
+                        String.valueOf(item.get("Image"))
+                    ));
                 }
-            });
 
+                // TODO
+                // Remove the following workaround and implement a better approach
+                ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
+            } else {
+                Log.d("Firestore failure", "Error getting documents: ", task.getException());
+            }
+        });
+
+    }
+
+    private void onSearch(View view) {
+        // TODO
+        // Either preprocess or check if we can remove this
+        // function altogether!
+        loadRecipeList();
     }
 
     public static class RecipeItem {
