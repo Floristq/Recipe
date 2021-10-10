@@ -1,9 +1,12 @@
 package com.example.recipeapp;
 
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,11 +46,22 @@ public class ViewRecipeListRecyclerViewAdapter extends RecyclerView.Adapter<View
             .placeholder(R.drawable.recipe_placeholder)
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(img);
+
+        ((View) img.getParent()).setOnClickListener(view -> {
+            this.onItemClick(view, holder);
+        });
     }
 
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    private void onItemClick(View view, ViewHolder holder) {
+        Bundle bundle = new Bundle();
+        bundle.putString("id", holder.item.id);
+
+        Navigation.findNavController(view).navigate(R.id.recipe_Item, bundle);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
