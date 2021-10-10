@@ -1,9 +1,11 @@
 package com.example.recipeapp;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -14,11 +16,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,11 +33,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import java.util.TimeZone;
 
 
 /**
@@ -49,6 +63,8 @@ public class Comments extends Fragment {
     private FirebaseAuth mFirebaseAuth;
 
     private List<String> namesList = new ArrayList<>();
+
+    private List<String> commentsList = new ArrayList<>();
 
     private View root = null;
 
@@ -116,10 +132,17 @@ public class Comments extends Fragment {
         }
 
         button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 Map<String,String> map = new HashMap<>();
-                map.put("Author", personName);
+
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YY HH:mm:ss");
+                LocalDateTime now = LocalDateTime.now(ZoneId.of("GMT+11:00"));
+
+
+
+                map.put("Author", personName + " @ " + dtf.format(now));
                 map.put("Content",editText.getText().toString());
 
                 db.collection("recipes/Greek lemon roast potatoes/comments").document().set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -138,14 +161,45 @@ public class Comments extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
                 namesList.clear();
+                commentsList.clear();
 
                 for(DocumentSnapshot snapshot : documentSnapshots){
-                    namesList.add(snapshot.getString("Content"));
-
+                    namesList.add(snapshot.getString("Author"));
+                    commentsList.add(snapshot.getString("Content"));
                 }
-                ArrayAdapter<String>adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_selectable_list_item,namesList);
-                adapter.notifyDataSetChanged();
+
+
+                HashMap<String,String> namecomments = new HashMap<>();
+
+
+                for (int i = 0; i < namesList.size(); i++) {
+                    namecomments.put(namesList.get(i), commentsList.get(i));
+                }
+
+
+                List<HashMap<String, String>> listItems =new ArrayList<>();
+
+                SimpleAdapter adapter = new SimpleAdapter(getContext(), listItems, R.layout.list_item,
+                        new String[]{"First Line","Second Line"},
+                        new int[]{R.id.textView1, R.id.textView2});
+
+                Iterator it = namecomments.entrySet().iterator();
+                while (it.hasNext())
+                {
+                    HashMap<String,String> resultsMap = new HashMap<>();
+                    Map.Entry pair = (Map.Entry)it.next();
+                    resultsMap.put("First Line", pair.getKey().toString());
+                    resultsMap.put("Second Line", pair.getValue().toString());
+                    listItems.add(resultsMap);
+                }
+
                 listView.setAdapter(adapter);
+
+//                ArrayAdapter<String>adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_selectable_list_item,namesList);
+//                adapter.notifyDataSetChanged();
+//                listView.setAdapter(adapter);
+
+
             }
         });
 
