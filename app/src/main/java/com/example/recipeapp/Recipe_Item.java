@@ -2,6 +2,7 @@ package com.example.recipeapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -81,7 +83,6 @@ public class Recipe_Item extends Fragment {
         loadItem();
 
         return root;
-
     }
 
     private void Go_Comments(View view){
@@ -98,32 +99,38 @@ public class Recipe_Item extends Fragment {
 
         String id = bundle.getString("id");
         recipeCollectionRef.document(id)
-            .get()
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Map<String, Object> data = document.getData();
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Map<String, Object> data = document.getData();
 
-                        mNameTextView.setText(String.valueOf(data.get("Name")));                        mNameTextView.setText(String.valueOf(data.get("Name")));
+                            mNameTextView.setText(String.valueOf(data.get("Name")));                        mNameTextView.setText(String.valueOf(data.get("Name")));
 
-                        Glide.with(img.getContext())
-                                .load(String.valueOf(data.get("Image")))
-                                .placeholder(R.drawable.recipe_placeholder)
-                                .transition(DrawableTransitionOptions.withCrossFade())
-                                .into(img);
+                            Glide.with(img.getContext())
+                                    .load(String.valueOf(data.get("Image")))
+                                    .placeholder(R.drawable.recipe_placeholder)
+                                    .transition(DrawableTransitionOptions.withCrossFade())
+                                    .into(img);
 
-                        mInstructionTextView.setText(String.valueOf(data.get("Instruction")));
+                            mInstructionTextView.setText(String.valueOf(data.get("Instruction")));
 
+                        } else {
+                            Toast.makeText(getActivity(), "No item found!", Toast.LENGTH_LONG).show();
+                        }
+
+                        Log.d("Firestore response", String.valueOf(task.getResult()));
                     } else {
-                        Toast.makeText(getActivity(), "No item found!", Toast.LENGTH_LONG).show();
+                        Log.d("Firestore failure", "Error getting documents: ", task.getException());
                     }
-
-                    Log.d("Firestore response", String.valueOf(task.getResult()));
-                } else {
-                    Log.d("Firestore failure", "Error getting documents: ", task.getException());
-                }
-            });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "Unavailable to get data from firebase!", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
 
