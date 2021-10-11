@@ -92,7 +92,7 @@
             android:layout_marginStart="215dp"
             android:layout_marginLeft="215dp"
             android:layout_marginTop="20dp"
-            android:text="Comments"
+            android:text="Comment Section"
             android:textSize="20sp"
             android:textColor="#FFFFFF"
             android:textAllCaps="false"

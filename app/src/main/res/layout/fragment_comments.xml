@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:ems="17"
             android:inputType="textPersonName"
-            android:hint="Comment here... (1 comment per recipe)"/>
+            android:hint="Comment here..."/>
 
         <ImageButton
             android:id="@+id/imageButton"

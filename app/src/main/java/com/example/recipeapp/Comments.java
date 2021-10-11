@@ -32,6 +32,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -102,6 +104,8 @@ public class Comments extends Fragment {
 
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -130,7 +134,8 @@ public class Comments extends Fragment {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YY HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now(ZoneId.of("GMT+11:00"));
 
-                map.put("Author", personName + " @ " + dtf.format(now));
+                map.put("Author", dtf.format(now) + " - " + personName + ":");
+//                map.put("Author", personName);
                 map.put("Content",editText.getText().toString());
 
                 db.collection("recipes/Greek lemon roast potatoes/comments").document().set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -161,7 +166,7 @@ public class Comments extends Fragment {
 
 
                 for (int i = 0; i < namesList.size(); i++) {
-                    namecomments.put(namesList.get(i), commentsList.get(i));
+                    namecomments.put(commentsList.get(i), namesList.get(i));
                 }
 
 
@@ -176,11 +181,18 @@ public class Comments extends Fragment {
                 {
                     HashMap<String,String> resultsMap = new HashMap<>();
                     Map.Entry pair = (Map.Entry)it.next();
-                    resultsMap.put("First Line", pair.getKey().toString());
-                    resultsMap.put("Second Line", pair.getValue().toString());
+                    resultsMap.put("First Line", pair.getValue().toString());
+                    resultsMap.put("Second Line", pair.getKey().toString());
                     listItems.add(resultsMap);
                 }
 
+                Comparator<Map<String, String>> mapComparator = new Comparator<Map<String, String>>() {
+                    public int compare(Map<String, String> m1, Map<String, String> m2) {
+                        return m1.get("First Line").compareTo(m2.get("First Line"));
+                    }
+                };
+
+                Collections.sort(listItems, mapComparator);
                 listView.setAdapter(adapter);
 
 
