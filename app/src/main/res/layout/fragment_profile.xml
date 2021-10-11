@@ -9,7 +9,7 @@
     android:background="@drawable/back"
     >
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:padding="20dp">
@@ -18,10 +18,13 @@
             android:id="@+id/profile_image"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="120dp"
-            android:src="@mipmap/ic_launcher_round" />
-    </RelativeLayout>
+            android:layout_marginTop="4dp"
+            android:src="@mipmap/ic_launcher_round"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,28 +50,30 @@
                     android:layout_height="30dp"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_profile_recipe" />
+
                 <TextView
                     android:id="@+id/profile_recipe_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:includeFontPadding="false"
                     android:text="2"
                     android:textColor="#fff"
-                    android:textSize="20sp"
-                    android:includeFontPadding="false"
-                    android:layout_centerInParent="true"/>
+                    android:textSize="20sp" />
+
                 <TextView
+                    android:id="@+id/profile_recipe_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/profile_recipe_label"
-                    android:text="Recipes"
-                    android:includeFontPadding="false"
-                    android:textSize="20sp"
-                    android:textColor="#fff"
                     android:layout_below="@id/profile_recipe_num"
-                    android:layout_centerHorizontal="true"/>
-                
+                    android:layout_centerHorizontal="true"
+                    android:includeFontPadding="false"
+                    android:text="Recipes"
+                    android:textColor="#fff"
+                    android:textSize="20sp" />
+
             </RelativeLayout>
-            
+
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -89,25 +94,27 @@
                     android:layout_height="30dp"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_profile_comment" />
+
                 <TextView
                     android:id="@+id/profile_comment_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:includeFontPadding="false"
                     android:text="13"
                     android:textColor="#fff"
-                    android:textSize="20sp"
-                    android:includeFontPadding="false"
-                    android:layout_centerInParent="true"/>
+                    android:textSize="20sp" />
+
                 <TextView
+                    android:id="@+id/profile_comment_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/profile_comment_label"
-                    android:text="Comments"
-                    android:includeFontPadding="false"
-                    android:textSize="20sp"
-                    android:textColor="#fff"
                     android:layout_below="@id/profile_comment_num"
-                    android:layout_centerHorizontal="true"/>
+                    android:layout_centerHorizontal="true"
+                    android:includeFontPadding="false"
+                    android:text="Comments"
+                    android:textColor="#fff"
+                    android:textSize="20sp" />
 
             </RelativeLayout>
 
