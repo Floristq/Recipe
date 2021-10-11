@@ -47,6 +47,14 @@
           }
         },
         {
+          "client_id": "819769335176-5h7nvs5360vvdthn3p6a0ia6uqg5o2mo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.recipeapp",
+            "certificate_hash": "f5675c9134e405d4f6c07d856667412a7301e2f2"
+          }
+        },
+        {
           "client_id": "819769335176-9c8vs14fa4hn467lfg6eqglitq9cvano.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
