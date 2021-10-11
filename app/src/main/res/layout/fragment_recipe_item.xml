@@ -18,67 +18,107 @@
             android:text="[Recipe Name]"
             android:textSize="26sp" />
     
-    <ImageView
-        android:id="@+id/Image"
-        android:layout_below = "@+id/Recipe_Name"
-        android:layout_width="380dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/ic_menu_camera"
-        android:layout_centerInParent="true"
-        android:scaleType="fitXY"/>
+        <ImageView
+            android:id="@+id/Image"
+            android:layout_below = "@+id/Recipe_Name"
+            android:layout_width="380dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/ic_menu_camera"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY"/>
 
-    <TextView
-        android:layout_below = "@+id/Image"
-        android:id="@+id/Instructions"
-        android:autoSizeTextType="uniform"
-        android:layout_width="380dp"
-        android:layout_height="400dp"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="16dp"
-        android:textSize="26sp" />
+        <TextView
+            android:layout_below = "@+id/Image"
+            android:id="@+id/Ingredients_title"
+            android:layout_width="380dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:textSize="23sp"
+            android:text = "Ingredients:"/>
+
+        <TextView
+            android:layout_below = "@+id/Ingredients_title"
+            android:id="@+id/Ingredients"
+
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_below = "@+id/Ingredients"
+            android:id="@+id/Instructions_title"
+            android:layout_width="380dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:textSize="23sp"
+            android:text = "Instruction:"/>
+
+        <TextView
+            android:layout_below = "@+id/Instructions_title"
+            android:id="@+id/Instructions"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:textSize="20sp" />
+
+<!--        android:autoSizeTextType="uniform"-->
 
 
-    <Button
-        android:layout_below = "@+id/Instructions"
-        android:id="@+id/Edit_Recipe"
-        android:layout_width="180dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:text="Edit Recipe"
-        android:textSize="20sp"
-        android:textColor="#FFFFFF"
-        android:textAllCaps="false"
-        android:background="@drawable/custom_button"/>
+        <Button
+            android:layout_below = "@+id/Instructions"
+            android:id="@+id/map"
+            android:layout_width="180dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Need More Ingredients?"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:background="@drawable/custom_button"/>
 
-    <Button
-        android:layout_below = "@+id/Instructions"
-        android:id="@+id/CommentsButton"
-        android:layout_width="180dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="215dp"
-        android:layout_marginLeft="215dp"
-        android:layout_marginTop="20dp"
-        android:text="Comments"
-        android:textSize="20sp"
-        android:textColor="#FFFFFF"
-        android:textAllCaps="false"
-        android:background="@drawable/custom_button"
-         />
+        <Button
+            android:layout_below = "@+id/Instructions"
+            android:id="@+id/CommentsButton"
+            android:layout_width="180dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="215dp"
+            android:layout_marginLeft="215dp"
+            android:layout_marginTop="20dp"
+            android:text="Comments"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:background="@drawable/custom_button"
+            />
 
-    <Button
-        android:layout_below = "@+id/Edit_Recipe"
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Need more ingredients!"
-        android:textColor="#FFFFFF"
+        <TextView
+            android:layout_below = "@+id/map"
+            android:id="@+id/placeholder"
+            android:layout_width="380dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+                />
 
-        android:layout_marginTop="30dp"
-        android:textSize="20sp"
-        android:textAllCaps="false"
-        android:background="@drawable/bottom_button"/>
+<!--        <Button-->
+<!--            android:layout_below = "@+id/Edit_Recipe"-->
+<!--            android:id="@+id/map"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="60dp"-->
+<!--            android:text="Need more ingredients!"-->
+<!--            android:textColor="#FFFFFF"-->
+
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:textSize="20sp"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:background="@drawable/bottom_button"/>-->
     </RelativeLayout>
 </ScrollView>

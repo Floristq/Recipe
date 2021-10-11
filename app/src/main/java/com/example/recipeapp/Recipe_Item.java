@@ -1,8 +1,11 @@
 package com.example.recipeapp;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -17,7 +20,15 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +39,9 @@ public class Recipe_Item extends Fragment {
 
     TextView mNameTextView;
     TextView mInsturctionTextView;
+    TextView mIngredientTextView;
+
+    private List<String> ingredientsList = new ArrayList<>();
 
     private Button CommentButton;
 
@@ -35,6 +49,8 @@ public class Recipe_Item extends Fragment {
     public static final String INSTRUCTION_KEY = "Instruction";
 
     private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("recipes/Greek lemon roast potatoes");
+
+    private DocumentReference mIngredientRef = FirebaseFirestore.getInstance().document("recipes/Greek lemon roast potatoes");
 
     private View root = null;
 
@@ -91,10 +107,27 @@ public class Recipe_Item extends Fragment {
 
         mInsturctionTextView = root.findViewById(R.id.Instructions);
         mNameTextView = root.findViewById(R.id.Recipe_Name);
+        mIngredientTextView = root.findViewById(R.id.Ingredients);
+
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         CommentButton = root.findViewById(R.id.CommentsButton);
-
         CommentButton.setOnClickListener(this::Go_Comments);
+
+        db.collection("recipes/Greek lemon roast potatoes/Ingredients").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
+                ingredientsList.clear();
+                for (DocumentSnapshot snapshot : documentSnapshots){
+                    ingredientsList.add(snapshot.getString("Name"));
+                }
+                String listString = String.join(", ", ingredientsList);
+                mIngredientTextView.setText(listString);
+            }
+        });
+
+
 
         mDocRef.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -105,33 +138,20 @@ public class Recipe_Item extends Fragment {
                     String InsturctionText = documentSnapshot.getString(INSTRUCTION_KEY);
                     mNameTextView.setText(NameText);
                     mInsturctionTextView.setText(InsturctionText);
-
                 }
             }
-
         })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getActivity(), "Unavailable to get data from firebase!", Toast.LENGTH_LONG).show();
                     }
-                })
-
-
-        ;
-
-
-
-
+                });
         return root;
-
     }
 
     private void Go_Comments(View view){
         Bundle bundle = new Bundle();
-
         Navigation.findNavController(view).navigate(R.id.comments, bundle);
     }
-
-
 }
