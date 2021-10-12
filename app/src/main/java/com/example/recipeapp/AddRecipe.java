@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,9 +28,18 @@ import com.example.recipeapp.autocompleteadapter.AutoCompleteAdapter;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +50,11 @@ import java.util.List;
 public class AddRecipe extends Fragment {
 
     private View root = null;
+
+    // TODO
+    // Refactor & create common source to use the database
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference recipeCollectionRef = db.collection("recipes");
 
     private FloatingActionButton cameraBtn;
     private FloatingActionButton galleryBtn;
@@ -136,17 +151,42 @@ public class AddRecipe extends Fragment {
     // Handle submission
     private void onSubmit(View view) {
         String name = ((EditText) root.findViewById(R.id.recipeName)).getText().toString();
+        String cuisine = cuisineSpinner.getSelectedItem().toString();
+        if (cuisine == SELECT_CUISINE_HINT) cuisine = ""; // User can't choose the hint
         String instructions = ((EditText) root.findViewById(R.id.instructions)).getText().toString();
         // We already have imageUri
-        String tags = recipeTagInput.getText().toString();
+        List<String> tempTags = Arrays.asList(recipeTagInput.getText().toString().split(", "));
+        List<String> tags = new ArrayList<String>();
+        for (String tempTag: tempTags) {
+            if (!tempTag.isEmpty()) tags.add(tempTag); // Removing the empty strings
+        }
 
-        if (name.toString() == "" || instructions.toString() == "" || imageUri == null || tags.toString() == "") {
+        if (name.isEmpty() ||
+                cuisine.isEmpty() ||
+                instructions.isEmpty() ||
+                imageUri == null ||
+                tags.isEmpty()) {
             // TODO
             // Let the user know which fields to fill specifically
             Toast.makeText(getActivity(), "Please fill in all the fields!", Toast.LENGTH_LONG).show();
         } else {
-            // TODO
-            // Post data to firebase
+            Map<String, Object> data = new HashMap<>();
+            data.put("Name", name);
+            data.put("Cuisine", cuisine);
+            data.put("Instructions", instructions);
+            data.put("Tags", tags);
+
+            recipeCollectionRef.add(data)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // DocumentReference document = task.getResult();
+
+                            Toast.makeText(getActivity(), "Recipe `" + name + "` - added successfully!" , Toast.LENGTH_LONG).show();
+                            Navigation.findNavController(view).navigate(R.id.nav_home);
+                        } else {
+                            Log.d("Firestore failure", "Error adding document: ", task.getException());
+                        }
+                    });
         }
     }
 
