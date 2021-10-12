@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Comments">
 
-    <!-- TODO: Update blank fragment layout -->
-    <ScrollView
+    <ListView
+        android:id = "@+id/listview"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="650dp">
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/commentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="17"
+            android:inputType="textPersonName"
+            android:hint="Comment here..."/>
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/but_back"
+            android:src="@drawable/send_image_foreground" />
 
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="600dp" />
+    </LinearLayout>
 
-    </ScrollView>
 
-</FrameLayout>
+</LinearLayout>

@@ -31,9 +31,26 @@
             />
 
         <TextView
+            android:id="@+id/Ingredients_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Instructions"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:textSize="19dp"
+            android:textColor="#000"
+            android:text = "Ingredients:"
+            />
+
+        <TextView
+            android:id="@+id/Ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Instructions:"
             android:layout_marginTop="@dimen/fab_margin"
             android:textSize="19dp"
             android:textColor="#000"

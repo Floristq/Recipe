@@ -1,8 +1,10 @@
 package com.example.recipeapp;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -18,12 +20,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -37,9 +37,12 @@ public class Recipe_Item extends Fragment {
 
     TextView mNameTextView;
     TextView mInstructionTextView;
+    TextView mIngredientTextView;
     ImageView img;
 
     private Button CommentButton;
+
+    private Button EditBtn;
 
     public static final String NAME_KEY = "Name";
     public static final String INSTRUCTION_KEY = "Instruction";
@@ -75,10 +78,15 @@ public class Recipe_Item extends Fragment {
         mInstructionTextView = root.findViewById(R.id.Instructions);
         mNameTextView = root.findViewById(R.id.Recipe_Name);
         img = root.findViewById(R.id.Image);
+        mIngredientTextView = root.findViewById(R.id.Ingredients);
+
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         CommentButton = root.findViewById(R.id.CommentsButton);
-
         CommentButton.setOnClickListener(this::Go_Comments);
+
+        EditBtn = root.findViewById(R.id.Edit_Recipe);
+        EditBtn.setOnClickListener(this::Go_Edit);
 
         loadItem();
 
@@ -87,10 +95,10 @@ public class Recipe_Item extends Fragment {
 
     private void Go_Comments(View view){
         Bundle bundle = new Bundle();
-
         Navigation.findNavController(view).navigate(R.id.comments, bundle);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadItem() {
         Bundle bundle = this.getArguments();
 
@@ -106,7 +114,8 @@ public class Recipe_Item extends Fragment {
                         if (document.exists()) {
                             Map<String, Object> data = document.getData();
 
-                            mNameTextView.setText(String.valueOf(data.get("Name")));                        mNameTextView.setText(String.valueOf(data.get("Name")));
+                            // Populating the fields!
+                            mNameTextView.setText(String.valueOf(data.get("Name")));
 
                             Glide.with(img.getContext())
                                     .load(String.valueOf(data.get("Image")))
@@ -114,6 +123,7 @@ public class Recipe_Item extends Fragment {
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .into(img);
 
+                            mIngredientTextView.setText(String.join(", ", (ArrayList) data.get("Ingredients")));
                             mInstructionTextView.setText(String.valueOf(data.get("Instruction")));
 
                         } else {
@@ -133,5 +143,8 @@ public class Recipe_Item extends Fragment {
                 });
     }
 
-
+    private void Go_Edit(View view){
+        Bundle bundle = new Bundle();
+        Navigation.findNavController(view).navigate(R.id.edit_Instruction, bundle);
+    }
 }

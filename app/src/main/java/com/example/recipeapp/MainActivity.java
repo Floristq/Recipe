@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity  {
     private GoogleSignInClient mSignInClient;
     private FirebaseAuth mFirebaseAuth;
     private AppBarConfiguration mAppBarConfiguration;
+//     private static final String TAG = "MainActivity";
+//     private static final int ERROR_DIALOG_REQUEST = 9001;
 
 
     @Override
@@ -51,14 +53,14 @@ public class MainActivity extends AppCompatActivity  {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -124,6 +126,9 @@ public class MainActivity extends AppCompatActivity  {
             }
         }
 
+//         if (isServiceOK()){
+//             init();
+//         }
     }
 
     @Override
@@ -148,4 +153,34 @@ public class MainActivity extends AppCompatActivity  {
         finish();
 
     }
+    
+//     private void init(){
+//         Button btnMap = (Button) findViewById(R.id.btnMap);
+//         btnMap.setOnClickListener(new View.OnClickListener() {
+//             @Override
+//             public void onClick(View view) {
+//                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
+//                 startActivity(intent);
+//             }
+//         });
+//     }
+    
+//     public boolean isServiceOK(){
+//         Log.d(TAG, "isServiceOK: checking google services version");
+//         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
+//         if (available== ConnectionResult.SUCCESS){
+//             //everything is fine and the user can make map requests
+//             Log.d(TAG, "isServicesOK: Google Play Services is working");
+//             return true;
+//         }
+//         else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+//             //an error occured but we can fix
+//             Log.d(TAG, "isServiceOK: an error occured but we can fix");
+//             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available,ERROR_DIALOG_REQUEST);
+//             dialog.show();
+//         }else {
+//             Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
+//         }
+//         return false;
+//     }
 }
