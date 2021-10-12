@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -26,6 +27,10 @@ import android.widget.Toast;
 import com.example.recipeapp.autocompleteadapter.AdapterItem;
 import com.example.recipeapp.autocompleteadapter.AutoCompleteAdapter;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
@@ -33,7 +38,14 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +66,7 @@ public class AddRecipe extends Fragment {
     // TODO
     // Refactor & create common source to use the database
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
     private CollectionReference recipeCollectionRef = db.collection("recipes");
 
     private FloatingActionButton cameraBtn;
@@ -151,8 +164,8 @@ public class AddRecipe extends Fragment {
     // Handle submission
     private void onSubmit(View view) {
         String name = ((EditText) root.findViewById(R.id.recipeName)).getText().toString();
-        String cuisine = cuisineSpinner.getSelectedItem().toString();
-        if (cuisine == SELECT_CUISINE_HINT) cuisine = ""; // User can't choose the hint
+        String tempCuisine = cuisineSpinner.getSelectedItem().toString();
+        String cuisine = tempCuisine == SELECT_CUISINE_HINT ? "" : tempCuisine; // User can't choose the hint
         String instructions = ((EditText) root.findViewById(R.id.instructions)).getText().toString();
         // We already have imageUri
         List<String> tempTags = Arrays.asList(recipeTagInput.getText().toString().split(", "));
@@ -170,23 +183,55 @@ public class AddRecipe extends Fragment {
             // Let the user know which fields to fill specifically
             Toast.makeText(getActivity(), "Please fill in all the fields!", Toast.LENGTH_LONG).show();
         } else {
-            Map<String, Object> data = new HashMap<>();
-            data.put("Name", name);
-            data.put("Cuisine", cuisine);
-            data.put("Instructions", instructions);
-            data.put("Tags", tags);
 
-            recipeCollectionRef.add(data)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            // DocumentReference document = task.getResult();
+            // Create the file metadata
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("image/jpeg")
+                    .build();
 
-                            Toast.makeText(getActivity(), "Recipe `" + name + "` - added successfully!" , Toast.LENGTH_LONG).show();
-                            Navigation.findNavController(view).navigate(R.id.nav_home);
-                        } else {
-                            Log.d("Firestore failure", "Error adding document: ", task.getException());
-                        }
-                    });
+            StorageReference imageRef = storage.getReference().child("images/" + imageUri.getLastPathSegment());
+
+            UploadTask uploadTask = imageRef.putFile(imageUri, metadata);
+
+            // TODO
+            // onProgress, onPause
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return imageRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(imageUploadtask -> {
+                if (imageUploadtask.isSuccessful()) {
+                    Uri downloadUri = imageUploadtask.getResult();
+
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("Name", name);
+                    data.put("Cuisine", cuisine);
+                    data.put("Instruction", instructions);
+                    data.put("Image", downloadUri.toString());
+                    data.put("Tags", tags);
+
+                    recipeCollectionRef.add(data)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    // DocumentReference document = task.getResult();
+
+                                    Toast.makeText(getActivity(), "Recipe `" + name + "` - added successfully!" , Toast.LENGTH_LONG).show();
+                                    Navigation.findNavController(view).navigate(R.id.nav_home);
+                                } else {
+                                    Log.d("Firestore failure", "Error adding document: ", task.getException());
+                                }
+                            });
+                } else {
+                    Toast.makeText(getActivity(), "Image failed to upload!", Toast.LENGTH_LONG).show();
+                }
+            });
+
         }
     }
 

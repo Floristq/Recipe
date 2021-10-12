@@ -123,7 +123,9 @@ public class Recipe_Item extends Fragment {
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .into(img);
 
-                            mIngredientTextView.setText(String.join(", ", (ArrayList) data.get("Ingredients")));
+                            if (data.containsKey("Ingredients")) {
+                                mIngredientTextView.setText(String.join(", ", (ArrayList) data.get("Ingredients")));
+                            }
                             mInstructionTextView.setText(String.valueOf(data.get("Instruction")));
 
                         } else {
