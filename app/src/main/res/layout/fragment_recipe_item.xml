@@ -10,8 +10,8 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/Recipe_Name"
-            android:layout_width="380dp"
-            android:layout_height="45dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
@@ -67,18 +67,16 @@
             android:layout_marginTop="16dp"
             android:textSize="20sp" />
 
-<!--        android:autoSizeTextType="uniform"-->
-
 
         <Button
             android:layout_below = "@+id/Instructions"
-            android:id="@+id/map"
+            android:id="@+id/Edit_Recipe"
             android:layout_width="180dp"
             android:layout_height="80dp"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:text="Need More Ingredients?"
+            android:text="Edit Instruction"
             android:textSize="20sp"
             android:textColor="#FFFFFF"
             android:textAllCaps="false"
@@ -99,26 +97,25 @@
             android:background="@drawable/custom_button"
             />
 
-        <TextView
-            android:layout_below = "@+id/map"
-            android:id="@+id/placeholder"
-            android:layout_width="380dp"
-            android:layout_height="20dp"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
-                />
+<!--        <TextView-->
+<!--            android:layout_below = "@+id/map"-->
+<!--            android:id="@+id/placeholder"-->
+<!--            android:layout_width="380dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--                />-->
 
-<!--        <Button-->
-<!--            android:layout_below = "@+id/Edit_Recipe"-->
-<!--            android:id="@+id/map"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="60dp"-->
-<!--            android:text="Need more ingredients!"-->
-<!--            android:textColor="#FFFFFF"-->
-
-<!--            android:layout_marginTop="30dp"-->
-<!--            android:textSize="20sp"-->
-<!--            android:textAllCaps="false"-->
-<!--            android:background="@drawable/bottom_button"/>-->
+        <Button
+            android:layout_below = "@+id/Edit_Recipe"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Need more ingredients!"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="30dp"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:background="@drawable/bottom_button"/>
     </RelativeLayout>
 </ScrollView>

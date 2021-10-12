@@ -45,12 +45,12 @@ public class Recipe_Item extends Fragment {
 
     private Button CommentButton;
 
+    private Button EditBtn;
+
     public static final String NAME_KEY = "Name";
     public static final String INSTRUCTION_KEY = "Instruction";
 
     private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("recipes/Greek lemon roast potatoes");
-
-    private DocumentReference mIngredientRef = FirebaseFirestore.getInstance().document("recipes/Greek lemon roast potatoes");
 
     private View root = null;
 
@@ -114,6 +114,9 @@ public class Recipe_Item extends Fragment {
         CommentButton = root.findViewById(R.id.CommentsButton);
         CommentButton.setOnClickListener(this::Go_Comments);
 
+        EditBtn = root.findViewById(R.id.Edit_Recipe);
+        EditBtn.setOnClickListener(this::Go_Edit);
+
         db.collection("recipes/Greek lemon roast potatoes/Ingredients").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -126,8 +129,6 @@ public class Recipe_Item extends Fragment {
                 mIngredientTextView.setText(listString);
             }
         });
-
-
 
         mDocRef.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -153,5 +154,10 @@ public class Recipe_Item extends Fragment {
     private void Go_Comments(View view){
         Bundle bundle = new Bundle();
         Navigation.findNavController(view).navigate(R.id.comments, bundle);
+    }
+
+    private void Go_Edit(View view){
+        Bundle bundle = new Bundle();
+        Navigation.findNavController(view).navigate(R.id.edit_Instruction, bundle);
     }
 }
