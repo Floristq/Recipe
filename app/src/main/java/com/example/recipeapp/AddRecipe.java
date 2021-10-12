@@ -13,16 +13,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.recipeapp.autocompleteadapter.AdapterItem;
 import com.example.recipeapp.autocompleteadapter.AutoCompleteAdapter;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -36,15 +39,6 @@ import java.util.List;
  */
 public class AddRecipe extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private View root = null;
 
     private FloatingActionButton cameraBtn;
@@ -53,10 +47,12 @@ public class AddRecipe extends Fragment {
     private ImageView recipeImg;
     private MultiAutoCompleteTextView recipeTagInput;
     private Button submitBtn;
+    private Spinner cuisineSpinner;
 
     private AutoCompleteAdapter recipeTagsAdapter;
     private Uri imageUri = null;
 
+    private final String SELECT_CUISINE_HINT = "Select Cuisine";
     // TODO
     // Remove temporaryTags and use server/firebase retrieved tags
     final private String[] temporaryTags = {
@@ -65,22 +61,15 @@ public class AddRecipe extends Fragment {
             "fitness", "mexican", "american", "chinese", "indian"
     };
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddRecipe.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddRecipe newInstance(String param1, String param2) {
-        AddRecipe fragment = new AddRecipe();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    // TODO
+    // Remove temporaryCuisines and use server/firebase retrieved tags
+    final private String[] temporaryCuisines = {
+            "Chinese", "English", "Indian", "French",
+            "American", "Japanese", "Mexican"
+    };
+
+    public static AddRecipe newInstance() {
+        return new AddRecipe();
     }
 
     public AddRecipe() {
@@ -90,10 +79,6 @@ public class AddRecipe extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -109,6 +94,22 @@ public class AddRecipe extends Fragment {
         uploadImgBtnContainer = root.findViewById(R.id.uploadImgBtnContainer);
         recipeTagInput = root.findViewById(R.id.recipeTagInput);
         submitBtn = root.findViewById(R.id.submitBtn);
+        cuisineSpinner = root.findViewById(R.id.cuisine);
+
+        List<String> cuisines =  new ArrayList<String>();
+        cuisines.add(SELECT_CUISINE_HINT);
+        for (String cuisine: temporaryCuisines) {
+            cuisines.add(cuisine);
+        }
+
+        ArrayAdapter<String> cuisineAdapter = new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_spinner_item,
+                cuisines
+        );
+
+        cuisineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        cuisineSpinner.setAdapter(cuisineAdapter);
 
         // Configuring recipeTagsInput
         // TODO
@@ -159,7 +160,9 @@ public class AddRecipe extends Fragment {
             // Loading image on the interface
             imageUri = data.getData();
             recipeImg.setImageURI(imageUri);
-            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) uploadImgBtnContainer.getLayoutParams();
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) uploadImgBtnContainer.getLayoutParams();
+            // TODO
+            // Make it hidden at the beginning, then visible after image gets uploaded!
             params.topMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             // Informing user about error(s)
