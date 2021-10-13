@@ -29,7 +29,7 @@
         tools:layout="@layout/fragment_input_ingredients" />
     <fragment
         android:id="@+id/addRecipe"
-        android:name="com.example.recipeapp.AddRecipe"
+        android:name="com.example.recipeapp.AddEditRecipe"
         android:label="Add Recipe"
         tools:layout="@layout/fragment_add_recipe" />
     <fragment

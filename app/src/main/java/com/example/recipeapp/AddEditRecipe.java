@@ -54,11 +54,11 @@ import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link AddRecipe#newInstance} factory method to
+ * Use the {@link AddEditRecipe#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class AddRecipe extends Fragment {
+public class AddEditRecipe extends Fragment {
 
     private View root = null;
 
@@ -79,6 +79,7 @@ public class AddRecipe extends Fragment {
     private Spinner cuisineSpinner;
     private ChipGroup ingredientContainer;
     private LinearLayout recipeForm;
+    private ProgressBar dataLoadingBar;
 
     private EditText recipeNameInput;
     private EditText instructionInput;
@@ -102,11 +103,16 @@ public class AddRecipe extends Fragment {
             "American", "Japanese", "Mexican"
     };
 
-    public static AddRecipe newInstance() {
-        return new AddRecipe();
+    // TODO
+    // Get a better way than saving the following one
+    // to identify server received image url
+    private String serverReceivedImageUrl;
+
+    public static AddEditRecipe newInstance() {
+        return new AddEditRecipe();
     }
 
-    public AddRecipe() {
+    public AddEditRecipe() {
         // Required empty public constructor
     }
 
@@ -120,7 +126,7 @@ public class AddRecipe extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        root = inflater.inflate(R.layout.fragment_add_recipe, container, false);
+        root = inflater.inflate(R.layout.fragment_add_edit_recipe, container, false);
 
         // Initializing components / elements
         cameraBtn = root.findViewById(R.id.cameraBtn);
@@ -132,6 +138,7 @@ public class AddRecipe extends Fragment {
         cuisineSpinner = root.findViewById(R.id.cuisine);
         ingredientContainer = root.findViewById(R.id.ingredientContainer);
         recipeForm = root.findViewById(R.id.recipeForm);
+        dataLoadingBar = root.findViewById(R.id.dataLoadingBar);
 
         recipeNameInput = root.findViewById(R.id.recipeName);
         instructionInput = root.findViewById(R.id.instructions);
@@ -168,11 +175,9 @@ public class AddRecipe extends Fragment {
             if (bundle.containsKey("id")) {
                 loadData(bundle.getString("id"));
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Edit Recipe");
-            } else {
-                recipeForm.setVisibility(View.VISIBLE);
+                dataLoadingBar.setVisibility(View.VISIBLE);
+                recipeForm.setVisibility(View.GONE);
             }
-        } else {
-            recipeForm.setVisibility(View.VISIBLE);
         }
 
         return root;
@@ -180,7 +185,6 @@ public class AddRecipe extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadData(String id) {
-        ProgressBar dataLoadingBar = root.findViewById(R.id.dataLoadingBar);
         dataLoadingBar.setVisibility(View.VISIBLE);
 
         recipeCollectionRef.document(id)
@@ -199,8 +203,10 @@ public class AddRecipe extends Fragment {
                                 setCuisine(String.valueOf(data.get("Cuisine")));
                             }
 
+                            serverReceivedImageUrl = String.valueOf(data.get("Image"));
+                            recipeImg.setVisibility(View.VISIBLE);
                             Glide.with(recipeImg.getContext())
-                                    .load(String.valueOf(data.get("Image")))
+                                    .load(serverReceivedImageUrl)
                                     .placeholder(R.drawable.recipe_placeholder)
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .into(recipeImg);
@@ -336,13 +342,28 @@ public class AddRecipe extends Fragment {
                 cuisine.isEmpty() ||
                 ingredients.isEmpty() ||
                 instructions.isEmpty() ||
-                imageUri == null ||
+                recipeImg.getDrawable() == null ||
                 tags.isEmpty()) {
             // TODO
             // Let the user know which fields to fill specifically
             Toast.makeText(getActivity(), "Please fill in all the fields!", Toast.LENGTH_LONG).show();
         } else {
 
+            Map<String, Object> data = new HashMap<>();
+            data.put("Name", name);
+            data.put("Cuisine", cuisine);
+            data.put("Ingredients", ingredients);
+            data.put("Instruction", instructions);
+            data.put("Tags", tags);
+
+            if (imageUri == null) {
+                data.put("Image", serverReceivedImageUrl);
+                uploadDocument(data);
+                // We no longer need to upload the image first!
+                return;
+            }
+
+            // Upload the image first
             // Create the file metadata
             StorageMetadata metadata = new StorageMetadata.Builder()
                     .setContentType("image/jpeg")
@@ -367,31 +388,37 @@ public class AddRecipe extends Fragment {
             }).addOnCompleteListener(imageUploadtask -> {
                 if (imageUploadtask.isSuccessful()) {
                     Uri downloadUri = imageUploadtask.getResult();
-
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("Name", name);
-                    data.put("Cuisine", cuisine);
-                    data.put("Ingredients", ingredients);
-                    data.put("Instruction", instructions);
                     data.put("Image", downloadUri.toString());
-                    data.put("Tags", tags);
 
-                    recipeCollectionRef.add(data)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    // DocumentReference document = task.getResult();
-
-                                    Toast.makeText(getActivity(), "Recipe `" + name + "` - added successfully!" , Toast.LENGTH_LONG).show();
-                                    Navigation.findNavController(view).popBackStack();
-                                } else {
-                                    Log.d("Firestore failure", "Error adding document: ", task.getException());
-                                }
-                            });
+                    uploadDocument(data);
                 } else {
                     Toast.makeText(getActivity(), "Image failed to upload!", Toast.LENGTH_LONG).show();
                 }
             });
 
+        }
+    }
+
+    private void uploadDocument(Map<String, Object> data) {
+
+        if (recipeId != null) {
+            recipeCollectionRef.add(data).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getActivity(), "Recipe `" + data.get("Name") + "` - added successfully!", Toast.LENGTH_LONG).show();
+                    Navigation.findNavController(root).popBackStack();
+                } else {
+                    Log.d("Firestore failure", "Error adding document: ", task.getException());
+                }
+            });
+        } else {
+            recipeCollectionRef.document(recipeId).update(data)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), "Recipe `" + data.get("Name") + "` - updated successfully!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Log.d("Firestore failure", "Error adding document: ", task.getException());
+                        }
+                    });
         }
     }
 
@@ -405,10 +432,7 @@ public class AddRecipe extends Fragment {
             // Loading image on the interface
             imageUri = data.getData();
             recipeImg.setImageURI(imageUri);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) uploadImgBtnContainer.getLayoutParams();
-            // TODO
-            // Make it hidden at the beginning, then visible after image gets uploaded!
-            params.topMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
+            recipeImg.setVisibility(View.VISIBLE);
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             // Informing user about error(s)
             Toast.makeText(getActivity(), ImagePicker.getError(data), Toast.LENGTH_LONG).show();
