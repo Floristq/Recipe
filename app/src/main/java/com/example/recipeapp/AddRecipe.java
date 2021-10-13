@@ -9,7 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -23,38 +23,33 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.recipeapp.autocompleteadapter.AdapterItem;
 import com.example.recipeapp.autocompleteadapter.AutoCompleteAdapter;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnPausedListener;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -71,9 +66,9 @@ public class AddRecipe extends Fragment {
 
     // TODO
     // Refactor & create common source to use the database
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
-    private CollectionReference recipeCollectionRef = db.collection("recipes");
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
+    private final CollectionReference recipeCollectionRef = db.collection("recipes");
 
     private FloatingActionButton cameraBtn;
     private FloatingActionButton galleryBtn;
@@ -83,6 +78,10 @@ public class AddRecipe extends Fragment {
     private Button submitBtn;
     private Spinner cuisineSpinner;
     private ChipGroup ingredientContainer;
+    private LinearLayout recipeForm;
+
+    private EditText recipeNameInput;
+    private EditText instructionInput;
 
     private AutoCompleteAdapter recipeTagsAdapter;
     private Uri imageUri = null;
@@ -116,6 +115,7 @@ public class AddRecipe extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -131,21 +131,17 @@ public class AddRecipe extends Fragment {
         submitBtn = root.findViewById(R.id.submitBtn);
         cuisineSpinner = root.findViewById(R.id.cuisine);
         ingredientContainer = root.findViewById(R.id.ingredientContainer);
+        recipeForm = root.findViewById(R.id.recipeForm);
+
+        recipeNameInput = root.findViewById(R.id.recipeName);
+        instructionInput = root.findViewById(R.id.instructions);
 
         List<String> cuisines =  new ArrayList<String>();
         cuisines.add(SELECT_CUISINE_HINT);
         for (String cuisine: temporaryCuisines) {
             cuisines.add(cuisine);
         }
-
-        ArrayAdapter<String> cuisineAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_spinner_item,
-                cuisines
-        );
-
-        cuisineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        cuisineSpinner.setAdapter(cuisineAdapter);
+        setCuisineAdapter(cuisines);
 
         // Configuring recipeTagsInput
         // TODO
@@ -167,7 +163,112 @@ public class AddRecipe extends Fragment {
         submitBtn.setOnClickListener(this::onSubmit);
         root.findViewById(R.id.addIngredient).setOnClickListener(this::onAddIngredient);
 
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            if (bundle.containsKey("id")) {
+                loadData(bundle.getString("id"));
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Edit Recipe");
+            } else {
+                recipeForm.setVisibility(View.VISIBLE);
+            }
+        } else {
+            recipeForm.setVisibility(View.VISIBLE);
+        }
+
         return root;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void loadData(String id) {
+        ProgressBar dataLoadingBar = root.findViewById(R.id.dataLoadingBar);
+        dataLoadingBar.setVisibility(View.VISIBLE);
+
+        recipeCollectionRef.document(id)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            recipeId = id; // Confirming the recipe ID
+
+                            Map<String, Object> data = document.getData();
+
+                            // Populating the fields!
+                            recipeNameInput.setText(String.valueOf(data.get("Name")));
+                            if (data.containsKey("Cuisine")) {
+                                setCuisine(String.valueOf(data.get("Cuisine")));
+                            }
+
+                            Glide.with(recipeImg.getContext())
+                                    .load(String.valueOf(data.get("Image")))
+                                    .placeholder(R.drawable.recipe_placeholder)
+                                    .transition(DrawableTransitionOptions.withCrossFade())
+                                    .into(recipeImg);
+
+                            if (data.containsKey("Ingredients")) {
+                                for (Object ingredient: (ArrayList) data.get("Ingredients")) {
+                                    addIngredientChip(ingredient.toString());
+                                }
+                            }
+
+                            instructionInput.setText(String.valueOf(data.get("Instruction")));
+
+                            if (data.containsKey("Tags")) {
+                                List<String> tags = new ArrayList<String>();
+                                for (Object tag: (ArrayList) data.get("Tags")) {
+                                    tags.add(tag.toString());
+                                }
+
+                                recipeTagInput.setText(String.join(", ", tags));
+                            }
+
+                            dataLoadingBar.setVisibility(View.GONE);
+                            recipeForm.setVisibility(View.VISIBLE);
+
+                        } else {
+                            Toast.makeText(getActivity(), "No item found!", Toast.LENGTH_LONG).show();
+                        }
+
+                    } else {
+                        // We let the user to create a new recipe in such case
+                        dataLoadingBar.setVisibility(View.GONE);
+                        recipeForm.setVisibility(View.VISIBLE);
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Add Recipe");
+
+                        Log.d("Firestore failure", "Error getting document: ", task.getException());
+                    }
+                });
+    }
+
+    private void setCuisine(String cuisine) {
+        SpinnerAdapter cuisineAdapter = cuisineSpinner.getAdapter();
+        int cuisineAdapterLen = cuisineAdapter.getCount();
+        List<String> cuisines = new ArrayList<String>();
+        for (int index = 0; index < cuisineAdapterLen; index++) {
+            Object cuisineValue = cuisineAdapter.getItem(index);
+            String cuisineStr = cuisineValue.toString();
+            if (cuisineStr.equalsIgnoreCase(cuisine)) {
+                cuisineSpinner.setSelection(index);
+                return;
+            }
+            cuisines.add(cuisineStr);
+        }
+
+        cuisines.add(cuisine);
+        setCuisineAdapter(cuisines);
+
+        cuisineSpinner.setSelection(cuisineAdapterLen);
+    }
+
+    private void setCuisineAdapter(List<String> cuisines) {
+        ArrayAdapter<String> cuisineAdapter = new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_spinner_item,
+                cuisines
+        );
+
+        cuisineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        cuisineSpinner.setAdapter(cuisineAdapter);
     }
 
     // Add the typed input as an ingredient
@@ -191,6 +292,12 @@ public class AddRecipe extends Fragment {
             }
         }
 
+        addIngredientChip(ingredient);
+        ingredientInput.setText("");
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void addIngredientChip(String ingredient) {
         Chip chip = new Chip(getActivity());
         chip.setText(ingredient);
         chip.setId(root.generateViewId());
@@ -202,13 +309,11 @@ public class AddRecipe extends Fragment {
         });
 
         ingredientContainer.addView(chip);
-
-        ingredientInput.setText("");
     }
 
     // Handle submission
     private void onSubmit(View view) {
-        String name = ((EditText) root.findViewById(R.id.recipeName)).getText().toString();
+        String name = recipeNameInput.getText().toString();
         String tempCuisine = cuisineSpinner.getSelectedItem().toString();
         String cuisine = tempCuisine == SELECT_CUISINE_HINT ? "" : tempCuisine; // User can't choose the hint
 
@@ -219,7 +324,7 @@ public class AddRecipe extends Fragment {
             ingredients.add(chip.getText().toString());
         }
 
-        String instructions = ((EditText) root.findViewById(R.id.instructions)).getText().toString();
+        String instructions = instructionInput.getText().toString();
         // We already have imageUri
         List<String> tempTags = Arrays.asList(recipeTagInput.getText().toString().split(", "));
         List<String> tags = new ArrayList<String>();

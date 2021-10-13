@@ -44,11 +44,8 @@ public class Recipe_Item extends Fragment {
 
     private Button EditBtn;
 
-    public static final String NAME_KEY = "Name";
-    public static final String INSTRUCTION_KEY = "Instruction";
-
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference recipeCollectionRef = db.collection("recipes");
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference recipeCollectionRef = db.collection("recipes");
 
     private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("recipes/Greek lemon roast potatoes");
 
@@ -67,6 +64,7 @@ public class Recipe_Item extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,15 +78,25 @@ public class Recipe_Item extends Fragment {
         img = root.findViewById(R.id.Image);
         mIngredientTextView = root.findViewById(R.id.Ingredients);
 
+        Bundle bundle = this.getArguments();
+
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         CommentButton = root.findViewById(R.id.CommentsButton);
         CommentButton.setOnClickListener(this::Go_Comments);
 
         EditBtn = root.findViewById(R.id.Edit_Recipe);
-        EditBtn.setOnClickListener(this::Go_Edit);
+//        EditBtn.setOnClickListener(this::Go_Edit);
+        if (bundle.containsKey("id")) {
+            String id = bundle.getString("id");
+            EditBtn.setOnClickListener(v -> {
+                Bundle editRecipeBundle = new Bundle();
+                editRecipeBundle.putString("id", id);
+                Navigation.findNavController(v).navigate(R.id.addRecipe, editRecipeBundle);
+            });
 
-        loadItem();
+            loadItem(id);
+        }
 
         return root;
     }
@@ -99,13 +107,10 @@ public class Recipe_Item extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void loadItem() {
-        Bundle bundle = this.getArguments();
-
+    private void loadItem(String id) {
         // We will not load anything if no `id` has been passed
-        if (!bundle.containsKey("id")) return;
+        if (id.isEmpty()) return;
 
-        String id = bundle.getString("id");
         recipeCollectionRef.document(id)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -132,9 +137,8 @@ public class Recipe_Item extends Fragment {
                             Toast.makeText(getActivity(), "No item found!", Toast.LENGTH_LONG).show();
                         }
 
-                        Log.d("Firestore response", String.valueOf(task.getResult()));
                     } else {
-                        Log.d("Firestore failure", "Error getting documents: ", task.getException());
+                        Log.d("Firestore failure", "Error getting document: ", task.getException());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
