@@ -90,26 +90,26 @@
         android:textAllCaps="false"
         />
 
-    <Button
-        android:layout_below = "@+id/SubmitButton"
-        android:id="@+id/Recipe_Item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="160dp"
-        android:paddingLeft="30dp"
-        android:paddingTop="8dp"
-        android:paddingRight="30dp"
-        android:paddingBottom="8dp"
+<!--    <Button-->
+<!--        android:layout_below = "@+id/SubmitButton"-->
+<!--        android:id="@+id/Recipe_Item"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:minWidth="160dp"-->
+<!--        android:paddingLeft="30dp"-->
+<!--        android:paddingTop="8dp"-->
+<!--        android:paddingRight="30dp"-->
+<!--        android:paddingBottom="8dp"-->
 
-        android:layout_marginTop="@dimen/fab_margin"
-        android:layout_centerInParent="true"
+<!--        android:layout_marginTop="@dimen/fab_margin"-->
+<!--        android:layout_centerInParent="true"-->
 
-        android:text="Recipe item"
-        android:textColor="#17308E"
-        android:textSize="16sp"
-        app:strokeColor="@color/colorPrimaryDark"
-        app:strokeWidth="2dp"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:textAllCaps="false"
-        />
+<!--        android:text="Recipe item"-->
+<!--        android:textColor="#17308E"-->
+<!--        android:textSize="16sp"-->
+<!--        app:strokeColor="@color/colorPrimaryDark"-->
+<!--        app:strokeWidth="2dp"-->
+<!--        style="@style/Widget.MaterialComponents.Button.OutlinedButton"-->
+<!--        android:textAllCaps="false"-->
+<!--        />-->
 </RelativeLayout>

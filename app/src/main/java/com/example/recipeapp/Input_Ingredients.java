@@ -29,7 +29,7 @@ public class Input_Ingredients extends Fragment {
     EditText Fifth_Ingredient;
     private Button button;
 
-    private Button itembutton;
+//    private Button itembutton;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,8 +87,8 @@ public class Input_Ingredients extends Fragment {
         Third_Ingredient = root.findViewById(R.id.Third_Ingredient);
         Fourth_Ingredient = root.findViewById(R.id.Fourth_Ingredient);
         Fifth_Ingredient = root.findViewById(R.id.Fifth_Ingredient);
-        itembutton = root.findViewById(R.id.Recipe_Item);
-        itembutton.setOnClickListener(this::onItem);
+//        itembutton = root.findViewById(R.id.Recipe_Item);
+//        itembutton.setOnClickListener(this::onItem);
         button.setOnClickListener(this::onSubmit);
         return root;
     }
