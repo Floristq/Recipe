@@ -1,5 +1,6 @@
 package com.example.recipeapp;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -44,6 +45,8 @@ public class Recipe_Item extends Fragment {
 
     private Button EditBtn;
 
+    private Button MapBtn;
+
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference recipeCollectionRef = db.collection("recipes");
 
@@ -82,6 +85,16 @@ public class Recipe_Item extends Fragment {
 
         CommentButton = root.findViewById(R.id.CommentsButton);
 //        CommentButton.setOnClickListener(this::Go_Comments);
+
+        // Direct to Google Maps
+        MapBtn = root.findViewById(R.id.map);
+        MapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MapActivity.class);
+                startActivity(intent);
+            }
+        });
 
         EditBtn = root.findViewById(R.id.Edit_Recipe);
 
