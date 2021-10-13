@@ -123,7 +123,7 @@ public class ViewRecipe extends Fragment {
         // Getting selected cuisines
         List<Integer> ids = cuisineContainer.getCheckedChipIds();
         List<CharSequence> selectedCuisines = new ArrayList<CharSequence>();
-        for (Integer id:ids){
+        for (Integer id: ids){
             Chip chip = cuisineContainer.findViewById(id);
             selectedCuisines.add(chip.getText());
         }

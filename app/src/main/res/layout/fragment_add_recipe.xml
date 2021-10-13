@@ -24,7 +24,7 @@
             android:id="@+id/recipeName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="-4dp"
+            android:layout_marginStart="-4dp"
             android:hint="@string/recipe_name_hint"
             android:inputType="textPersonName"
             />
@@ -42,7 +42,59 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginLeft="-8dp"
+            android:layout_marginStart="-8dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:text="Ingredients"
+            android:textSize="18sp"
+            />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <EditText
+                android:id="@+id/ingredient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textShortMessage"
+                android:hint="Type to add ingredients"
+                android:layout_marginStart="-4dp"
+                />
+
+            <View
+                android:layout_width="0sp"
+                android:layout_height="0sp"
+                android:layout_weight="1"
+                />
+
+            <!--
+                TODO
+                - Rounded corners
+                - Spacious / padded ripple effect
+            -->
+            <Button
+                android:id="@+id/addIngredient"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="-30dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:background="@android:drawable/ic_input_add"
+                app:backgroundTint="#000"
+                />
+        </LinearLayout>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/ingredientContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             />
 
         <TextView
@@ -57,7 +109,7 @@
             android:id="@+id/instructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="-4dp"
+            android:layout_marginStart="-4dp"
             android:hint="@string/recipe_instruction_hint"
             android:inputType="textMultiLine|textPersonName"
             android:minHeight="48dp"

@@ -3,10 +3,12 @@ package com.example.recipeapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -32,6 +34,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -51,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -62,6 +66,8 @@ import java.util.Map;
 public class AddRecipe extends Fragment {
 
     private View root = null;
+
+    private String recipeId;
 
     // TODO
     // Refactor & create common source to use the database
@@ -76,6 +82,7 @@ public class AddRecipe extends Fragment {
     private MultiAutoCompleteTextView recipeTagInput;
     private Button submitBtn;
     private Spinner cuisineSpinner;
+    private ChipGroup ingredientContainer;
 
     private AutoCompleteAdapter recipeTagsAdapter;
     private Uri imageUri = null;
@@ -123,6 +130,7 @@ public class AddRecipe extends Fragment {
         recipeTagInput = root.findViewById(R.id.recipeTagInput);
         submitBtn = root.findViewById(R.id.submitBtn);
         cuisineSpinner = root.findViewById(R.id.cuisine);
+        ingredientContainer = root.findViewById(R.id.ingredientContainer);
 
         List<String> cuisines =  new ArrayList<String>();
         cuisines.add(SELECT_CUISINE_HINT);
@@ -157,8 +165,45 @@ public class AddRecipe extends Fragment {
         cameraBtn.setOnClickListener(this::onCameraBtnClick);
         galleryBtn.setOnClickListener(this::onGalleryBtnClick);
         submitBtn.setOnClickListener(this::onSubmit);
+        root.findViewById(R.id.addIngredient).setOnClickListener(this::onAddIngredient);
 
         return root;
+    }
+
+    // Add the typed input as an ingredient
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void onAddIngredient(View view) {
+        EditText ingredientInput = root.findViewById(R.id.ingredient);
+        String ingredient = ingredientInput.getText().toString().trim();
+
+        if (ingredient.isEmpty()) {
+            Toast.makeText(getActivity(), "Please provide some input first!", Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            String ingredientLC = ingredient.toLowerCase();
+            List<Integer> chipIds = ingredientContainer.getCheckedChipIds();
+            for (Integer chipId: chipIds) {
+                Chip chip = ingredientContainer.findViewById(chipId);
+                if (ingredient.equalsIgnoreCase(chip.getText().toString())) {
+                    Toast.makeText(getActivity(), "Provided ingredient already added!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        }
+
+        Chip chip = new Chip(getActivity());
+        chip.setText(ingredient);
+        chip.setId(root.generateViewId());
+        chip.setCheckable(true);
+        chip.setChecked(true);
+        chip.setCloseIconVisible(true);
+        chip.setOnCloseIconClickListener(v -> {
+            ingredientContainer.removeView(v);
+        });
+
+        ingredientContainer.addView(chip);
+
+        ingredientInput.setText("");
     }
 
     // Handle submission
@@ -166,6 +211,14 @@ public class AddRecipe extends Fragment {
         String name = ((EditText) root.findViewById(R.id.recipeName)).getText().toString();
         String tempCuisine = cuisineSpinner.getSelectedItem().toString();
         String cuisine = tempCuisine == SELECT_CUISINE_HINT ? "" : tempCuisine; // User can't choose the hint
+
+        List<Integer> ingredientChipIds = ingredientContainer.getCheckedChipIds();
+        List<String> ingredients = new ArrayList<String>();
+        for (Integer id: ingredientChipIds){
+            Chip chip = ingredientContainer.findViewById(id);
+            ingredients.add(chip.getText().toString());
+        }
+
         String instructions = ((EditText) root.findViewById(R.id.instructions)).getText().toString();
         // We already have imageUri
         List<String> tempTags = Arrays.asList(recipeTagInput.getText().toString().split(", "));
@@ -176,6 +229,7 @@ public class AddRecipe extends Fragment {
 
         if (name.isEmpty() ||
                 cuisine.isEmpty() ||
+                ingredients.isEmpty() ||
                 instructions.isEmpty() ||
                 imageUri == null ||
                 tags.isEmpty()) {
@@ -212,6 +266,7 @@ public class AddRecipe extends Fragment {
                     Map<String, Object> data = new HashMap<>();
                     data.put("Name", name);
                     data.put("Cuisine", cuisine);
+                    data.put("Ingredients", ingredients);
                     data.put("Instruction", instructions);
                     data.put("Image", downloadUri.toString());
                     data.put("Tags", tags);
@@ -222,7 +277,7 @@ public class AddRecipe extends Fragment {
                                     // DocumentReference document = task.getResult();
 
                                     Toast.makeText(getActivity(), "Recipe `" + name + "` - added successfully!" , Toast.LENGTH_LONG).show();
-                                    Navigation.findNavController(view).navigate(R.id.nav_home);
+                                    Navigation.findNavController(view).popBackStack();
                                 } else {
                                     Log.d("Firestore failure", "Error adding document: ", task.getException());
                                 }
