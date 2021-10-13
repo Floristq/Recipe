@@ -31,7 +31,7 @@
         android:id="@+id/addRecipe"
         android:name="com.example.recipeapp.AddEditRecipe"
         android:label="Add Recipe"
-        tools:layout="@layout/fragment_add_recipe" />
+        tools:layout="@layout/fragment_add_edit_recipe" />
     <fragment
         android:id="@+id/viewRecipe"
         android:name="com.example.recipeapp.ViewRecipe"
@@ -47,9 +47,4 @@
         android:name="com.example.recipeapp.Comments"
         android:label="Comments"
         tools:layout="@layout/fragment_comments" />
-    <fragment
-        android:id="@+id/edit_Instruction"
-        android:name="com.example.recipeapp.Edit_Instruction"
-        android:label="Edit instruction"
-        tools:layout="@layout/fragment_edit_instruction" />
 </navigation>

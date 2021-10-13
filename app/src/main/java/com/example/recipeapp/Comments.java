@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +20,17 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDateTime;
@@ -38,6 +43,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -60,6 +67,7 @@ public class Comments extends Fragment {
 
     private View root = null;
 
+    private ListenerRegistration registration;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -135,24 +143,41 @@ public class Comments extends Fragment {
                 LocalDateTime now = LocalDateTime.now(ZoneId.of("GMT+11:00"));
 
                 map.put("Author", dtf.format(now) + " - " + personName + ":");
-//                map.put("Author", personName);
                 map.put("Content",editText.getText().toString());
 
-                db.collection("recipes/Greek lemon roast potatoes/comments").document().set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                db.collection("recipes/Greek lemon roast potatoes/comments").document().set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()){
+//                            Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                });
+
+                db.collection("recipes/Greek lemon roast potatoes/comments").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
-                        }
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
+
                     }
                 });
+
+
 
             }
         });
 
-        db.collection("recipes/Greek lemon roast potatoes/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        Query query = db.collection("recipes/Greek lemon roast potatoes/comments");
+
+        registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
+            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                if (e != null) {
+                    Log.w(TAG, "listen:error", e);
+                    return;
+                }
+
                 namesList.clear();
                 commentsList.clear();
 
@@ -200,6 +225,16 @@ public class Comments extends Fragment {
         });
 
         return root;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (registration!= null) {
+            registration.remove();
+            registration = null;
+        }
     }
 
 

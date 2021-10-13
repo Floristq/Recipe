@@ -47,8 +47,6 @@ public class Recipe_Item extends Fragment {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference recipeCollectionRef = db.collection("recipes");
 
-    private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("recipes/Greek lemon roast potatoes");
-
     private View root = null;
 
     public Recipe_Item() {
@@ -83,10 +81,10 @@ public class Recipe_Item extends Fragment {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         CommentButton = root.findViewById(R.id.CommentsButton);
-        CommentButton.setOnClickListener(this::Go_Comments);
+//        CommentButton.setOnClickListener(this::Go_Comments);
 
         EditBtn = root.findViewById(R.id.Edit_Recipe);
-//        EditBtn.setOnClickListener(this::Go_Edit);
+
         if (bundle.containsKey("id")) {
             String id = bundle.getString("id");
             EditBtn.setOnClickListener(v -> {
@@ -98,13 +96,24 @@ public class Recipe_Item extends Fragment {
             loadItem(id);
         }
 
+        if (bundle.containsKey("id")) {
+            String id = bundle.getString("id");
+            CommentButton.setOnClickListener(v -> {
+                Bundle commentBundle = new Bundle();
+                commentBundle.putString("id", id);
+                Navigation.findNavController(v).navigate(R.id.comments, commentBundle);
+            });
+
+            loadItem(id);
+        }
+
         return root;
     }
 
-    private void Go_Comments(View view){
-        Bundle bundle = new Bundle();
-        Navigation.findNavController(view).navigate(R.id.comments, bundle);
-    }
+//    private void Go_Comments(View view){
+//        Bundle bundle = new Bundle();
+//        Navigation.findNavController(view).navigate(R.id.comments, bundle);
+//    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadItem(String id) {
@@ -149,8 +158,4 @@ public class Recipe_Item extends Fragment {
                 });
     }
 
-    private void Go_Edit(View view){
-        Bundle bundle = new Bundle();
-        Navigation.findNavController(view).navigate(R.id.edit_Instruction, bundle);
-    }
 }
