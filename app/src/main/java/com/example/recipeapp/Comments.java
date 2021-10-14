@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -15,15 +16,18 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -32,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -58,6 +63,11 @@ public class Comments extends Fragment {
     EditText editText;
     ListView listView;
     String personName;
+
+    String recipeId;
+
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference recipeCollectionRef = db.collection("recipes");
 
     private FirebaseAuth mFirebaseAuth;
 
@@ -112,8 +122,25 @@ public class Comments extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void loadData(String id) {
+        recipeCollectionRef.document(id)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            recipeId = id; // Confirming the recipe ID
+                        } else {
+                            Toast.makeText(getActivity(), "No item found!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
 
 
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -125,7 +152,15 @@ public class Comments extends Fragment {
         editText = root.findViewById(R.id.commentText);
         listView = root.findViewById(R.id.listview);
 
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            if (bundle.containsKey("id")) {
+                loadData(bundle.getString("id"));
+            }
+        }
+
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mFirebaseAuth.getCurrentUser();
@@ -137,39 +172,26 @@ public class Comments extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
+
                 Map<String,String> map = new HashMap<>();
 
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YY HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now(ZoneId.of("GMT+11:00"));
 
                 map.put("Author", dtf.format(now) + " - " + personName + ":");
-                map.put("Content",editText.getText().toString());
+                map.put("Content", editText.getText().toString());
 
-//                db.collection("recipes/Greek lemon roast potatoes/comments").document().set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()){
-//                            Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                });
-
-                db.collection("recipes/Greek lemon roast potatoes/comments").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                db.collection("recipes/" + recipeId + "/comments").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
 
                     }
                 });
-
-
-
             }
         });
 
-        Query query = db.collection("recipes/Greek lemon roast potatoes/comments");
-
-        registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        registration = db.collection("recipes/" + recipeId + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException e) {
 
@@ -226,6 +248,8 @@ public class Comments extends Fragment {
 
         return root;
     }
+
+
 
     @Override
     public void onStop() {
