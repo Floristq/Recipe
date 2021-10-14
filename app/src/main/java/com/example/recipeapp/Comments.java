@@ -118,27 +118,7 @@ public class Comments extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void loadData(String id) {
-        recipeCollectionRef.document(id)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            recipeId = id; // Confirming the recipe ID
-                        } else {
-                            Toast.makeText(getActivity(), "No item found!", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -153,10 +133,8 @@ public class Comments extends Fragment {
         listView = root.findViewById(R.id.listview);
 
         Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            if (bundle.containsKey("id")) {
-                loadData(bundle.getString("id"));
-            }
+        if (bundle != null && bundle.containsKey("id")) {
+            recipeId = bundle.getString("id");
         }
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
