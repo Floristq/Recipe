@@ -67,7 +67,6 @@ public class Comments extends Fragment {
     String recipeId;
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference recipeCollectionRef = db.collection("recipes");
 
     private FirebaseAuth mFirebaseAuth;
 
