@@ -19,7 +19,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:text="Name"
             android:textSize="20sp"
-            android:textColor="#000"
+            android:textColor="#030001"
+            android:textStyle="bold"
             />
     
         <ImageView
@@ -36,7 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fab_margin"
             android:textSize="19dp"
-            android:textColor="#000"
+            android:textColor="#030001"
+            android:textStyle="bold"
             android:text = "Ingredients:"
             />
 
@@ -53,7 +55,8 @@
             android:text="Instructions:"
             android:layout_marginTop="@dimen/fab_margin"
             android:textSize="19dp"
-            android:textColor="#000"
+            android:textColor="#030001"
+            android:textStyle="bold"
             />
 
         <TextView
