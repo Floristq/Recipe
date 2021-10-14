@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,108 +8,173 @@
     android:paddingRight="@dimen/fab_margin"
     tools:context=".Input_Ingredients">
 
-    <EditText
-        android:layout_below = "@+id/textView2"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="16dp"
-        android:id = "@+id/First_Ingredient"
-        android:hint="First Ingredient (Mandatory)"/>
 
-    <EditText
-        android:layout_below = "@+id/First_Ingredient"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:layout_width="match_parent"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/TextInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:id = "@+id/Second_Ingredient"
-        android:hint="second Ingredient (Mandatory)"/>
-
-    <EditText
-        android:layout_below = "@+id/Second_Ingredient"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:id = "@+id/Third_Ingredient"
-        android:hint="Third Ingredient (Optional)" />
-
-    <EditText
-        android:layout_below = "@+id/Third_Ingredient"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:id = "@+id/Fourth_Ingredient"
-        android:hint="Fourth Ingredient (Optional)" />
-
-    <EditText
-        android:layout_below = "@+id/Fourth_Ingredient"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:id = "@+id/Fifth_Ingredient"
-        android:hint="Fifth Ingredient (Optional)" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="What ingredients do you have?"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="102dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:hint="First Ingredient"
+        app:helperText="required*"
+        app:helperTextTextColor="#FC0E2B"
+        app:counterMaxLength="30"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/First_Ingredient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="30" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/TextInputLayout2"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="192dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:hint="Second Ingredient"
+        app:helperText="required*"
+        app:helperTextTextColor="#FC0E2B"
+        app:counterMaxLength="30"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/Second_Ingredient"
+            android:maxLength="30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/TextInputLayout3"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="282dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:hint="Third Ingredient"
+
+        app:counterMaxLength="30"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/Third_Ingredient"
+            android:maxLength="30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/TextInputLayout4"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="362dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:hint="Fourth Ingredient"
+
+        app:counterMaxLength="30"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/Fourth_Ingredient"
+            android:maxLength="30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/TextInputLayout5"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="442dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:hint="Fifth Ingredient"
+
+        app:counterMaxLength="30"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/Fifth_Ingredient"
+            android:maxLength="30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:layout_below = "@+id/Fifth_Ingredient"
         android:id="@+id/SubmitButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
         android:minWidth="160dp"
+
         android:paddingLeft="30dp"
+
         android:paddingTop="8dp"
         android:paddingRight="30dp"
         android:paddingBottom="8dp"
-
-        android:layout_marginTop="30dp"
-        android:layout_centerInParent="true"
-
         android:text="Submit"
-        android:textColor="#17308E"
-        android:textSize="16sp"
-        app:strokeColor="@color/colorPrimaryDark"
-        app:strokeWidth="2dp"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-
         android:textAllCaps="false"
-        />
+        android:textColor="#17308E"
 
-<!--    <Button-->
-<!--        android:layout_below = "@+id/SubmitButton"-->
-<!--        android:id="@+id/Recipe_Item"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:minWidth="160dp"-->
-<!--        android:paddingLeft="30dp"-->
-<!--        android:paddingTop="8dp"-->
-<!--        android:paddingRight="30dp"-->
-<!--        android:paddingBottom="8dp"-->
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TextInputLayout5"
+        app:strokeColor="@color/colorPrimaryDark"
+        app:strokeWidth="2dp" />
 
-<!--        android:layout_marginTop="@dimen/fab_margin"-->
-<!--        android:layout_centerInParent="true"-->
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Input your ingredients below!"
+        android:textSize="30sp"
+        android:textColor="#030001"
+        app:layout_constraintBottom_toTopOf="@+id/TextInputLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.554" />
 
-<!--        android:text="Recipe item"-->
-<!--        android:textColor="#17308E"-->
-<!--        android:textSize="16sp"-->
-<!--        app:strokeColor="@color/colorPrimaryDark"-->
-<!--        app:strokeWidth="2dp"-->
-<!--        style="@style/Widget.MaterialComponents.Button.OutlinedButton"-->
-<!--        android:textAllCaps="false"-->
-<!--        />-->
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
