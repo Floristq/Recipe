@@ -1,11 +1,18 @@
 package com.example.recipeapp;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -47,6 +54,8 @@ public class Recipe_Item extends Fragment {
 
     private Button MapBtn;
 
+    private int LOCATION_PERMISSION_CODE = 1001;
+
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference recipeCollectionRef = db.collection("recipes");
 
@@ -86,13 +95,31 @@ public class Recipe_Item extends Fragment {
         CommentButton = root.findViewById(R.id.CommentsButton);
 //        CommentButton.setOnClickListener(this::Go_Comments);
 
-        // Direct to Google Maps
+        // Direct user to Google Maps
         MapBtn = root.findViewById(R.id.map);
         MapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MapActivity.class);
-                startActivity(intent);
+                // if the permission is open
+                if (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED){
+                    // Create a Uri from an intent string. Use the result to create an Intent.
+                    Uri gmmIntentUri = Uri.parse("geo:0,0?q=grocery&z=17");
+
+                    // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    // Make the Intent explicit by setting the Google Maps package
+                    mapIntent.setPackage("com.google.android.apps.maps");
+
+                    if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        // Attempt to start an activity that can handle the Intent
+                        startActivity(mapIntent);
+                    }
+                }
+                // if the permission if off
+                else {
+                    requestLocationPermission();
+                }
             }
         });
 
@@ -121,6 +148,36 @@ public class Recipe_Item extends Fragment {
         }
 
         return root;
+    }
+
+    // request permission method
+    private void requestLocationPermission(){
+        // show a pop up dialog to tell user why we need this permission
+        // (in case the user denied before but try to permit again)
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)){
+            // Pop up dialog
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Permission needed")
+                    .setMessage("Location permission is needed because of using the Google Map service")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
+                            requestPermissions(permissions, LOCATION_PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+
+        }else{
+            String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
+            requestPermissions(permissions, LOCATION_PERMISSION_CODE);
+        }
     }
 
 //    private void Go_Comments(View view){
