@@ -150,7 +150,9 @@ public class Comments extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Map<String,String> map = new HashMap<>();
+                if (!editText.getText().toString().equals("")){
+
+                    Map<String, String> map = new HashMap<>();
 
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YY HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now(ZoneId.of("GMT+11:00"));
@@ -162,10 +164,13 @@ public class Comments extends Fragment {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }else{
+                    Toast.makeText(getActivity(), "Your comment can't be empty!", Toast.LENGTH_LONG).show();
+                }
+        }
 
-                    }
-                });
-            }
         });
 
         registration = db.collection("recipes/" + recipeId + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
