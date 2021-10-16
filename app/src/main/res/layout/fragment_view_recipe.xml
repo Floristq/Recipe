@@ -70,7 +70,8 @@
             android:layout_height="wrap_content"
             android:text="Cuisines"
             android:textSize="19dp"
-            android:textColor="#000"
+            android:textColor="#030001"
+            android:textStyle="bold"
             />
 
         <com.google.android.material.chip.ChipGroup
