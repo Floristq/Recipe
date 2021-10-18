@@ -101,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:includeFontPadding="false"
-                    android:text="13"
+                    android:text="-"
                     android:textColor="#fff"
                     android:textSize="20sp" />
 
