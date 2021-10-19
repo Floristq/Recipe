@@ -1,5 +1,6 @@
 package com.example.recipeapp;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -50,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 /**
@@ -169,7 +172,16 @@ public class Comments extends Fragment {
                 }else{
                     Toast.makeText(getActivity(), "Your comment can't be empty!", Toast.LENGTH_LONG).show();
                 }
-        }
+
+                try {
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                    editText.setText("");
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+
+            }
 
         });
 
