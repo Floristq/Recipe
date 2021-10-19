@@ -178,7 +178,7 @@ public class Comments extends Fragment {
                     imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     editText.setText("");
                 } catch (Exception e) {
-                    // TODO: handle exception
+                    Toast.makeText(getActivity(), "Error: " + e, Toast.LENGTH_LONG).show();
                 }
 
             }
