@@ -32,6 +32,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseFirestore db;
     private Integer commentSum = 0;
+    private Integer recipeSum = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class ProfileFragment extends Fragment {
         final TextInputLayout user_name = root.findViewById(R.id.profile_textfield_name);
         final ImageView img = root.findViewById(R.id.profile_image);
         final TextView commentCount = root.findViewById(R.id.profile_comment_num);
+        final TextView recipeCount = root.findViewById(R.id.profile_recipe_num);
 
         // Get the user info from firebase
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -57,8 +59,6 @@ public class ProfileFragment extends Fragment {
             email.getEditText().setText(personEmail);
             Glide.with(this).load(user.getPhotoUrl()).into(img);
 
-            // TODO: extract data recipe num and comment num from firebase
-
             // Initialize recipe list
             ArrayList<String> recipeList = new ArrayList<String>();
 
@@ -71,7 +71,15 @@ public class ProfileFragment extends Fragment {
                             if (task.isSuccessful()){
                                 for (QueryDocumentSnapshot document: task.getResult()){
                                     recipeList.add(document.getId());
+
+                                    // count the recipe number of user
+                                    String author = document.getString("Author");
+                                    if (author!=null && author.equals(personName)){
+                                        recipeSum++;
+                                    }
                                 }
+                                // set the recipe count to the textview
+                                recipeCount.setText(recipeSum.toString());
 
                                 // get comments from each recipe
                                 for (int i=0; i<recipeList.size(); i++){
@@ -99,7 +107,6 @@ public class ProfileFragment extends Fragment {
                                                 }
                                             });
                                 }
-                                // count the recipe number of user
                             }else{
                                 Log.d("debug", "Error getting documents");
                                 Log.d("debug", task.getException().toString());
