@@ -2,11 +2,13 @@ package com.example.recipeapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -20,10 +22,11 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "SignInActivity";
     ImageView signin;
+    TextView register;
     int RC_SIGN_IN = 0;
     GoogleSignInClient mGoogleSignInClient;
 
@@ -35,10 +38,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        register = (TextView) findViewById(R.id.createNewAccount);
+        register.setOnClickListener(this);
         signin = findViewById(R.id.sign_in_button);
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent i = new Intent(Intent.makeMainActivity(new ComponentName(LoginActivity.this, SignupActivity.class)));
+                startActivity(i);
                 switch (view.getId()) {
                     case R.id.sign_in_button:
                         signIn();
@@ -103,5 +110,11 @@ public class LoginActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(this, e -> Toast.makeText(LoginActivity.this, "Authentication failed.",
                         Toast.LENGTH_SHORT).show());
+    }
+
+    @Override
+    public void onClick(View view) {
+        Intent i = new Intent(Intent.makeMainActivity(new ComponentName(LoginActivity.this, SignupActivity.class)));
+        startActivity(i);
     }
 }
