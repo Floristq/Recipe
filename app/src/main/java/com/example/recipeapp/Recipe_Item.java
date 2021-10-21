@@ -93,7 +93,7 @@ public class Recipe_Item extends Fragment {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         CommentButton = root.findViewById(R.id.CommentsButton);
-//        CommentButton.setOnClickListener(this::Go_Comments);
+        // CommentButton.setOnClickListener(this::Go_Comments);
 
         // Direct user to Google Maps
         MapBtn = root.findViewById(R.id.map);

@@ -132,7 +132,8 @@
             <EditText
                 android:id="@+id/instructions"
                 android:layout_width="match_parent"
-                android:layout_height="257dp"
+                android:layout_height="wrap_content"
+                android:minHeight="90dp"
                 android:ems="10"
                 android:hint="@string/recipe_instruction_hint"
                 android:gravity="start|top"

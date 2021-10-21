@@ -402,24 +402,32 @@ public class AddEditRecipe extends Fragment {
     private void uploadDocument(Map<String, Object> data) {
 
         if (recipeId != null) {
-            recipeCollectionRef.add(data).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Recipe `" + data.get("Name") + "` - added successfully!", Toast.LENGTH_LONG).show();
-                    Navigation.findNavController(root).popBackStack();
-                } else {
-                    Log.d("Firestore failure", "Error adding document: ", task.getException());
-                }
-            });
-        } else {
             recipeCollectionRef.document(recipeId).update(data)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Toast.makeText(getActivity(), "Recipe `" + data.get("Name") + "` - updated successfully!", Toast.LENGTH_LONG).show();
+                            goToRecipeItem(recipeId);
                         } else {
                             Log.d("Firestore failure", "Error adding document: ", task.getException());
                         }
                     });
+        } else {
+            recipeCollectionRef.add(data).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getActivity(), "Recipe `" + data.get("Name") + "` - added successfully!", Toast.LENGTH_LONG).show();
+                    goToRecipeItem(task.getResult().getId());
+                } else {
+                    Log.d("Firestore failure", "Error adding document: ", task.getException());
+                }
+            });
         }
+    }
+
+    private void goToRecipeItem(String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+
+        Navigation.findNavController(root).navigate(R.id.recipe_Item, bundle);
     }
 
     // TODO
