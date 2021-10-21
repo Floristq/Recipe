@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 
 import com.example.recipeapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -113,6 +114,12 @@ public class ProfileFragment extends Fragment {
                             }
                         }
                     });
+
+            ((CardView) recipeCount.getParent().getParent()).setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("ownRecipeOnly", true);
+                Navigation.findNavController(v).navigate(R.id.viewRecipe, bundle);
+            });
         }
         return root;
     }
