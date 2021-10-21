@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/Edit_Recipe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                 android:textSize="16sp"
                 app:strokeColor="@color/colorPrimaryDark"
                 app:strokeWidth="2dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/MaterialButtonStyle"
                 />
 
             <View

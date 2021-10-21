@@ -28,6 +28,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -58,8 +60,12 @@ public class Recipe_Item extends Fragment {
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference recipeCollectionRef = db.collection("recipes");
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
+    private final FirebaseUser user = auth.getCurrentUser();
 
     private View root = null;
+
+    private String recipeId = null;
 
     public Recipe_Item() {
         // Required empty public constructor
@@ -124,16 +130,12 @@ public class Recipe_Item extends Fragment {
         });
 
         EditBtn = root.findViewById(R.id.Edit_Recipe);
+        EditBtn.setEnabled(false);
+        EditBtn.setOnClickListener(this::onEdit);
 
         if (bundle.containsKey("id")) {
-            String id = bundle.getString("id");
-            EditBtn.setOnClickListener(v -> {
-                Bundle editRecipeBundle = new Bundle();
-                editRecipeBundle.putString("id", id);
-                Navigation.findNavController(v).navigate(R.id.addRecipe, editRecipeBundle);
-            });
-
-            loadItem(id);
+            recipeId = bundle.getString("id");
+            loadItem(recipeId);
         }
 
         if (bundle.containsKey("id")) {
@@ -188,7 +190,7 @@ public class Recipe_Item extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadItem(String id) {
         // We will not load anything if no `id` has been passed
-        if (id.isEmpty()) return;
+        if (id.isEmpty() || id == null) return;
 
         recipeCollectionRef.document(id)
                 .get()
@@ -212,6 +214,11 @@ public class Recipe_Item extends Fragment {
                             }
                             mInstructionTextView.setText(String.valueOf(data.get("Instruction")));
 
+                            // Only the author of the recipe can edit it
+                            if (String.valueOf(data.get("AuthorEmail")).equals(user.getEmail())) {
+                                EditBtn.setEnabled(true);
+                            }
+
                         } else {
                             Toast.makeText(getActivity(), "No item found!", Toast.LENGTH_LONG).show();
                         }
@@ -226,6 +233,13 @@ public class Recipe_Item extends Fragment {
                         Toast.makeText(getActivity(), "Unavailable to get data from firebase!", Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    private void onEdit(View v) {
+        Bundle editRecipeBundle = new Bundle();
+        editRecipeBundle.putString("id", recipeId);
+
+        Navigation.findNavController(v).navigate(R.id.addRecipe, editRecipeBundle);
     }
 
 }
