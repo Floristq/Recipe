@@ -73,8 +73,8 @@ public class ProfileFragment extends Fragment {
                                     recipeList.add(document.getId());
 
                                     // count the recipe number of user
-                                    String author = document.getString("Author");
-                                    if (author!=null && author.equals(personName)){
+                                    String authorEmail = document.getString("AuthorEmail");
+                                    if (authorEmail != null && authorEmail.equals(personEmail)){
                                         recipeSum++;
                                     }
                                 }

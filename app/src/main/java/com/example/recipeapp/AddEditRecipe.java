@@ -38,6 +38,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -69,6 +71,8 @@ public class AddEditRecipe extends Fragment {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final CollectionReference recipeCollectionRef = db.collection("recipes");
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
+    private final FirebaseUser user = auth.getCurrentUser();
 
     private FloatingActionButton cameraBtn;
     private FloatingActionButton galleryBtn;
@@ -356,6 +360,7 @@ public class AddEditRecipe extends Fragment {
             data.put("Instruction", instructions);
             data.put("Tags", tags);
 
+
             if (imageUri == null) {
                 data.put("Image", serverReceivedImageUrl);
                 uploadDocument(data);
@@ -412,6 +417,8 @@ public class AddEditRecipe extends Fragment {
                         }
                     });
         } else {
+            data.put("AuthorEmail", user.getEmail());
+
             recipeCollectionRef.add(data).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(getActivity(), "Recipe `" + data.get("Name") + "` - added successfully!", Toast.LENGTH_LONG).show();
