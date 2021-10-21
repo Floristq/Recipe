@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,8 @@ import android.widget.Button;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -37,6 +40,8 @@ public class ViewRecipe extends Fragment {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference recipeCollectionRef = db.collection("recipes");
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
+    private final FirebaseUser user = auth.getCurrentUser();
 
     // TODO
     // Remove temporaryCuisines and use server/firebase retrieved tags
@@ -49,6 +54,8 @@ public class ViewRecipe extends Fragment {
     private ChipGroup cuisineContainer;
     private RecyclerView recipeListContainer;
     private Button searchRecipeBtn;
+
+    private boolean ownRecipeOnly = false;
 
     public ViewRecipe() {
         // Required empty public constructor
@@ -74,28 +81,6 @@ public class ViewRecipe extends Fragment {
         cuisineContainer = root.findViewById(R.id.cuisineContainer);
         Activity activity = getActivity();
 
-        Bundle bundle = this.getArguments();
-//        String Ingredient1 = bundle.getString("Ingredient1");
-//        String Ingredient2 = bundle.getString("Ingredient2");
-//
-//        if (!bundle.getString("Ingredient3").equals("")){
-//            String Ingredient3 = bundle.getString("Ingredient3");
-//        }else{
-//            String Ingredient3 = "";
-//        }
-//
-//        if (!bundle.getString("Ingredient4").equals("")){
-//            String Ingredient4 = bundle.getString("Ingredient4");
-//        }else{
-//            String Ingredient4 = "";
-//        }
-//
-//        if (!bundle.getString("Ingredient5").equals("")){
-//            String Ingredient5 = bundle.getString("Ingredient5");
-//        }else{
-//            String Ingredient5 = "";
-//        }
-
         for (String cuisine: temporaryCuisines) {
             Chip chip = new Chip(activity);
             chip.setText(cuisine);
@@ -106,6 +91,14 @@ public class ViewRecipe extends Fragment {
         }
 
         searchRecipeBtn.setOnClickListener(this::onSearch);
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            if (bundle.containsKey("ownRecipeOnly")) {
+                ownRecipeOnly = bundle.getBoolean("ownRecipeOnly");
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My Recipes");
+            }
+        }
 
         loadRecipeList();
 
@@ -131,15 +124,17 @@ public class ViewRecipe extends Fragment {
         Task<QuerySnapshot> snap;
 
         // Building query and subsequent query snapshot
-        if (selectedCuisines.size() > 0) {
-            snap = recipeCollectionRef
-                    .whereIn("Cuisine", selectedCuisines)
-                    .get();
-        } else {
-            snap = recipeCollectionRef
-                    // .whereNotEqualTo("Image", "")
-                    .get();
+        Query query = recipeCollectionRef;
+
+        if (ownRecipeOnly) {
+            query = query.whereEqualTo("AuthorEmail", user.getEmail());
         }
+
+        if (selectedCuisines.size() > 0) {
+            query = query.whereIn("Cuisine", selectedCuisines);
+        }
+
+        snap = query.get();
 
         snap.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

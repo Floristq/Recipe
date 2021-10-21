@@ -45,15 +45,18 @@ public class HomeFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.input_Ingredients);
         });
 
+        binding.buttonMyRecipe.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("ownRecipeOnly", true);
+            Navigation.findNavController(v).navigate(R.id.viewRecipe, bundle);
+        });
+
         binding.buttonAddRecipe.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.addRecipe);
         });
 
         binding.buttonViewRecipe.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("Ingredient1", "");
-            bundle.putString("Ingredient2", "");
-            Navigation.findNavController(v).navigate(R.id.viewRecipe, bundle);
+            Navigation.findNavController(v).navigate(R.id.viewRecipe);
         });
     }
 
