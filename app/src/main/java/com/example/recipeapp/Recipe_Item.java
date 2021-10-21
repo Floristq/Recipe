@@ -22,6 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +66,8 @@ public class Recipe_Item extends Fragment {
     private final FirebaseUser user = auth.getCurrentUser();
 
     private View root = null;
+    private ProgressBar dataLoadingBar;
+    private LinearLayout recipeContainer;
 
     private String recipeId = null;
 
@@ -93,6 +97,8 @@ public class Recipe_Item extends Fragment {
         mNameTextView = root.findViewById(R.id.Recipe_Name);
         img = root.findViewById(R.id.Image);
         mIngredientTextView = root.findViewById(R.id.Ingredients);
+        dataLoadingBar = root.findViewById(R.id.dataLoadingBar);
+        recipeContainer = root.findViewById(R.id.recipeContainer);
 
         Bundle bundle = this.getArguments();
 
@@ -192,6 +198,9 @@ public class Recipe_Item extends Fragment {
         // We will not load anything if no `id` has been passed
         if (id.isEmpty() || id == null) return;
 
+        dataLoadingBar.setVisibility(View.VISIBLE);
+        recipeContainer.setVisibility(View.GONE);
+
         recipeCollectionRef.document(id)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -219,11 +228,18 @@ public class Recipe_Item extends Fragment {
                                 EditBtn.setEnabled(true);
                             }
 
+                            dataLoadingBar.setVisibility(View.GONE);
+                            recipeContainer.setVisibility(View.VISIBLE);
+
                         } else {
+                            dataLoadingBar.setVisibility(View.GONE);
+
                             Toast.makeText(getActivity(), "No item found!", Toast.LENGTH_LONG).show();
                         }
 
                     } else {
+                        dataLoadingBar.setVisibility(View.GONE);
+
                         Log.d("Firestore failure", "Error getting document: ", task.getException());
                     }
                 })

@@ -9,119 +9,137 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/Recipe_Name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:text="Name"
-            android:textSize="20sp"
-            android:textColor="#030001"
-            android:textStyle="bold"
-            />
-    
-        <ImageView
-            android:id="@+id/Image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fab_margin"
-            android:scaleType="fitXY"
-            />
-
-        <TextView
-            android:id="@+id/Ingredients_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fab_margin"
-            android:textSize="19dp"
-            android:textColor="#030001"
-            android:textStyle="bold"
-            android:text = "Ingredients:"
-            />
-
-        <TextView
-            android:id="@+id/Ingredients"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Instructions:"
-            android:layout_marginTop="@dimen/fab_margin"
-            android:textSize="19dp"
-            android:textColor="#030001"
-            android:textStyle="bold"
-            />
-
-        <TextView
-            android:id="@+id/Instructions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="40dp"
-            android:textSize="20sp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <ProgressBar
+            android:id="@+id/dataLoadingBar"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
             />
 
         <LinearLayout
+            android:id="@+id/recipeContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/Edit_Recipe"
-                android:layout_width="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/Recipe_Name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Edit Recipe"
-                android:textAllCaps="false"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:textColor="#17308E"
-                android:textSize="16sp"
-                app:strokeColor="@color/colorPrimaryDark"
-                app:strokeWidth="2dp"
-                style="@style/MaterialButtonStyle"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:text="Name"
+                android:textSize="20sp"
+                android:textColor="#030001"
+                android:textStyle="bold"
                 />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+            <ImageView
+                android:id="@+id/Image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:scaleType="fitXY"
                 />
+
+            <TextView
+                android:id="@+id/Ingredients_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:textSize="19dp"
+                android:textColor="#030001"
+                android:textStyle="bold"
+                android:text = "Ingredients:"
+                />
+
+            <TextView
+                android:id="@+id/Ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Instructions:"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:textSize="19dp"
+                android:textColor="#030001"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/Instructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="40dp"
+                android:textSize="20sp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/Edit_Recipe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edit Recipe"
+                    android:textAllCaps="false"
+                    android:layout_marginLeft="@dimen/fab_margin"
+                    android:textColor="#17308E"
+                    android:textSize="16sp"
+                    app:strokeColor="@color/colorPrimaryDark"
+                    app:strokeWidth="2dp"
+                    style="@style/MaterialButtonStyle"
+                    />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    />
+
+                <Button
+                    android:layout_below = "@+id/Instructions"
+                    android:id="@+id/CommentsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comments"
+                    android:textAllCaps="false"
+                    android:layout_marginRight="@dimen/fab_margin"
+                    android:textColor="#17308E"
+                    android:textSize="16sp"
+                    app:strokeColor="@color/colorPrimaryDark"
+                    app:strokeWidth="2dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    />
+
+            </LinearLayout>
 
             <Button
-                android:layout_below = "@+id/Instructions"
-                android:id="@+id/CommentsButton"
-                android:layout_width="wrap_content"
+                android:id="@+id/map"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Comments"
-                android:textAllCaps="false"
+                android:text="Need more ingredients!"
+                android:layout_marginLeft="@dimen/fab_margin"
                 android:layout_marginRight="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:textAllCaps="false"
                 android:textColor="#17308E"
                 android:textSize="16sp"
                 app:strokeColor="@color/colorPrimaryDark"
                 app:strokeWidth="2dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 />
-
         </LinearLayout>
 
-        <Button
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Need more ingredients!"
-            android:layout_marginLeft="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:layout_marginTop="@dimen/fab_margin"
-            android:textAllCaps="false"
-            android:textColor="#17308E"
-            android:textSize="16sp"
-            app:strokeColor="@color/colorPrimaryDark"
-            app:strokeWidth="2dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            />
     </LinearLayout>
+
+
 </ScrollView>

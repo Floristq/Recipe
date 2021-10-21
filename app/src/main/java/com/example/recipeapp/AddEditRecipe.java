@@ -182,8 +182,6 @@ public class AddEditRecipe extends Fragment {
             if (bundle.containsKey("id")) {
                 loadData(bundle.getString("id"));
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Edit Recipe");
-                dataLoadingBar.setVisibility(View.VISIBLE);
-                recipeForm.setVisibility(View.GONE);
             }
         }
 
@@ -193,6 +191,7 @@ public class AddEditRecipe extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadData(String id) {
         dataLoadingBar.setVisibility(View.VISIBLE);
+        recipeForm.setVisibility(View.GONE);
 
         recipeCollectionRef.document(id)
                 .get()
