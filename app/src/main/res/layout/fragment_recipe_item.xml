@@ -46,6 +46,25 @@
                 />
 
             <TextView
+                android:id="@+id/cuisineTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:textSize="19dp"
+                android:textColor="#030001"
+                android:textStyle="bold"
+                android:text = "Cuisine:"
+                />
+
+            <TextView
+                android:id="@+id/cuisine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="N/A"
+                />
+
+            <TextView
                 android:id="@+id/Ingredients_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,13 +96,32 @@
                 android:id="@+id/Instructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="40dp"
                 android:textSize="20sp"
+                />
+
+            <TextView
+                android:id="@+id/tagTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:textSize="19dp"
+                android:textColor="#030001"
+                android:textStyle="bold"
+                android:text = "Tags:"
+                />
+
+            <TextView
+                android:id="@+id/tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="N/A"
                 />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
                 >
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/Edit_Recipe"

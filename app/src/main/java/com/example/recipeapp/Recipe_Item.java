@@ -218,10 +218,16 @@ public class Recipe_Item extends Fragment {
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .into(img);
 
+                            if (data.containsKey("Cuisine")) {
+                                ((TextView) root.findViewById(R.id.cuisine)).setText(String.valueOf(data.get("Instruction")));
+                            }
                             if (data.containsKey("Ingredients")) {
                                 mIngredientTextView.setText(String.join(", ", (ArrayList) data.get("Ingredients")));
                             }
                             mInstructionTextView.setText(String.valueOf(data.get("Instruction")));
+                            if (data.containsKey("Tags")) {
+                                ((TextView) root.findViewById(R.id.tags)).setText(String.join(", ", (ArrayList) data.get("Tags")));
+                            }
 
                             // Only the author of the recipe can edit it
                             if (String.valueOf(data.get("AuthorEmail")).equals(user.getEmail())) {
