@@ -219,7 +219,7 @@ public class Recipe_Item extends Fragment {
                                     .into(img);
 
                             if (data.containsKey("Cuisine")) {
-                                ((TextView) root.findViewById(R.id.cuisine)).setText(String.valueOf(data.get("Instruction")));
+                                ((TextView) root.findViewById(R.id.cuisine)).setText(String.valueOf(data.get("Cuisine")));
                             }
                             if (data.containsKey("Ingredients")) {
                                 mIngredientTextView.setText(String.join(", ", (ArrayList) data.get("Ingredients")));
