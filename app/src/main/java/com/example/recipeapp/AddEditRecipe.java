@@ -1,5 +1,7 @@
 package com.example.recipeapp;
 
+import static java.util.Objects.*;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -42,8 +44,11 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -54,6 +59,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -231,7 +237,8 @@ public class AddEditRecipe extends Fragment {
                                     tags.add(tag.toString());
                                 }
 
-                                recipeTagInput.setText(String.join(", ", tags));
+                                recipeTagInput.setText(String.join(", ", tags) +
+                                        (tags.size() > 0 ? ", " : ""));
                             }
 
                             dataLoadingBar.setVisibility(View.GONE);
@@ -425,34 +432,55 @@ public class AddEditRecipe extends Fragment {
         );
         loadingSnackbar.show();
 
-        if (recipeId != null) {
-            recipeCollectionRef.document(recipeId).update(data)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), "Recipe `" + data.get("Name") + "` - updated successfully!", Toast.LENGTH_LONG).show();
-                            goToRecipeItem(recipeId);
-                        } else {
-                            Log.d("Firestore failure", "Error adding document: ", task.getException());
-                        }
+        CollectionReference utilityRef = db.collection("utilities");
+        WriteBatch batch = db.batch();
+        DocumentReference newRecipeDoc = null;
 
-                        loadingSnackbar.dismiss();
-                        uploading = false;
-                    });
+        for (String ingredient: (List<String>) data.get("Ingredients")) {
+            batch.update(
+                utilityRef.document("ingredients"),
+                "values",
+                FieldValue.arrayUnion(ingredient.toLowerCase())
+            );
+        }
+
+        for (String tag: (List<String>) data.get("Tags")) {
+            batch.update(
+                    utilityRef.document("tags"),
+                    "values",
+                    FieldValue.arrayUnion(tag.toLowerCase())
+            );
+        }
+
+        if (recipeId != null) {
+            batch.update(recipeCollectionRef.document(recipeId), data);
         } else {
             data.put("AuthorEmail", user.getEmail());
 
-            recipeCollectionRef.add(data).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Recipe `" + data.get("Name") + "` - added successfully!", Toast.LENGTH_LONG).show();
-                    goToRecipeItem(task.getResult().getId());
-                } else {
-                    Log.d("Firestore failure", "Error adding document: ", task.getException());
-                }
+            newRecipeDoc = recipeCollectionRef.document();
 
-                loadingSnackbar.dismiss();
-                uploading = false;
-            });
+            batch.set(newRecipeDoc, data);
+            recipeId = newRecipeDoc.getId();
         }
+
+        DocumentReference finalNewRecipeDoc = newRecipeDoc;
+
+        batch.commit().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(
+                        getActivity(),
+                        "Recipe `" + data.get("Name") + "` - " +
+                        (finalNewRecipeDoc != null ? "added" : "updated") + " successfully!",
+                        Toast.LENGTH_LONG
+                ).show();
+                goToRecipeItem(recipeId);
+            } else {
+                Toast.makeText(getActivity(), "Upload failed - please try back at a later time!", Toast.LENGTH_LONG).show();
+            }
+
+            loadingSnackbar.dismiss();
+            uploading = false;
+        });
     }
 
     private void goToRecipeItem(String id) {
