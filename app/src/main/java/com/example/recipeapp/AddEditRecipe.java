@@ -38,6 +38,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -90,6 +91,8 @@ public class AddEditRecipe extends Fragment {
 
     private AutoCompleteAdapter recipeTagsAdapter;
     private Uri imageUri = null;
+
+    private boolean uploading = false;
 
     private final String SELECT_CUISINE_HINT = "Select Cuisine";
     // TODO
@@ -323,6 +326,12 @@ public class AddEditRecipe extends Fragment {
 
     // Handle submission
     private void onSubmit(View view) {
+        // If `uploading` is enabled, it means data is already in
+        // a being uploaded state
+        if (uploading) {
+            return;
+        }
+
         String name = recipeNameInput.getText().toString();
         String tempCuisine = cuisineSpinner.getSelectedItem().toString();
         String cuisine = tempCuisine == SELECT_CUISINE_HINT ? "" : tempCuisine; // User can't choose the hint
@@ -360,6 +369,9 @@ public class AddEditRecipe extends Fragment {
             data.put("Instruction", instructions);
             data.put("Tags", tags);
 
+            uploading = true;
+            // Until `uploading` is disabled, we no longer
+            // respond to `Submit` button click
 
             if (imageUri == null) {
                 data.put("Image", serverReceivedImageUrl);
@@ -397,6 +409,7 @@ public class AddEditRecipe extends Fragment {
 
                     uploadDocument(data);
                 } else {
+                    uploading = false;
                     Toast.makeText(getActivity(), "Image failed to upload!", Toast.LENGTH_LONG).show();
                 }
             });
@@ -405,6 +418,13 @@ public class AddEditRecipe extends Fragment {
     }
 
     private void uploadDocument(Map<String, Object> data) {
+
+        Snackbar loadingSnackbar = Snackbar.make(
+                root,
+                "Uploading recipe data!",
+                Snackbar.LENGTH_INDEFINITE
+        );
+        loadingSnackbar.show();
 
         if (recipeId != null) {
             recipeCollectionRef.document(recipeId).update(data)
@@ -415,6 +435,9 @@ public class AddEditRecipe extends Fragment {
                         } else {
                             Log.d("Firestore failure", "Error adding document: ", task.getException());
                         }
+
+                        loadingSnackbar.dismiss();
+                        uploading = false;
                     });
         } else {
             data.put("AuthorEmail", user.getEmail());
@@ -426,15 +449,22 @@ public class AddEditRecipe extends Fragment {
                 } else {
                     Log.d("Firestore failure", "Error adding document: ", task.getException());
                 }
+
+                loadingSnackbar.dismiss();
+                uploading = false;
             });
         }
     }
 
     private void goToRecipeItem(String id) {
-        Bundle bundle = new Bundle();
-        bundle.putString("id", id);
+        if (root != null) {
+            // Redirect to recipe item page if user hasn't
+            // already altered the page
+            Bundle bundle = new Bundle();
+            bundle.putString("id", id);
 
-        Navigation.findNavController(root).navigate(R.id.recipe_Item, bundle);
+            Navigation.findNavController(root).navigate(R.id.recipe_Item, bundle);
+        }
     }
 
     // TODO
