@@ -27,24 +27,34 @@
         tools:context=".ViewRecipe">
 
         <LinearLayout
+            android:id="@+id/llAdvanceFilter"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/fab_margin"
             android:layout_marginLeft="@dimen/fab_margin"
             android:layout_marginTop="@dimen/fab_margin"
             android:visibility="gone"
+            android:orientation="vertical"
             >
+
+            <FrameLayout
+                android:id="@+id/fmAdvanced"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
             <EditText
                 android:id="@+id/editTextTextPersonName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
+                android:visibility="gone"
                 android:hint="Search"
                 />
 
             <View
                 android:layout_width="0sp"
                 android:layout_height="0sp"
+                android:visibility="gone"
                 android:layout_weight="1"
                 />
 
@@ -57,6 +67,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="8dp"
+                android:visibility="gone"
                 android:layout_marginLeft="-30dp"
                 android:clickable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -64,7 +75,11 @@
                 />
 
         </LinearLayout>
-
+    <LinearLayout
+        android:id="@+id/llMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,6 +93,17 @@
             android:id="@+id/cuisineContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:textColor="#17308E"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:strokeColor="@color/colorPrimaryDark"
+            android:text="Advanced Filter"
+            android:id="@+id/tvAdvanceFilter"
             />
 
         <Button
@@ -98,6 +124,6 @@
             android:layout_height="match_parent"
             android:name="com.example.recipeapp.ViewRecipeListFragment"
             />
-
+    </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -44,8 +44,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Intent.makeMainActivity(new ComponentName(LoginActivity.this, SignupActivity.class)));
-                startActivity(i);
+//                Intent i = new Intent(Intent.makeMainActivity(new ComponentName(LoginActivity.this, SignupActivity.class)));
+//                startActivity(i);
                 switch (view.getId()) {
                     case R.id.sign_in_button:
                         signIn();
