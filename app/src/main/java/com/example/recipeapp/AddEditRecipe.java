@@ -252,7 +252,7 @@ public class AddEditRecipe extends Fragment {
                         // We let the user to create a new recipe in such case
                         dataLoadingBar.setVisibility(View.GONE);
                         recipeForm.setVisibility(View.VISIBLE);
-                        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Add Recipe");
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("New Recipe");
 
                         Log.d("Firestore failure", "Error getting document: ", task.getException());
                     }

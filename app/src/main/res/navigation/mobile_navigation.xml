@@ -30,12 +30,12 @@
     <fragment
         android:id="@+id/addRecipe"
         android:name="com.example.recipeapp.AddEditRecipe"
-        android:label="Add Recipe"
+        android:label="New Recipe"
         tools:layout="@layout/fragment_add_edit_recipe" />
     <fragment
         android:id="@+id/viewRecipe"
         android:name="com.example.recipeapp.ViewRecipe"
-        android:label="View Recipe"
+        android:label="Find Recipes"
         tools:layout="@layout/fragment_view_recipe" />
     <fragment
         android:id="@+id/recipe_Item"
