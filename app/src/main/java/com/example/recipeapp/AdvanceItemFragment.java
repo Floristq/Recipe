@@ -31,6 +31,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.pchmn.materialchips.ChipsInput;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class AdvanceItemFragment extends Fragment {
     private List<String> selectedItem = new ArrayList<>();
     private List<String> arrayValue;
     private MyItemRecyclerViewAdapter adapter;
-
+    List<IngredientsModel> ingredientsModelList = new ArrayList<>();
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -97,6 +98,7 @@ public class AdvanceItemFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.list);
         EditText etSearchText = view.findViewById(R.id.etSearchText);
         FloatingActionButton floatIcon = view.findViewById(R.id.floatIcon);
+        ChipsInput chipsInput = (ChipsInput) view.findViewById(R.id.chips_input);
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
         } else {
@@ -113,6 +115,10 @@ public class AdvanceItemFragment extends Fragment {
                         arrayValue = (List<String>) document.get("arrayValue");
                         adapter = new MyItemRecyclerViewAdapter(arrayValue);
                         recyclerView.setAdapter(adapter);
+                        for (int i = 0; i < arrayValue.size(); i++) {
+                            ingredientsModelList.add(new IngredientsModel(arrayValue.get(i)));
+                        }
+                        chipsInput.setFilterableList(ingredientsModelList);
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -125,7 +131,11 @@ public class AdvanceItemFragment extends Fragment {
         floatIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedItem.addAll(adapter.getSelectedItem());
+//                selectedItem.addAll(adapter.getSelectedItem());
+                List<IngredientsModel> ingredientsModels = (List<IngredientsModel>) chipsInput.getSelectedChipList();
+                for (int i = 0; i < ingredientsModels.size(); i++) {
+                    selectedItem.add(ingredientsModels.get(i).getLabel());
+                }
                 Navigation.findNavController(v).getPreviousBackStackEntry().getSavedStateHandle().set("key", selectedItem);
                 Navigation.findNavController(v).navigateUp();
 

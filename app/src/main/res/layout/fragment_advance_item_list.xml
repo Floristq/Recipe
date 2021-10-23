@@ -5,11 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+    <com.pchmn.materialchips.ChipsInput
+        android:id="@+id/chips_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hint="Enter a name" />
     <EditText
         android:id="@+id/etSearchText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:hint="Search Text" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -17,6 +22,7 @@
         android:layout_below="@id/etSearchText"
         android:name="com.example.recipeapp.AdvanceItemFragment"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"

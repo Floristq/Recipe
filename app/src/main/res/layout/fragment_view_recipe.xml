@@ -80,14 +80,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cuisines"
-            android:textSize="19dp"
             android:textColor="#030001"
-            android:textStyle="bold"
-            />
+            android:textSize="19dp"
+            android:textStyle="bold" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/cuisineContainer"
@@ -119,11 +119,27 @@
             android:id="@+id/searchRecipeBtn"
             />
 
+        <TextView
+            android:id="@+id/tvNoRecipeFound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No Recipes Found"
+            android:textColor="#030001"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textSize="23dp"
+            android:textStyle="bold" />
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/rvListing"
+    >
         <fragment
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:name="com.example.recipeapp.ViewRecipeListFragment"
             />
+</RelativeLayout>
     </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -1,7 +1,6 @@
 package com.example.recipeapp;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -9,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
@@ -23,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.Task;
@@ -30,13 +29,10 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +54,7 @@ public class ViewRecipe extends Fragment {
             "American", "Japanese", "Mexican"
     };
 
-    private ArrayList<String> result;
+    private ArrayList<String> ingredientsArray;
 
     private View root = null;
     private ChipGroup cuisineContainer;
@@ -67,6 +63,8 @@ public class ViewRecipe extends Fragment {
     private TextView tvAdvanceFilter;
     private LinearLayout llMain;
     private LinearLayout llAdvanceFilter;
+    private TextView tvNoRecipeFound;
+    private RelativeLayout rvListing;
 
     public ViewRecipe() {
         // Required empty public constructor
@@ -93,6 +91,8 @@ public class ViewRecipe extends Fragment {
         tvAdvanceFilter = root.findViewById(R.id.tvAdvanceFilter);
         llMain = root.findViewById(R.id.llMain);
         llAdvanceFilter = root.findViewById(R.id.llAdvanceFilter);
+        tvNoRecipeFound = root.findViewById(R.id.tvNoRecipeFound);
+        rvListing = root.findViewById(R.id.rvListing);
         Activity activity = getActivity();
 
         Bundle bundle = this.getArguments();
@@ -159,8 +159,8 @@ public class ViewRecipe extends Fragment {
             public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
                 if (event.equals(Lifecycle.Event.ON_RESUME)
                         && navBackStackEntry.getSavedStateHandle().contains("key")) {
-                    result = navBackStackEntry.getSavedStateHandle().get("key");
-                    Log.e("@@@",result.size()+"");
+                    ingredientsArray = navBackStackEntry.getSavedStateHandle().get("key");
+                    Log.e("@@@", ingredientsArray.size()+"");
                 }
             }
         };
@@ -187,20 +187,20 @@ public class ViewRecipe extends Fragment {
 
         // Building query and subsequent query snapshot
         if (selectedCuisines.size() > 0) {
-            if(result!=null && result.size()>0) {
+            if(ingredientsArray !=null && ingredientsArray.size()>0) {
                 snap = recipeCollectionRef
-//                        .whereIn("Cuisine", selectedCuisines)
-                        .whereArrayContainsAny("Ingredients", result)
+                        .whereEqualTo("Cuisine", selectedCuisines.get(0).toString())
+                        .whereArrayContainsAny("Ingredients", ingredientsArray)
                         .get();
             }else{
                 snap = recipeCollectionRef
-                        .whereIn("Cuisine", selectedCuisines)
+                        .whereEqualTo("Cuisine", selectedCuisines.get(0).toString())
                         .get();
             }
         } else {
-            if(result!=null && result.size()>0) {
+            if(ingredientsArray !=null && ingredientsArray.size()>0) {
                 snap = recipeCollectionRef
-                        .whereArrayContainsAny("Ingredients", result)
+                        .whereArrayContainsAny("Ingredients", ingredientsArray)
                         .get();
             }else {
                 snap = recipeCollectionRef
@@ -225,7 +225,14 @@ public class ViewRecipe extends Fragment {
 
                 // TODO
                 // Remove the following workaround and implement a better approach
-                ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
+                if(data.size()>0) {
+                    rvListing.setVisibility(View.VISIBLE);
+                    tvNoRecipeFound.setVisibility(View.GONE);
+                    ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
+                }else{
+                    rvListing.setVisibility(View.GONE);
+                    tvNoRecipeFound.setVisibility(View.VISIBLE);
+                }
             } else {
                 Log.d("Firestore failure", "Error getting documents: ", task.getException());
             }
