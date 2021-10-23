@@ -3,6 +3,7 @@ package com.example.recipeapp;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,7 +50,8 @@ public class ViewRecipeListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_recipe_item_list, container, false);
         recyclerView = (RecyclerView) view;
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        // recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
 
         return view;
     }

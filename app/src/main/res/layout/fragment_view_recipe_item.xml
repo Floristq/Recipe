@@ -12,16 +12,27 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="@dimen/fab_margin"
-    android:layout_marginBottom="@dimen/fab_margin"
-    app:cardElevation="4dp"
-    app:contentPadding="@dimen/fab_margin"
-    app:cardCornerRadius="6dp"
+    app:cardElevation="2dp"
+    app:contentPadding="8dp"
+    app:cardCornerRadius="1dp"
+    android:layout_marginHorizontal="4dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <!--
+            TODO
+            use a placeholder instead of background
+        !-->
+        <ImageView
+            android:id="@+id/recipeImage"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/pasta"
+             />
 
         <TextView
             android:id="@+id/recipeName"
@@ -32,19 +43,7 @@
             android:textSize="18sp"
             android:textColor="#030001"
             android:textStyle="bold"
-            />
-
-        <!--
-            TODO
-            use a placeholder instead of background
-        !-->
-        <ImageView
-            android:id="@+id/recipeImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginTop="8sp"
-            android:scaleType="fitXY"
-            android:src="@drawable/pasta"
             />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
