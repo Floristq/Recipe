@@ -16,6 +16,7 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.recipeapp.databinding.FragmentViewRecipeItemBinding;
+import com.example.recipeapp.ViewRecipe;
 
 import java.util.List;
 
