@@ -49,6 +49,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/fab_margin"
+                android:text="Type"
+                android:textColor="#030001"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/typeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:singleSelection="true"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fab_margin"
                 android:text="Cuisine"
                 android:textColor="#030001"
                 android:textSize="18sp"
@@ -61,7 +79,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="-8dp"
-
                 />
 
             <TextView

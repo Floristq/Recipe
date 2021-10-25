@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -87,6 +88,7 @@ public class AddEditRecipe extends Fragment {
     private ImageView recipeImg;
     private MultiAutoCompleteTextView recipeTagInput;
     private Button submitBtn;
+    private ChipGroup typeContainer;
     private Spinner cuisineSpinner;
     private ChipGroup ingredientContainer;
     private LinearLayout recipeForm;
@@ -94,6 +96,8 @@ public class AddEditRecipe extends Fragment {
 
     private EditText recipeNameInput;
     private EditText instructionInput;
+
+    Snackbar loadingSnackbar = null;
 
     private AutoCompleteAdapter recipeTagsAdapter;
     private Uri imageUri = null;
@@ -140,6 +144,7 @@ public class AddEditRecipe extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_add_edit_recipe, container, false);
+        FragmentActivity activity = getActivity();
 
         // Initializing components / elements
         cameraBtn = root.findViewById(R.id.cameraBtn);
@@ -148,6 +153,7 @@ public class AddEditRecipe extends Fragment {
         uploadImgBtnContainer = root.findViewById(R.id.uploadImgBtnContainer);
         recipeTagInput = root.findViewById(R.id.recipeTagInput);
         submitBtn = root.findViewById(R.id.submitBtn);
+        typeContainer = root.findViewById(R.id.typeContainer);
         cuisineSpinner = root.findViewById(R.id.cuisine);
         ingredientContainer = root.findViewById(R.id.ingredientContainer);
         recipeForm = root.findViewById(R.id.recipeForm);
@@ -163,6 +169,15 @@ public class AddEditRecipe extends Fragment {
         }
         setCuisineAdapter(cuisines);
 
+        for (String type: Utils.allTypes) {
+            Chip chip = new Chip(activity);
+            chip.setText(type);
+            chip.setId(root.generateViewId());
+            chip.setCheckable(true);
+
+            typeContainer.addView(chip);
+        }
+
         // Configuring recipeTagsInput
         // TODO
         // Temporarily using the temporaryTags to populate tags-input until
@@ -172,7 +187,7 @@ public class AddEditRecipe extends Fragment {
             tagAdapterList.add(new AdapterItem(tag, 0));
         }
 
-        recipeTagsAdapter = new AutoCompleteAdapter(getActivity(), tagAdapterList);
+        recipeTagsAdapter = new AutoCompleteAdapter(activity, tagAdapterList);
         recipeTagInput.setAdapter(recipeTagsAdapter);
         recipeTagInput.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
@@ -318,7 +333,7 @@ public class AddEditRecipe extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void addIngredientChip(String ingredient) {
         Chip chip = new Chip(getActivity());
-        chip.setText(ingredient);
+        chip.setText(Utils.capitalize(ingredient));
         chip.setId(root.generateViewId());
         chip.setCheckable(true);
         chip.setChecked(true);
@@ -339,6 +354,11 @@ public class AddEditRecipe extends Fragment {
         }
 
         String name = recipeNameInput.getText().toString();
+        int typeChipId = typeContainer.getCheckedChipId();
+        String type = (typeChipId != -1 ?
+                ((Chip) typeContainer.findViewById(typeChipId)).getText().toString() :
+                "Any").toLowerCase();
+
         String tempCuisine = cuisineSpinner.getSelectedItem().toString();
         String cuisine = tempCuisine == SELECT_CUISINE_HINT ? "" : tempCuisine; // User can't choose the hint
 
@@ -346,7 +366,7 @@ public class AddEditRecipe extends Fragment {
         List<String> ingredients = new ArrayList<String>();
         for (Integer id: ingredientChipIds){
             Chip chip = ingredientContainer.findViewById(id);
-            ingredients.add(chip.getText().toString());
+            ingredients.add(chip.getText().toString().toLowerCase());
         }
 
         String instructions = instructionInput.getText().toString();
@@ -354,10 +374,11 @@ public class AddEditRecipe extends Fragment {
         List<String> tempTags = Arrays.asList(recipeTagInput.getText().toString().split(", "));
         List<String> tags = new ArrayList<String>();
         for (String tempTag: tempTags) {
-            if (!tempTag.isEmpty()) tags.add(tempTag); // Removing the empty strings
+            if (!tempTag.isEmpty()) tags.add(tempTag.toLowerCase()); // Removing the empty strings
         }
 
         if (name.isEmpty() ||
+                type.isEmpty() ||
                 cuisine.isEmpty() ||
                 ingredients.isEmpty() ||
                 instructions.isEmpty() ||
@@ -370,6 +391,7 @@ public class AddEditRecipe extends Fragment {
 
             Map<String, Object> data = new HashMap<>();
             data.put("Name", name);
+            data.put("Type", type);
             data.put("Cuisine", cuisine);
             data.put("Ingredients", ingredients);
             data.put("Instruction", instructions);
@@ -378,6 +400,12 @@ public class AddEditRecipe extends Fragment {
             uploading = true;
             // Until `uploading` is disabled, we no longer
             // respond to `Submit` button click
+            loadingSnackbar = Snackbar.make(
+                    root,
+                    "Uploading recipe data!",
+                    Snackbar.LENGTH_INDEFINITE
+            );
+            loadingSnackbar.show();
 
             if (imageUri == null) {
                 data.put("Image", serverReceivedImageUrl);
@@ -424,13 +452,6 @@ public class AddEditRecipe extends Fragment {
     }
 
     private void uploadDocument(Map<String, Object> data) {
-
-        Snackbar loadingSnackbar = Snackbar.make(
-                root,
-                "Uploading recipe data!",
-                Snackbar.LENGTH_INDEFINITE
-        );
-        loadingSnackbar.show();
 
         CollectionReference utilityRef = db.collection("utilities");
         WriteBatch batch = db.batch();
@@ -479,6 +500,7 @@ public class AddEditRecipe extends Fragment {
             }
 
             loadingSnackbar.dismiss();
+            loadingSnackbar = null;
             uploading = false;
         });
     }
