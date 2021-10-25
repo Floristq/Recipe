@@ -230,6 +230,17 @@ public class AddEditRecipe extends Fragment {
                                 setCuisine(String.valueOf(data.get("Cuisine")));
                             }
 
+                            String type = (String) data.get("Type");
+                            int types = typeContainer.getChildCount();
+                            while (types > 0) {
+                                Chip typeChip = (Chip) typeContainer.getChildAt(types - 1);
+                                if (typeChip.getText().toString().equalsIgnoreCase(type)) {
+                                    typeChip.setChecked(true);
+                                    break;
+                                }
+                                types -= 1;
+                            }
+
                             serverReceivedImageUrl = String.valueOf(data.get("Image"));
                             recipeImg.setVisibility(View.VISIBLE);
                             Glide.with(recipeImg.getContext())
