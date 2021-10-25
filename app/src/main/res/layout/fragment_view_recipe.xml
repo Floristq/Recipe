@@ -72,35 +72,37 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <HorizontalScrollView
+            <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
+                android:layout_height="match_parent"
                 >
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/typeContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:singleLine="true"
-                    app:singleSelection="true"
-                    >
-                    <com.google.android.material.chip.Chip
-                        android:text="Just Testing"
-                        />
-                </com.google.android.material.chip.ChipGroup>
-            </HorizontalScrollView>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:textColor="#17308E"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:strokeColor="@color/colorPrimaryDark"
-                android:text="Advanced Filter"
-                android:id="@+id/tvAdvanceFilter"
-                />
+                <HorizontalScrollView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    app:layout_flexGrow="1"
+                    >
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/typeContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:singleLine="true"
+                        app:singleSelection="true"
+                        />
+                </HorizontalScrollView>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/advancedFilterBtn"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_filter_alt_12"
+                    android:contentDescription="Confirm"
+                    app:backgroundTint="@color/white_transparency"
+                    app:fabCustomSize="32dp"
+                    app:tint="@color/design_default_color_primary"/>
+
+            </com.google.android.flexbox.FlexboxLayout>
 
             <Button
                 android:layout_width="wrap_content"
@@ -132,11 +134,11 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/rvListing"
                 >
+
                 <fragment
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:name="com.example.recipeapp.ViewRecipeListFragment"
-                    />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

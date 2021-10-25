@@ -60,7 +60,6 @@ public class ViewRecipe extends Fragment {
     private View root = null;
     private ChipGroup typeContainer;
     private Button searchRecipeBtn;
-    private TextView tvAdvanceFilter;
     private TextView tvNoRecipeFound;
     private RelativeLayout rvListing;
 
@@ -88,7 +87,6 @@ public class ViewRecipe extends Fragment {
 
         searchRecipeBtn = root.findViewById(R.id.searchRecipeBtn);
         typeContainer = root.findViewById(R.id.typeContainer);
-        tvAdvanceFilter = root.findViewById(R.id.tvAdvanceFilter);
         tvNoRecipeFound = root.findViewById(R.id.tvNoRecipeFound);
         rvListing = root.findViewById(R.id.rvListing);
         Activity activity = getActivity();
@@ -115,7 +113,7 @@ public class ViewRecipe extends Fragment {
             }
         }
 
-        tvAdvanceFilter.setOnClickListener(v -> {
+        root.findViewById(R.id.advancedFilterBtn).setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.recipeFilter);
         });
 
