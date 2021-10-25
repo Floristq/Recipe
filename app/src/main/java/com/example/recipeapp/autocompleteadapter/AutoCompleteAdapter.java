@@ -75,8 +75,12 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
                 // Adding the 'superset' (filtering text / constraint in the 'subset' here) items
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
+                suggestions.add(new AdapterItem(filterPattern, 0));
+
                 for (AdapterItem item : data) {
-                    if (item.getLabel().toLowerCase().contains(filterPattern)) {
+                    String itemName = item.getLabel().toLowerCase();
+
+                    if (!itemName.equals(filterPattern) && itemName.contains(filterPattern)) {
                         suggestions.add(item);
                     }
                 }
