@@ -49,8 +49,8 @@
         tools:layout="@layout/fragment_comments" />
 
     <fragment
-        android:id="@+id/advanceFiltered"
-        android:name="com.example.recipeapp.AdvanceItemFragment"
-        android:label="Advance Filter"
-        tools:layout="@layout/fragment_advance_item_list" />
+        android:id="@+id/recipeFilter"
+        android:name="com.example.recipeapp.RecipeFilterFragment"
+        android:label="Recipe Filter"
+        tools:layout="@layout/fragment_recipe_filter" />
 </navigation>

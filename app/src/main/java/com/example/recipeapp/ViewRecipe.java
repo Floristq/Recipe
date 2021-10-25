@@ -119,7 +119,7 @@ public class ViewRecipe extends Fragment {
         }
 
         tvAdvanceFilter.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.advanceFiltered);
+            Navigation.findNavController(v).navigate(R.id.recipeFilter);
         });
 
         loadRecipeList();

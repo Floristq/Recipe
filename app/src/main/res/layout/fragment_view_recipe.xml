@@ -26,7 +26,6 @@
         tools:context=".ViewRecipe">
 
         <LinearLayout
-            android:id="@+id/llAdvanceFilter"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/fab_margin"
@@ -36,17 +35,10 @@
             android:orientation="vertical"
             >
 
-            <FrameLayout
-                android:id="@+id/fmAdvanced"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
             <EditText
-                android:id="@+id/editTextTextPersonName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:visibility="gone"
                 android:hint="Search"
                 />
 
@@ -76,7 +68,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/llMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
