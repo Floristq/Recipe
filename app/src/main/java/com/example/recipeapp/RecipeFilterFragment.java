@@ -13,19 +13,16 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
-import com.pchmn.materialchips.ChipsInput;
-import com.pchmn.materialchips.model.ChipInterface;
+import com.tylersuehr.chips.Chip;
+import com.tylersuehr.chips.ChipsInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +37,8 @@ public class RecipeFilterFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference utilitiesRef = db.collection("utilities");
 
-    ChipsInput ingredientsChipInput;
-    ChipsInput tagsChipInput;
+    ChipsInputLayout ingredientsChipInput;
+    ChipsInputLayout tagsChipInput;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -82,13 +79,13 @@ public class RecipeFilterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 List<String> selectedIngredients = new ArrayList<>();
-                for (ChipInterface item: ingredientsChipInput.getSelectedChipList()) {
-                    selectedIngredients.add(item.getLabel());
+                for (Chip item: ingredientsChipInput.getSelectedChips()) {
+                    selectedIngredients.add(item.getTitle());
                 }
 
                 List<String> selectedTags = new ArrayList<>();
-                for (ChipInterface item: tagsChipInput.getSelectedChipList()) {
-                    selectedTags.add(item.getLabel());
+                for (Chip item: tagsChipInput.getSelectedChips()) {
+                    selectedTags.add(item.getTitle());
                 }
 
                 SavedStateHandle previousState = Navigation.findNavController(v).getPreviousBackStackEntry().getSavedStateHandle();
@@ -101,7 +98,7 @@ public class RecipeFilterFragment extends Fragment {
         });
     }
 
-    private void populateFilter(String key, ChipsInput chipsInput) {
+    private void populateFilter(String key, ChipsInputLayout chipsInput) {
         utilitiesRef.document(key)
             .get()
             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -119,7 +116,7 @@ public class RecipeFilterFragment extends Fragment {
                                 list.add(new ChipItem(item));
                             }
 
-                            chipsInput.setFilterableList(list);
+                            chipsInput.setFilterableChipList(list);
                         } else {
                             // TODO
                             // Handle empty result
@@ -132,16 +129,24 @@ public class RecipeFilterFragment extends Fragment {
             });
     }
 
-    public static class ChipItem implements ChipInterface {
-        private String item;
+    public class ChipItem extends Chip {
+        private final String item;
 
         public ChipItem(String item) {
+            super();
             this.item = item;
         }
 
+        @Nullable
         @Override
-        public Object getId() {
+        public Integer getId() {
             return null;
+        }
+
+        @NonNull
+        @Override
+        public String getTitle() {
+            return item;
         }
 
         @Override
@@ -149,18 +154,15 @@ public class RecipeFilterFragment extends Fragment {
             return null;
         }
 
+        @Nullable
         @Override
         public Drawable getAvatarDrawable() {
             return null;
         }
 
+        @Nullable
         @Override
-        public String getLabel() {
-            return item;
-        }
-
-        @Override
-        public String getInfo() {
+        public String getSubtitle() {
             return null;
         }
     }

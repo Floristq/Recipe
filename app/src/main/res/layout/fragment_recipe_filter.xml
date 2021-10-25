@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -25,12 +24,14 @@
                 android:textSize="19dp"
                 android:textStyle="bold" />
 
-            <com.pchmn.materialchips.ChipsInput
+            <com.tylersuehr.chips.ChipsInputLayout
                 android:id="@+id/ingredientsChipInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="Search Ingredients"
-                app:chip_deletable="true"
+                android:hint="Search for ingredients..."
+                android:layout_marginStart="-9dp"
+                android:layout_marginEnd="-9dp"
+                app:hideKeyboardOnChipClick="false"
                 />
 
             <TextView
@@ -41,12 +42,14 @@
                 android:textSize="19dp"
                 android:textStyle="bold" />
 
-            <com.pchmn.materialchips.ChipsInput
+            <com.tylersuehr.chips.ChipsInputLayout
                 android:id="@+id/tagsChipInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="Search Tags"
-                app:chip_deletable="true"
+                android:hint="Search for tags..."
+                android:layout_marginStart="-9dp"
+                android:layout_marginEnd="-9dp"
+                app:hideKeyboardOnChipClick="false"
                 />
 
         </LinearLayout>
