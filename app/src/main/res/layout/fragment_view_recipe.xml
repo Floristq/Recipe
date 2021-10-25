@@ -83,7 +83,11 @@
                     android:layout_height="wrap_content"
                     app:singleLine="true"
                     app:singleSelection="true"
-                    />
+                    >
+                    <com.google.android.material.chip.Chip
+                        android:text="Just Testing"
+                        />
+                </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
             <TextView
@@ -108,6 +112,7 @@
                 app:strokeWidth="2dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:text="Search"
+                android:visibility="gone"
                 android:id="@+id/searchRecipeBtn"
                 />
 

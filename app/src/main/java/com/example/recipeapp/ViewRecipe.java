@@ -101,6 +101,9 @@ public class ViewRecipe extends Fragment {
 
             typeContainer.addView(chip);
         }
+        typeContainer.setOnCheckedChangeListener((group, checkedId) -> {
+            onSearch(group);
+        });
 
         searchRecipeBtn.setOnClickListener(this::onSearch);
 
