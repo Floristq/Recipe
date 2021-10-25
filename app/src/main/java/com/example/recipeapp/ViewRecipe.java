@@ -66,8 +66,6 @@ public class ViewRecipe extends Fragment {
     private RecyclerView recipeListContainer;
     private Button searchRecipeBtn;
     private TextView tvAdvanceFilter;
-    private LinearLayout llMain;
-    private LinearLayout llAdvanceFilter;
     private TextView tvNoRecipeFound;
     private RelativeLayout rvListing;
 
@@ -96,8 +94,6 @@ public class ViewRecipe extends Fragment {
         searchRecipeBtn = root.findViewById(R.id.searchRecipeBtn);
         cuisineContainer = root.findViewById(R.id.cuisineContainer);
         tvAdvanceFilter = root.findViewById(R.id.tvAdvanceFilter);
-        llMain = root.findViewById(R.id.llMain);
-        llAdvanceFilter = root.findViewById(R.id.llAdvanceFilter);
         tvNoRecipeFound = root.findViewById(R.id.tvNoRecipeFound);
         rvListing = root.findViewById(R.id.rvListing);
         Activity activity = getActivity();
