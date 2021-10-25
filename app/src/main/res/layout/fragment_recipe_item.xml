@@ -45,6 +45,33 @@
                 android:scaleType="fitXY"
                 />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/typeContainer"
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:id="@+id/typeType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    android:textSize="19dp"
+                    android:textColor="#030001"
+                    android:textStyle="bold"
+                    android:text = "Type:"
+                    />
+
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="N/A"
+                    />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/cuisineTitle"
                 android:layout_width="match_parent"

@@ -249,7 +249,7 @@ public class AddEditRecipe extends Fragment {
                             if (data.containsKey("Tags")) {
                                 List<String> tags = new ArrayList<String>();
                                 for (Object tag: (ArrayList) data.get("Tags")) {
-                                    tags.add(tag.toString());
+                                    tags.add(Utils.capitalize(tag.toString()));
                                 }
 
                                 recipeTagInput.setText(String.join(", ", tags) +

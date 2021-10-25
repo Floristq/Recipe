@@ -38,6 +38,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -141,18 +142,12 @@ public class Recipe_Item extends Fragment {
 
         if (bundle.containsKey("id")) {
             recipeId = bundle.getString("id");
-            loadItem(recipeId);
-        }
-
-        if (bundle.containsKey("id")) {
-            String id = bundle.getString("id");
             CommentButton.setOnClickListener(v -> {
                 Bundle commentBundle = new Bundle();
-                commentBundle.putString("id", id);
+                commentBundle.putString("id", recipeId);
                 Navigation.findNavController(v).navigate(R.id.comments, commentBundle);
             });
-
-            loadItem(id);
+            loadItem(recipeId);
         }
 
         return root;
@@ -218,15 +213,33 @@ public class Recipe_Item extends Fragment {
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .into(img);
 
+                            if (data.containsKey("Type")) {
+                                String type = (String) data.get("Type");
+                                if (!type.equals("any")) {
+                                    root.findViewById(R.id.typeContainer).setVisibility(View.VISIBLE);
+                                    ((TextView) root.findViewById(R.id.type)).setText(type);
+                                }
+                            }
+
                             if (data.containsKey("Cuisine")) {
                                 ((TextView) root.findViewById(R.id.cuisine)).setText(String.valueOf(data.get("Cuisine")));
                             }
                             if (data.containsKey("Ingredients")) {
-                                mIngredientTextView.setText(String.join(", ", (ArrayList) data.get("Ingredients")));
+                                List<String> ingredients = new ArrayList<String>();
+                                for (String ingredient: (List<String>) data.get("Ingredients")) {
+                                    ingredients.add(Utils.capitalize(ingredient));
+                                }
+
+                                mIngredientTextView.setText(String.join(", ", ingredients));
                             }
                             mInstructionTextView.setText(String.valueOf(data.get("Instruction")));
                             if (data.containsKey("Tags")) {
-                                ((TextView) root.findViewById(R.id.tags)).setText(String.join(", ", (ArrayList) data.get("Tags")));
+                                List<String> tags = new ArrayList<String>();
+                                for (String tag: (List<String>) data.get("Ingredients")) {
+                                    tags.add(Utils.capitalize(tag));
+                                }
+
+                                ((TextView) root.findViewById(R.id.tags)).setText(String.join(", ", tags));
                             }
 
                             // Only the author of the recipe can edit it
