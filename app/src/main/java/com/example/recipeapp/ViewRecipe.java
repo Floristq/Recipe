@@ -62,7 +62,7 @@ public class ViewRecipe extends Fragment {
     private ChipGroup typeContainer;
     private Button searchRecipeBtn;
     private ProgressBar dataLoadingBar;
-    private RelativeLayout rvListing;
+    private LinearLayout emptyListLayout;
 
     private boolean ownRecipeOnly = false;
 
@@ -89,7 +89,7 @@ public class ViewRecipe extends Fragment {
         searchRecipeBtn = root.findViewById(R.id.searchRecipeBtn);
         typeContainer = root.findViewById(R.id.typeContainer);
         dataLoadingBar = root.findViewById(R.id.dataLoadingBar);
-        rvListing = root.findViewById(R.id.rvListing);
+        emptyListLayout = root.findViewById(R.id.emptyListLayout);
         Activity activity = getActivity();
 
         for (String type: Utils.allTypes) {
@@ -116,6 +116,10 @@ public class ViewRecipe extends Fragment {
 
         root.findViewById(R.id.advancedFilterBtn).setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.recipeFilter);
+        });
+
+        root.findViewById(R.id.addRecipeBtn).setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.addRecipe);
         });
 
         return root;
@@ -154,11 +158,10 @@ public class ViewRecipe extends Fragment {
     }
 
     private void loadRecipeList() {
-
-
         // Starting with emptying the recyclerView
         ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(new ArrayList<RecipeItem>()));
         dataLoadingBar.setVisibility(View.VISIBLE);
+        emptyListLayout.setVisibility(View.GONE);
 
         // Getting selected type
         Integer typeChipId = typeContainer.getCheckedChipId();
@@ -209,8 +212,9 @@ public class ViewRecipe extends Fragment {
         snap = query.get();
 
         snap.addOnCompleteListener(task -> {
+            ArrayList<RecipeItem> data = new ArrayList<RecipeItem>();
+
             if (task.isSuccessful()) {
-                ArrayList<RecipeItem> data = new ArrayList<RecipeItem>();
 
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     Map<String, Object> item = document.getData();
@@ -254,17 +258,17 @@ public class ViewRecipe extends Fragment {
 
                 // TODO
                 // Remove the following workaround and implement a better approach
-                if (data.size() > 0) {
-                    rvListing.setVisibility(View.VISIBLE);
-                    ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
-                } else {
-                    rvListing.setVisibility(View.GONE);
-                }
+                ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
+
+
             } else {
                 Log.d("Firestore failure", "Error getting documents: ", task.getException());
             }
 
             dataLoadingBar.setVisibility(View.GONE);
+            if (data.size() == 0) {
+                emptyListLayout.setVisibility(View.VISIBLE);
+            }
         });
 
     }
