@@ -38,6 +38,7 @@ public class RecipeFilterFragment extends Fragment {
     private CollectionReference utilitiesRef = db.collection("utilities");
 
     ChipsInputLayout ingredientsChipInput;
+    ChipsInputLayout cuisinesChipInput;
     ChipsInputLayout tagsChipInput;
 
     /**
@@ -62,6 +63,7 @@ public class RecipeFilterFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_recipe_filter, container, false);
 
         ingredientsChipInput = root.findViewById(R.id.ingredientsChipInput);
+        cuisinesChipInput = root.findViewById(R.id.cuisinesChipInput);
         tagsChipInput = root.findViewById(R.id.tagsChipInput);
 
         return root;
@@ -74,6 +76,7 @@ public class RecipeFilterFragment extends Fragment {
 
         populateFilter("ingredients", ingredientsChipInput);
         populateFilter("tags", tagsChipInput);
+        populateFilter("cuisines", cuisinesChipInput);
 
         root.findViewById(R.id.confirmBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +84,11 @@ public class RecipeFilterFragment extends Fragment {
                 List<String> selectedIngredients = new ArrayList<>();
                 for (Chip item: ingredientsChipInput.getSelectedChips()) {
                     selectedIngredients.add(item.getTitle());
+                }
+
+                List<String> selectedCuisines = new ArrayList<>();
+                for (Chip item: cuisinesChipInput.getSelectedChips()) {
+                    selectedCuisines.add(item.getTitle());
                 }
 
                 List<String> selectedTags = new ArrayList<>();
@@ -91,6 +99,7 @@ public class RecipeFilterFragment extends Fragment {
                 SavedStateHandle previousState = Navigation.findNavController(v).getPreviousBackStackEntry().getSavedStateHandle();
 
                 previousState.set("ingredients", selectedIngredients);
+                previousState.set("cuisines", selectedCuisines);
                 previousState.set("tags", selectedTags);
 
                 Navigation.findNavController(v).navigateUp();

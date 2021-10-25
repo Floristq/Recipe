@@ -37,6 +37,25 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Cuisines"
+                android:textColor="#030001"
+                android:textSize="19dp"
+                android:textStyle="bold" />
+
+            <com.tylersuehr.chips.ChipsInputLayout
+                android:id="@+id/cuisinesChipInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Filter a cuisine"
+                android:layout_marginStart="-9dp"
+                android:layout_marginEnd="-9dp"
+                app:hideKeyboardOnChipClick="false"
+                app:singleSelection="true"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Tags"
                 android:textColor="#030001"
                 android:textSize="19dp"
@@ -50,14 +69,11 @@
                 android:layout_marginStart="-9dp"
                 android:layout_marginEnd="-9dp"
                 app:hideKeyboardOnChipClick="false"
+                app:singleSelection="true"
                 />
 
         </LinearLayout>
     </ScrollView>
-
-
-
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"

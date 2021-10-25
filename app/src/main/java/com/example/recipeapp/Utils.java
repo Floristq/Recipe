@@ -1,5 +1,9 @@
 package com.example.recipeapp;
 
+import android.util.Log;
+
+import java.util.concurrent.Callable;
+
 public class Utils {
     public final static String[] allTypes = {
             "Breakfast", "Lunch", "Dinner", "Snack", "Any"

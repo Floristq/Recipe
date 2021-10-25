@@ -55,6 +55,7 @@ public class ViewRecipe extends Fragment {
 
     private List<String> filteredIngredients = null;
     private List<String> filteredTags = null;
+    private List<String> filteredCuisines = null;
 
     private View root = null;
     private ChipGroup typeContainer;
@@ -137,6 +138,10 @@ public class ViewRecipe extends Fragment {
                     if (savedState.contains("tags")) {
                         filteredTags = savedState.get("tags");
                     }
+
+                    if (savedState.contains("cuisines")) {
+                        filteredCuisines = savedState.get("cuisines");
+                    }
                 }
             }
         };
@@ -173,21 +178,32 @@ public class ViewRecipe extends Fragment {
             query = query.whereEqualTo("Type", type);
         }
 
-        boolean hasFilteredIngredients = false, filterTagsManually = false;
+        boolean hasFilteredIngredients = false, hasFilteredTags = false,
+                filterTagsManually = false, filterCuisinesManually = false;
         if (filteredIngredients != null && filteredIngredients.size() > 0) {
             hasFilteredIngredients = true;
             query = query.whereArrayContainsAny("Ingredients", filteredIngredients);
         }
 
         if (filteredTags != null && filteredTags.size() > 0) {
+            hasFilteredTags = true;
             if (hasFilteredIngredients) {
                 filterTagsManually = true;
             } else {
-                query = query.whereEqualTo("Tag", filteredTags);
+                query = query.whereArrayContainsAny("Tags", filteredTags);
+            }
+        }
+
+        if (filteredCuisines != null && filteredCuisines.size() > 0) {
+            if (hasFilteredIngredients || hasFilteredTags) {
+                filterCuisinesManually = true;
+            } else {
+                query = query.whereIn("Cuisine", filteredCuisines);
             }
         }
 
         final boolean finalFilterTagsManually = filterTagsManually;
+        final boolean finalFilterCuisinesManually = filterCuisinesManually;
 
         snap = query.get();
 
@@ -214,6 +230,16 @@ public class ViewRecipe extends Fragment {
                         }
 
                         if (!shouldProceed) {
+                            continue;
+                        }
+                    }
+
+                    if (finalFilterCuisinesManually) {
+                        // TODO
+                        // Do the tag filtration manually here
+                        // Since firebase doesn't support multiple `whereIn|whereArrayContainsAny`
+                        // we had to resort to this!
+                        if (!filteredCuisines.contains(String.valueOf(item.get("Cuisine")))) {
                             continue;
                         }
                     }
