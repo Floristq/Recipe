@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,16 +55,17 @@ public class ViewRecipe extends Fragment {
 
     // TODO
     // Remove temporaryCuisines and use server/firebase retrieved tags
-    final private String[] temporaryCuisines = {
-            "Chinese", "English", "Indian", "French",
-            "American", "Japanese", "Mexican"
-    };
+//    final private String[] temporaryCuisines = {
+//            "Chinese", "English", "Indian", "French",
+//            "American", "Japanese", "Mexican"
+//    };
 
-    private ArrayList<String> ingredientsArray;
+    private List<String> filteredIngredients = null;
+    private List<String> filteredTags = null;
+
 
     private View root = null;
     private ChipGroup cuisineContainer;
-    private RecyclerView recipeListContainer;
     private Button searchRecipeBtn;
     private TextView tvAdvanceFilter;
     private TextView tvNoRecipeFound;
@@ -92,21 +94,21 @@ public class ViewRecipe extends Fragment {
         root = inflater.inflate(R.layout.fragment_view_recipe, container, false);
 
         searchRecipeBtn = root.findViewById(R.id.searchRecipeBtn);
-        cuisineContainer = root.findViewById(R.id.cuisineContainer);
+//        cuisineContainer = root.findViewById(R.id.cuisineContainer);
         tvAdvanceFilter = root.findViewById(R.id.tvAdvanceFilter);
         tvNoRecipeFound = root.findViewById(R.id.tvNoRecipeFound);
         rvListing = root.findViewById(R.id.rvListing);
         Activity activity = getActivity();
 
-        for (String cuisine: temporaryCuisines) {
-
-            Chip chip = new Chip(activity);
-            chip.setText(cuisine);
-            chip.setId(root.generateViewId());
-            chip.setCheckable(true);
-
-            cuisineContainer.addView(chip);
-        }
+//        for (String cuisine: temporaryCuisines) {
+//
+//            Chip chip = new Chip(activity);
+//            chip.setText(cuisine);
+//            chip.setId(root.generateViewId());
+//            chip.setCheckable(true);
+//
+//            cuisineContainer.addView(chip);
+//        }
 
         searchRecipeBtn.setOnClickListener(this::onSearch);
 
@@ -122,8 +124,6 @@ public class ViewRecipe extends Fragment {
             Navigation.findNavController(v).navigate(R.id.recipeFilter);
         });
 
-        loadRecipeList();
-
         return root;
     }
 
@@ -136,14 +136,23 @@ public class ViewRecipe extends Fragment {
         final LifecycleEventObserver observer = new LifecycleEventObserver() {
             @Override
             public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
-                if (event.equals(Lifecycle.Event.ON_RESUME)
-                        && navBackStackEntry.getSavedStateHandle().contains("key")) {
-                    ingredientsArray = navBackStackEntry.getSavedStateHandle().get("key");
-                    Log.e("@@@", ingredientsArray.size()+"");
+                if (event.equals(Lifecycle.Event.ON_RESUME)) {
+                    SavedStateHandle savedState = navBackStackEntry.getSavedStateHandle();
+
+                    if (savedState.contains("ingredients")) {
+                        filteredIngredients = savedState.get("ingredients");
+                    }
+
+                    if (savedState.contains("tags")) {
+                        filteredTags = savedState.get("tags");
+                    }
                 }
             }
         };
+
         navBackStackEntry.getLifecycle().addObserver(observer);
+
+        loadRecipeList();
     }
 
     private void loadRecipeList() {
@@ -155,12 +164,12 @@ public class ViewRecipe extends Fragment {
         ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(new ArrayList<RecipeItem>()));
 
         // Getting selected cuisines
-        List<Integer> ids = cuisineContainer.getCheckedChipIds();
-        List<CharSequence> selectedCuisines = new ArrayList<CharSequence>();
-        for (Integer id : ids) {
-            Chip chip = cuisineContainer.findViewById(id);
-            selectedCuisines.add(chip.getText());
-        }
+//        List<Integer> ids = cuisineContainer.getCheckedChipIds();
+//        List<CharSequence> selectedCuisines = new ArrayList<CharSequence>();
+//        for (Integer id : ids) {
+//            Chip chip = cuisineContainer.findViewById(id);
+//            selectedCuisines.add(chip.getText());
+//        }
 
         Task<QuerySnapshot> snap;
 
@@ -171,13 +180,25 @@ public class ViewRecipe extends Fragment {
             query = query.whereEqualTo("AuthorEmail", user.getEmail());
         }
 
-        if (selectedCuisines.size() > 0) {
-            query = query.whereIn("Cuisine", selectedCuisines);
+//        if (selectedCuisine != null) {
+//            query = query.whereEqualTo("Cuisine", selectedCuisine);
+//        }
+
+        boolean hasFilteredIngredients = false, filterTagsManually = false;
+        if (filteredIngredients != null && filteredIngredients.size() > 0) {
+            hasFilteredIngredients = true;
+            query = query.whereArrayContainsAny("Ingredients", filteredIngredients);
         }
 
-        if (ingredientsArray != null && ingredientsArray.size() > 0) {
-            query = query.whereArrayContainsAny("Ingredients", ingredientsArray);
+        if (filteredTags != null && filteredTags.size() > 0) {
+            if (hasFilteredIngredients) {
+                filterTagsManually = true;
+            } else {
+                query = query.whereEqualTo("Tag", filteredTags);
+            }
         }
+
+        final boolean finalFilterTagsManually = filterTagsManually;
 
         snap = query.get();
 
@@ -188,6 +209,26 @@ public class ViewRecipe extends Fragment {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     Map<String, Object> item = document.getData();
 
+                    if (finalFilterTagsManually) {
+                        boolean shouldProceed = false;
+                        // TODO
+                        // Do the tag filtration manually here
+                        // Since firebase doesn't support multiple `whereArrayContainsAny`
+                        // we had to resort to this!
+                        List<String> itemTags = (List<String>) item.get("Tags");
+
+                        for (String tag: filteredTags) {
+                            if (itemTags.contains(tag)) {
+                                shouldProceed = true;
+                                break;
+                            }
+                        }
+
+                        if (!shouldProceed) {
+                            continue;
+                        }
+                    }
+
                     data.add(new RecipeItem(
                             document.getId(),
                             String.valueOf(item.get("Name")),
@@ -197,11 +238,11 @@ public class ViewRecipe extends Fragment {
 
                 // TODO
                 // Remove the following workaround and implement a better approach
-                if(data.size()>0) {
+                if (data.size() > 0) {
                     rvListing.setVisibility(View.VISIBLE);
                     tvNoRecipeFound.setVisibility(View.GONE);
                     ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
-                }else{
+                } else {
                     rvListing.setVisibility(View.GONE);
                     tvNoRecipeFound.setVisibility(View.VISIBLE);
                 }
