@@ -53,19 +53,11 @@ public class ViewRecipe extends Fragment {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseUser user = auth.getCurrentUser();
 
-    // TODO
-    // Remove temporaryCuisines and use server/firebase retrieved tags
-//    final private String[] temporaryCuisines = {
-//            "Chinese", "English", "Indian", "French",
-//            "American", "Japanese", "Mexican"
-//    };
-
     private List<String> filteredIngredients = null;
     private List<String> filteredTags = null;
 
-
     private View root = null;
-    private ChipGroup cuisineContainer;
+    private ChipGroup typeContainer;
     private Button searchRecipeBtn;
     private TextView tvAdvanceFilter;
     private TextView tvNoRecipeFound;
@@ -94,21 +86,20 @@ public class ViewRecipe extends Fragment {
         root = inflater.inflate(R.layout.fragment_view_recipe, container, false);
 
         searchRecipeBtn = root.findViewById(R.id.searchRecipeBtn);
-//        cuisineContainer = root.findViewById(R.id.cuisineContainer);
+        typeContainer = root.findViewById(R.id.typeContainer);
         tvAdvanceFilter = root.findViewById(R.id.tvAdvanceFilter);
         tvNoRecipeFound = root.findViewById(R.id.tvNoRecipeFound);
         rvListing = root.findViewById(R.id.rvListing);
         Activity activity = getActivity();
 
-//        for (String cuisine: temporaryCuisines) {
-//
-//            Chip chip = new Chip(activity);
-//            chip.setText(cuisine);
-//            chip.setId(root.generateViewId());
-//            chip.setCheckable(true);
-//
-//            cuisineContainer.addView(chip);
-//        }
+        for (String type: Utils.allTypes) {
+            Chip chip = new Chip(activity);
+            chip.setText(type);
+            chip.setId(root.generateViewId());
+            chip.setCheckable(true);
+
+            typeContainer.addView(chip);
+        }
 
         searchRecipeBtn.setOnClickListener(this::onSearch);
 
@@ -163,13 +154,11 @@ public class ViewRecipe extends Fragment {
         // Starting with emptying the recyclerView
         ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(new ArrayList<RecipeItem>()));
 
-        // Getting selected cuisines
-//        List<Integer> ids = cuisineContainer.getCheckedChipIds();
-//        List<CharSequence> selectedCuisines = new ArrayList<CharSequence>();
-//        for (Integer id : ids) {
-//            Chip chip = cuisineContainer.findViewById(id);
-//            selectedCuisines.add(chip.getText());
-//        }
+        // Getting selected type
+        Integer typeChipId = typeContainer.getCheckedChipId();
+        String type = (typeChipId != -1 ?
+                ((Chip) typeContainer.findViewById(typeChipId)).getText().toString() :
+                "Any").toLowerCase();
 
         Task<QuerySnapshot> snap;
 
@@ -180,9 +169,9 @@ public class ViewRecipe extends Fragment {
             query = query.whereEqualTo("AuthorEmail", user.getEmail());
         }
 
-//        if (selectedCuisine != null) {
-//            query = query.whereEqualTo("Cuisine", selectedCuisine);
-//        }
+        if (!type.equals("any")) {
+            query = query.whereEqualTo("Type", type);
+        }
 
         boolean hasFilteredIngredients = false, filterTagsManually = false;
         if (filteredIngredients != null && filteredIngredients.size() > 0) {

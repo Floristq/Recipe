@@ -72,24 +72,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Cuisines"
-                android:textColor="#030001"
-                android:textSize="19dp"
-                android:textStyle="bold" />
-
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 >
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/cuisineContainer"
+                    android:id="@+id/typeContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:singleLine="true"
+                    app:singleSelection="true"
                     />
             </HorizontalScrollView>
 
