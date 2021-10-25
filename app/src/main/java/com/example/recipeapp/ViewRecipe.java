@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -60,7 +61,7 @@ public class ViewRecipe extends Fragment {
     private View root = null;
     private ChipGroup typeContainer;
     private Button searchRecipeBtn;
-    private TextView tvNoRecipeFound;
+    private ProgressBar dataLoadingBar;
     private RelativeLayout rvListing;
 
     private boolean ownRecipeOnly = false;
@@ -87,7 +88,7 @@ public class ViewRecipe extends Fragment {
 
         searchRecipeBtn = root.findViewById(R.id.searchRecipeBtn);
         typeContainer = root.findViewById(R.id.typeContainer);
-        tvNoRecipeFound = root.findViewById(R.id.tvNoRecipeFound);
+        dataLoadingBar = root.findViewById(R.id.dataLoadingBar);
         rvListing = root.findViewById(R.id.rvListing);
         Activity activity = getActivity();
 
@@ -154,11 +155,10 @@ public class ViewRecipe extends Fragment {
 
     private void loadRecipeList() {
 
-        // TODO
-        // Display a loader
 
         // Starting with emptying the recyclerView
         ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(new ArrayList<RecipeItem>()));
+        dataLoadingBar.setVisibility(View.VISIBLE);
 
         // Getting selected type
         Integer typeChipId = typeContainer.getCheckedChipId();
@@ -256,15 +256,15 @@ public class ViewRecipe extends Fragment {
                 // Remove the following workaround and implement a better approach
                 if (data.size() > 0) {
                     rvListing.setVisibility(View.VISIBLE);
-                    tvNoRecipeFound.setVisibility(View.GONE);
                     ViewRecipeListFragment.recyclerView.setAdapter(new ViewRecipeListRecyclerViewAdapter(data));
                 } else {
                     rvListing.setVisibility(View.GONE);
-                    tvNoRecipeFound.setVisibility(View.VISIBLE);
                 }
             } else {
                 Log.d("Firestore failure", "Error getting documents: ", task.getException());
             }
+
+            dataLoadingBar.setVisibility(View.GONE);
         });
 
     }

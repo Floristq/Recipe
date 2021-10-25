@@ -118,23 +118,20 @@
                 android:id="@+id/searchRecipeBtn"
                 />
 
-            <TextView
-                android:id="@+id/tvNoRecipeFound"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="No Recipes Found"
-                android:textColor="#030001"
-                android:gravity="center"
-                android:visibility="gone"
-                android:textSize="23dp"
-                android:textStyle="bold" />
-
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/rvListing"
                 >
 
+                <ProgressBar
+                    android:id="@+id/dataLoadingBar"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="gone"
+                    />
                 <fragment
                     android:name="com.example.recipeapp.ViewRecipeListFragment"
                     android:layout_width="match_parent"
