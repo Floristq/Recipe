@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -86,7 +87,7 @@ public class AddEditRecipe extends Fragment {
     private FloatingActionButton galleryBtn;
     private LinearLayout uploadImgBtnContainer;
     private ImageView recipeImg;
-    private MultiAutoCompleteTextView recipeTagInput;
+    private AutoCompleteTextView recipeTagInput;
     private Button submitBtn;
     private ChipGroup typeContainer;
     private Spinner cuisineSpinner;
@@ -151,7 +152,7 @@ public class AddEditRecipe extends Fragment {
         galleryBtn = root.findViewById(R.id.galleryBtn);
         recipeImg = root.findViewById((R.id.recipeImg));
         uploadImgBtnContainer = root.findViewById(R.id.uploadImgBtnContainer);
-        recipeTagInput = root.findViewById(R.id.recipeTagInput);
+        recipeTagInput = root.findViewById(R.id.tagsInput);
         submitBtn = root.findViewById(R.id.submitBtn);
         typeContainer = root.findViewById(R.id.typeContainer);
         cuisineSpinner = root.findViewById(R.id.cuisine);
@@ -182,14 +183,14 @@ public class AddEditRecipe extends Fragment {
         // TODO
         // Temporarily using the temporaryTags to populate tags-input until
         // server / firebase is set up
-        List<AdapterItem> tagAdapterList = new ArrayList<>();
-        for (String tag: temporaryTags) {
-            tagAdapterList.add(new AdapterItem(tag, 0));
-        }
-
-        recipeTagsAdapter = new AutoCompleteAdapter(activity, tagAdapterList);
-        recipeTagInput.setAdapter(recipeTagsAdapter);
-        recipeTagInput.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+//        List<AdapterItem> tagAdapterList = new ArrayList<>();
+//        for (String tag: temporaryTags) {
+//            tagAdapterList.add(new AdapterItem(tag, 0));
+//        }
+//
+//        recipeTagsAdapter = new AutoCompleteAdapter(activity, tagAdapterList);
+//        recipeTagInput.setAdapter(recipeTagsAdapter);
+//        recipeTagInput.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
 
         // Attaching events
@@ -460,6 +461,44 @@ public class AddEditRecipe extends Fragment {
             });
 
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private AutoCompleteAdapter configureFilter(AutoCompleteTextView input, ChipGroup chipGroup) {
+        AutoCompleteAdapter adapter = new AutoCompleteAdapter(getActivity(), new ArrayList<AdapterItem>(), input);
+        adapter.setCustomCreationEnabled(false);
+        input.setAdapter(adapter);
+        input.setTag(R.string.AUTO_COMPLETE_ADAPTER_CONNECTED_ADAPTER_KEY, adapter);
+
+        input.setOnItemClickListener((parent, v, position, id) -> {
+            com.google.android.material.chip.Chip chip = new com.google.android.material.chip.Chip(getActivity());
+            chip.setText(input.getText());
+            chip.setId(root.generateViewId());
+            chip.setCheckable(true);
+            chip.setChecked(true);
+            chip.setCloseIconVisible(true);
+            chip.setOnCloseIconClickListener(chipView -> {
+                chipGroup.removeView(chipView);
+            });
+
+            chipGroup.addView(chip);
+
+            ChipGroup.LayoutParams chipLayoutParams = (ChipGroup.LayoutParams) chip.getLayoutParams();
+            chipLayoutParams.rightMargin = 20;
+
+            input.setText("");
+
+            List<Integer> chipIds = chipGroup.getCheckedChipIds();
+            List<String> list = new ArrayList<String>();
+            for (Integer chipId: chipIds){
+                com.google.android.material.chip.Chip selectedChip = chipGroup.findViewById(chipId);
+                list.add(chip.getText().toString());
+            }
+
+            input.setTag(R.string.AUTO_COMPLETE_ADAPTER_SELECTED_VALUES_KEY, list);
+        });
+
+        return adapter;
     }
 
     private void uploadDocument(Map<String, Object> data) {

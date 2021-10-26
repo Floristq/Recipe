@@ -94,12 +94,12 @@
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/advancedFilterBtn"
-                    android:layout_width="24dp"
+                    android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_baseline_filter_alt_12"
                     android:contentDescription="Confirm"
                     app:backgroundTint="#fff"
-                    app:fabCustomSize="24dp"
+                    app:fabCustomSize="28dp"
                     app:tint="@color/design_default_color_primary"/>
 
             </com.google.android.flexbox.FlexboxLayout>

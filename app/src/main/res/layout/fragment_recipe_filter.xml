@@ -26,7 +26,7 @@
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="4dp"
+                android:background="@drawable/border_bottom"
                 app:flexWrap="wrap"
                 >
                 <com.google.android.material.chip.ChipGroup
@@ -49,7 +49,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:text="Cuisines"
                 android:textColor="#030001"
                 android:textSize="19dp"
@@ -58,7 +58,7 @@
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="4dp"
+                android:background="@drawable/border_bottom"
                 app:flexWrap="wrap"
                 >
                 <com.google.android.material.chip.ChipGroup
@@ -81,7 +81,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:text="Tags"
                 android:textColor="#030001"
                 android:textSize="19dp"
@@ -90,7 +90,7 @@
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="4dp"
+                android:background="@drawable/border_bottom"
                 app:flexWrap="wrap"
                 >
                 <com.google.android.material.chip.ChipGroup

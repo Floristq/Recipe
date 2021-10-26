@@ -40,9 +40,10 @@
                 android:id="@+id/recipeName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="-4dp"
                 android:hint="@string/recipe_name_hint"
                 android:inputType="textPersonName"
+                android:paddingVertical="8dp"
+                android:background="@drawable/border_bottom"
                 />
 
             <TextView
@@ -55,13 +56,20 @@
                 android:textStyle="bold"
                 />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/typeContainer"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:singleSelection="true"
-                />
+                android:scrollbars="none"
+                >
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/typeContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:singleSelection="true"
+                    app:singleLine="true"
+                    />
+            </HorizontalScrollView>
 
             <TextView
                 android:layout_width="match_parent"
@@ -150,11 +158,14 @@
                 android:id="@+id/instructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="90dp"
+                android:minHeight="80dp"
                 android:ems="10"
                 android:hint="@string/recipe_instruction_hint"
                 android:gravity="start|top"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:paddingVertical="8dp"
+                android:background="@drawable/border_bottom"
+                />
 
             <TextView
                 android:layout_width="match_parent"
@@ -226,13 +237,28 @@
                 android:textStyle="bold"
                 />
 
-            <MultiAutoCompleteTextView
-                android:id="@+id/recipeTagInput"
+            <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:completionThreshold="1"
-                android:hint="@string/recipe_tag_hint"
-                />
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                app:flexWrap="wrap"
+                android:background="@drawable/border_bottom"
+                >
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/tagsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/tagsInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/transparent"
+                    android:completionThreshold="1"
+                    android:hint="Type to add tags..."
+                    />
+            </com.google.android.flexbox.FlexboxLayout>
 
             <Button
                 android:id="@+id/submitBtn"
