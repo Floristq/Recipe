@@ -1,15 +1,19 @@
 package com.example.recipeapp.autocompleteadapter;
 
+import android.app.Activity;
 import android.content.Context;
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
+import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +21,7 @@ import android.widget.TextView;
 import android.os.Handler;
 
 import com.example.recipeapp.R;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +51,46 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
 
         setData(data, false);
         this.textView = textView;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public final static AutoCompleteAdapter getInstance(
+            Activity activity, AutoCompleteTextView input, ChipGroup chipGroup
+    ) {
+        AutoCompleteAdapter adapter = new AutoCompleteAdapter(activity, new ArrayList<AdapterItem>(), input);
+        adapter.setCustomCreationEnabled(false);
+        input.setAdapter(adapter);
+        input.setTag(R.string.AUTO_COMPLETE_ADAPTER_CONNECTED_ADAPTER_KEY, adapter);
+
+        input.setOnItemClickListener((parent, v, position, id) -> {
+            com.google.android.material.chip.Chip chip = new com.google.android.material.chip.Chip(activity);
+            chip.setText(input.getText());
+            chip.setId(v.generateViewId());
+            chip.setCheckable(true);
+            chip.setChecked(true);
+            chip.setCloseIconVisible(true);
+            chip.setOnCloseIconClickListener(chipView -> {
+                chipGroup.removeView(chipView);
+            });
+
+            chipGroup.addView(chip);
+
+            ChipGroup.LayoutParams chipLayoutParams = (ChipGroup.LayoutParams) chip.getLayoutParams();
+            chipLayoutParams.rightMargin = 20;
+
+            input.setText("");
+
+            List<Integer> chipIds = chipGroup.getCheckedChipIds();
+            List<String> list = new ArrayList<String>();
+            for (Integer chipId: chipIds){
+                com.google.android.material.chip.Chip selectedChip = chipGroup.findViewById(chipId);
+                list.add(chip.getText().toString());
+            }
+
+            input.setTag(R.string.AUTO_COMPLETE_ADAPTER_SELECTED_VALUES_KEY, list);
+        });
+
+        return adapter;
     }
 
     // Sets dropdown list data and reloads if applicable

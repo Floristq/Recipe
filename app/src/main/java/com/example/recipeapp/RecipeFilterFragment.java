@@ -1,5 +1,6 @@
 package com.example.recipeapp;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -81,10 +82,20 @@ public class RecipeFilterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FloatingActionButton confirmBtn = root.findViewById(R.id.confirmBtn);
+        Activity activity = getActivity();
 
-        populateFilter("ingredients", configureFilter(searchIngredientsInput, ingredientsContainer));
-        populateFilter("cuisines", configureFilter(searchCuisines, cuisinesContainer));
-        populateFilter("tags", configureFilter(searchTags, tagsContainer));
+        populateFilter(
+                "ingredients",
+                AutoCompleteAdapter.getInstance(activity, searchIngredientsInput, ingredientsContainer)
+        );
+        populateFilter(
+                "cuisines",
+                AutoCompleteAdapter.getInstance(activity, searchCuisines, cuisinesContainer)
+        );
+        populateFilter(
+                "tags",
+                AutoCompleteAdapter.getInstance(activity, searchTags, tagsContainer)
+        );
 
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,44 +109,6 @@ public class RecipeFilterFragment extends Fragment {
                 Navigation.findNavController(v).navigateUp();
             }
         });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private AutoCompleteAdapter configureFilter(AutoCompleteTextView input, ChipGroup chipGroup) {
-        AutoCompleteAdapter adapter = new AutoCompleteAdapter(getActivity(), new ArrayList<AdapterItem>(), input);
-        adapter.setCustomCreationEnabled(false);
-        input.setAdapter(adapter);
-        input.setTag(R.string.AUTO_COMPLETE_ADAPTER_CONNECTED_ADAPTER_KEY, adapter);
-
-        input.setOnItemClickListener((parent, v, position, id) -> {
-            com.google.android.material.chip.Chip chip = new com.google.android.material.chip.Chip(getActivity());
-            chip.setText(input.getText());
-            chip.setId(root.generateViewId());
-            chip.setCheckable(true);
-            chip.setChecked(true);
-            chip.setCloseIconVisible(true);
-            chip.setOnCloseIconClickListener(chipView -> {
-                chipGroup.removeView(chipView);
-            });
-
-            chipGroup.addView(chip);
-
-            ChipGroup.LayoutParams chipLayoutParams = (ChipGroup.LayoutParams) chip.getLayoutParams();
-            chipLayoutParams.rightMargin = 20;
-
-            input.setText("");
-
-            List<Integer> chipIds = chipGroup.getCheckedChipIds();
-            List<String> list = new ArrayList<String>();
-            for (Integer chipId: chipIds){
-                com.google.android.material.chip.Chip selectedChip = chipGroup.findViewById(chipId);
-                list.add(chip.getText().toString());
-            }
-
-            input.setTag(R.string.AUTO_COMPLETE_ADAPTER_SELECTED_VALUES_KEY, list);
-        });
-
-        return adapter;
     }
 
     private List<String> getChipValues(ChipGroup chipGroup) {
