@@ -217,7 +217,7 @@ public class Recipe_Item extends Fragment {
                                 String type = (String) data.get("Type");
                                 if (!type.equals("any")) {
                                     root.findViewById(R.id.typeContainer).setVisibility(View.VISIBLE);
-                                    ((TextView) root.findViewById(R.id.type)).setText(type);
+                                    ((TextView) root.findViewById(R.id.type)).setText(Utils.capitalize(type));
                                 }
                             }
 
