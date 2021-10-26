@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi;
 import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,21 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
             addSelectedData(input.getText().toString());
 
             input.setText("");
+        });
+
+        input.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_UP) {
+                    if (input.getText().toString().isEmpty() && selectedData.size() > 0) {
+                        int lastChildPos = chipGroup.getChildCount() - 1;
+                        chipGroup.removeView(chipGroup.getChildAt(lastChildPos));
+                        selectedData.remove(lastChildPos);
+                        return true;
+                    }
+                }
+                return false;
+            }
         });
     }
 
