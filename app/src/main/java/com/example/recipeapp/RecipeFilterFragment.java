@@ -85,6 +85,8 @@ public class RecipeFilterFragment extends Fragment {
         FloatingActionButton confirmBtn = root.findViewById(R.id.confirmBtn);
         Activity activity = getActivity();
 
+        Bundle bundle = this.getArguments();
+
         AutoCompleteAdapter ingredientAdapter = new AutoCompleteAdapter(activity, searchIngredientsInput, ingredientsContainer);
         AutoCompleteAdapter cuisineAdapter = new AutoCompleteAdapter(activity, searchCuisines, cuisinesContainer);
         AutoCompleteAdapter tagAdapter = new AutoCompleteAdapter(activity, searchTags, tagsContainer);
@@ -92,6 +94,18 @@ public class RecipeFilterFragment extends Fragment {
         populateFilter("ingredients", ingredientAdapter);
         populateFilter("cuisines", cuisineAdapter);
         populateFilter("tags", tagAdapter);
+
+        if (bundle != null) {
+            if (bundle.containsKey("ingredients")) {
+                ingredientAdapter.setSelectedData(bundle.getStringArrayList("ingredients"));
+            }
+            if (bundle.containsKey("cuisines")) {
+                cuisineAdapter.setSelectedData(bundle.getStringArrayList("cuisines"));
+            }
+            if (bundle.containsKey("tags")) {
+                tagAdapter.setSelectedData(bundle.getStringArrayList("tags"));
+            }
+        }
 
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
