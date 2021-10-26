@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="@dimen/fab_margin"
     tools:context=".Comments">
 
     <ListView
@@ -16,24 +17,35 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_bottom"
+        >
         <EditText
             android:id="@+id/commentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:paddingVertical="4dp"
             android:ems="17"
             android:hint="Insert your comment here..."
             android:gravity="start|top"
-            android:inputType="textMultiLine" />
-
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
             android:layout_weight="1"
-            android:background="@drawable/but_back"
-            android:src="@drawable/send_image_foreground" />
+            android:inputType="textMultiLine"
+            android:background="@android:color/transparent"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/imageButton"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/send_image_foreground"
+            android:contentDescription="Confirm"
+            app:backgroundTint="#fff"
+            app:fabCustomSize="28dp"
+            app:tint="@color/design_default_color_primary"
+            android:layout_gravity="bottom"
+            />
+
 
 
     </LinearLayout>
