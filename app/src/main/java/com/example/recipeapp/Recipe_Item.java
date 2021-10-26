@@ -235,7 +235,7 @@ public class Recipe_Item extends Fragment {
                             mInstructionTextView.setText(String.valueOf(data.get("Instruction")));
                             if (data.containsKey("Tags")) {
                                 List<String> tags = new ArrayList<String>();
-                                for (String tag: (List<String>) data.get("Ingredients")) {
+                                for (String tag: (List<String>) data.get("Tags")) {
                                     tags.add(Utils.capitalize(tag));
                                 }
 
