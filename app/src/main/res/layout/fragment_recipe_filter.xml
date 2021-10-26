@@ -25,7 +25,7 @@
 
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/border_bottom"
                 app:flexWrap="wrap"
                 >
@@ -57,7 +57,7 @@
 
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/border_bottom"
                 app:flexWrap="wrap"
                 >
@@ -89,7 +89,7 @@
 
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/border_bottom"
                 app:flexWrap="wrap"
                 >
