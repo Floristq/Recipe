@@ -35,78 +35,113 @@ import java.util.List;
 // - Maybe design improvement
 // - Maybe integrating a library
 public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
-    private List<AdapterItem> data;
+    private List<AdapterItem> data = new ArrayList<AdapterItem>();
+    // TODO: Change type `String` to `AdapterItem`
+    private List<String> selectedData = new ArrayList<String>();
     private CharSequence constraint = "";
-    private TextView textView = null;
+
+    private Activity activity;
+    private ChipGroup chipGroup;
+    // TODO: Later allow more type of `input`s
+    private AutoCompleteTextView input;
+
     private boolean customCreationEnabled = true;
-
-    public AutoCompleteAdapter(@NonNull Context context, List<AdapterItem> data) {
-        super(context, 0, new ArrayList<>());
-
-        setData(data, false);
-    }
-
-    public AutoCompleteAdapter(@NonNull Context context, List<AdapterItem> data, TextView textView) {
-        super(context, 0, new ArrayList<>());
-
-        setData(data, false);
-        this.textView = textView;
-    }
+    private boolean allowMultipleSelection = true;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public final static AutoCompleteAdapter getInstance(
-            Activity activity, AutoCompleteTextView input, ChipGroup chipGroup
-    ) {
-        AutoCompleteAdapter adapter = new AutoCompleteAdapter(activity, new ArrayList<AdapterItem>(), input);
-        adapter.setCustomCreationEnabled(false);
-        input.setAdapter(adapter);
-        input.setTag(R.string.AUTO_COMPLETE_ADAPTER_CONNECTED_ADAPTER_KEY, adapter);
+    public AutoCompleteAdapter(@NonNull Context context, AutoCompleteTextView input, ChipGroup chipGroup) {
+        super(context, 0, new ArrayList<>());
+
+        activity = (Activity) context;
+        this.input = input;
+        this.chipGroup = chipGroup;
+
+        setCustomCreationEnabled(false);
+
+        input.setAdapter(this);
 
         input.setOnItemClickListener((parent, v, position, id) -> {
-            com.google.android.material.chip.Chip chip = new com.google.android.material.chip.Chip(activity);
-            chip.setText(input.getText());
-            chip.setId(v.generateViewId());
-            chip.setCheckable(true);
-            chip.setChecked(true);
-            chip.setCloseIconVisible(true);
-            chip.setOnCloseIconClickListener(chipView -> {
-                chipGroup.removeView(chipView);
-            });
-
-            chipGroup.addView(chip);
-
-            ChipGroup.LayoutParams chipLayoutParams = (ChipGroup.LayoutParams) chip.getLayoutParams();
-            chipLayoutParams.rightMargin = 20;
+            addSelectedData(input.getText().toString());
 
             input.setText("");
-
-            List<Integer> chipIds = chipGroup.getCheckedChipIds();
-            List<String> list = new ArrayList<String>();
-            for (Integer chipId: chipIds){
-                com.google.android.material.chip.Chip selectedChip = chipGroup.findViewById(chipId);
-                list.add(chip.getText().toString());
-            }
-
-            input.setTag(R.string.AUTO_COMPLETE_ADAPTER_SELECTED_VALUES_KEY, list);
         });
-
-        return adapter;
     }
+
 
     // Sets dropdown list data and reloads if applicable
     // TODO
-    // Chek if customFilter.filter(...) works or not!
-    public void setData(List<AdapterItem> data, Boolean shouldUpdateView) {
-        this.data = data == null ? new ArrayList<>() : data;
-
-        if (shouldUpdateView) {
-            customFilter.filter(constraint);
+    // Chek if customFilter.filter(...) works or not applying the following
+    // if (shouldUpdateView) {
+    //     customFilter.filter(constraint);
+    // }
+    public void setData(List<?> rawData) {
+        if (rawData != null) {
+            if (rawData.size() > 0 && rawData.get(0).getClass().equals(String.class)) {
+                for (Object item: rawData) {
+                    data.add(new AdapterItem(item.toString(), 0));
+                }
+            } else {
+                data = (List<AdapterItem>) rawData;
+            }
+        } else {
+            data = new ArrayList<>();
         }
+    }
+
+    public void setData(String[] rawData) {
+        if (rawData != null) {
+            for (String item: rawData) {
+                data.add(new AdapterItem(item, 0));
+            }
+        } else {
+            data = new ArrayList<>();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void addSelectedData(String value) {
+        if (allowMultipleSelection) {
+            chipGroup.clearCheck();
+            selectedData = new ArrayList<String>();
+        }
+
+        com.google.android.material.chip.Chip chip = new com.google.android.material.chip.Chip(activity);
+        chip.setText(value);
+        chip.setId(input.generateViewId());
+        chip.setCheckable(true);
+        chip.setChecked(true);
+        chip.setCloseIconVisible(true);
+        chip.setOnCloseIconClickListener(chipView -> {
+            chipGroup.removeView(chipView);
+        });
+
+        chipGroup.addView(chip);
+
+        ChipGroup.LayoutParams chipLayoutParams = (ChipGroup.LayoutParams) chip.getLayoutParams();
+        chipLayoutParams.rightMargin = 20;
+
+        selectedData.add(value);
     }
 
     // Allows to create custom values
     public void setCustomCreationEnabled(boolean value) {
         customCreationEnabled = value;
+    }
+
+    public void setAllowMultipleSelection(boolean value) {
+        allowMultipleSelection = value;
+    }
+
+    public List<String> getSelectedData() {
+        return selectedData;
+    }
+
+    // Only when `allowMultipleSelection` is `false`
+    public String getSelectedItem() {
+        if (!allowMultipleSelection && selectedData.size() > 0) {
+            return selectedData.get(0);
+        }
+        return null;
     }
 
     // Custom filter helps to display all items containing the filtering text,
@@ -135,22 +170,11 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 if (customCreationEnabled) suggestions.add(new AdapterItem(filterPattern, 0));
-
-                // Extracting the selected values for this adapter
-                List<String> selectedValues = null;
-                if (textView != null) {
-                    View view = (View) textView;
-                    selectedValues = (List<String>) view.getTag(R.string.AUTO_COMPLETE_ADAPTER_SELECTED_VALUES_KEY);
-                }
-
-                if (selectedValues == null) {
-                    selectedValues = new ArrayList<String>();
-                }
                 
                 for (AdapterItem item : data) {
                     String itemName = item.getLabel().toLowerCase();
 
-                    if (!selectedValues.contains(itemName) &&
+                    if (!selectedData.contains(itemName) &&
                             (!customCreationEnabled || !itemName.equals(filterPattern)) &&
                             itemName.contains(filterPattern)) {
                         suggestions.add(item);
