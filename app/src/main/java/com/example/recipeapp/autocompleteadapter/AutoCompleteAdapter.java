@@ -29,11 +29,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-
-// TODO
-// - Contemplate removing selected items from the dropdown
-// - Maybe design improvement
-// - Maybe integrating a library
 public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
     private List<AdapterItem> data = new ArrayList<AdapterItem>();
     // TODO: Change type `String` to `AdapterItem`
@@ -100,8 +95,8 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void addSelectedData(String value) {
-        if (allowMultipleSelection) {
-            chipGroup.clearCheck();
+        if (!allowMultipleSelection) {
+            chipGroup.removeAllViews();
             selectedData = new ArrayList<String>();
         }
 
@@ -153,6 +148,15 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
         return customFilter;
     }
 
+    private boolean hasItem(String value) {
+        for (String item: selectedData) {
+            if (value.equalsIgnoreCase(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private Filter customFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -174,7 +178,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
                 for (AdapterItem item : data) {
                     String itemName = item.getLabel().toLowerCase();
 
-                    if (!selectedData.contains(itemName) &&
+                    if (!hasItem(itemName) &&
                             (!customCreationEnabled || !itemName.equals(filterPattern)) &&
                             itemName.contains(filterPattern)) {
                         suggestions.add(item);
