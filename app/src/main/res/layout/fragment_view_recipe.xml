@@ -134,13 +134,15 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/rvListing"
                 >
+
                 <ProgressBar
                     android:id="@+id/dataLoadingBar"
                     android:layout_width="150dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="@dimen/fab_margin"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/fab_margin"
                     android:visibility="gone"
+                    android:indeterminateTint="@color/design_default_color_primary"
                     />
 
                 <LinearLayout
