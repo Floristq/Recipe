@@ -87,10 +87,10 @@ public class AddEditRecipe extends Fragment {
     private FloatingActionButton galleryBtn;
     private LinearLayout uploadImgBtnContainer;
     private ImageView recipeImg;
-    private AutoCompleteTextView recipeTagInput;
     private Button submitBtn;
     private ChipGroup typeContainer;
-    private Spinner cuisineSpinner;
+    private AutoCompleteAdapter cuisineAdapter;
+    private AutoCompleteAdapter tagAdapter;
     private ChipGroup ingredientContainer;
     private LinearLayout recipeForm;
     private ProgressBar dataLoadingBar;
@@ -100,15 +100,13 @@ public class AddEditRecipe extends Fragment {
 
     Snackbar loadingSnackbar = null;
 
-    private AutoCompleteAdapter recipeTagsAdapter;
     private Uri imageUri = null;
 
     private boolean uploading = false;
 
-    private final String SELECT_CUISINE_HINT = "Select Cuisine";
     // TODO
-    // Remove temporaryTags and use server/firebase retrieved tags
-    final private String[] temporaryTags = {
+    // The basic tags to look from, user can also add their own
+    final private String[] basicTags = {
             "frost", "lunch", "breakfast", "dinner", "snacks", "bakery", "healthy",
             "chef", "delicious", "cooking", "dessert", "yummy", "vegan", "glutenfree", "tasty",
             "fitness", "mexican", "american", "chinese", "indian"
@@ -152,23 +150,14 @@ public class AddEditRecipe extends Fragment {
         galleryBtn = root.findViewById(R.id.galleryBtn);
         recipeImg = root.findViewById((R.id.recipeImg));
         uploadImgBtnContainer = root.findViewById(R.id.uploadImgBtnContainer);
-        recipeTagInput = root.findViewById(R.id.tagsInput);
         submitBtn = root.findViewById(R.id.submitBtn);
         typeContainer = root.findViewById(R.id.typeContainer);
-        cuisineSpinner = root.findViewById(R.id.cuisine);
         ingredientContainer = root.findViewById(R.id.ingredientContainer);
         recipeForm = root.findViewById(R.id.recipeForm);
         dataLoadingBar = root.findViewById(R.id.dataLoadingBar);
 
         recipeNameInput = root.findViewById(R.id.recipeName);
         instructionInput = root.findViewById(R.id.instructions);
-
-        List<String> cuisines =  new ArrayList<String>();
-        cuisines.add(SELECT_CUISINE_HINT);
-        for (String cuisine: temporaryCuisines) {
-            cuisines.add(cuisine);
-        }
-        setCuisineAdapter(cuisines);
 
         for (String type: Utils.allTypes) {
             Chip chip = new Chip(activity);
@@ -179,25 +168,26 @@ public class AddEditRecipe extends Fragment {
             typeContainer.addView(chip);
         }
 
-        // Configuring recipeTagsInput
-        // TODO
-        // Temporarily using the temporaryTags to populate tags-input until
-        // server / firebase is set up
-//        List<AdapterItem> tagAdapterList = new ArrayList<>();
-//        for (String tag: temporaryTags) {
-//            tagAdapterList.add(new AdapterItem(tag, 0));
-//        }
-//
-//        recipeTagsAdapter = new AutoCompleteAdapter(activity, tagAdapterList);
-//        recipeTagInput.setAdapter(recipeTagsAdapter);
-//        recipeTagInput.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        cuisineAdapter = new AutoCompleteAdapter(
+                activity,
+                root.findViewById(R.id.cuisinesInput),
+                root.findViewById(R.id.cuisinesContainer)
+        );
+        cuisineAdapter.setAllowMultipleSelection(false);
+        cuisineAdapter.setData(temporaryCuisines);
 
+        tagAdapter = new AutoCompleteAdapter(
+                activity,
+                root.findViewById(R.id.tagsInput),
+                root.findViewById(R.id.tagsContainer)
+        );
+        tagAdapter.setData(basicTags);
 
         // Attaching events
         cameraBtn.setOnClickListener(this::onCameraBtnClick);
         galleryBtn.setOnClickListener(this::onGalleryBtnClick);
         submitBtn.setOnClickListener(this::onSubmit);
-        root.findViewById(R.id.addIngredient).setOnClickListener(this::onAddIngredient);
+//        root.findViewById(R.id.addIngredient).setOnClickListener(this::onAddIngredient);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -228,7 +218,7 @@ public class AddEditRecipe extends Fragment {
                             // Populating the fields!
                             recipeNameInput.setText(String.valueOf(data.get("Name")));
                             if (data.containsKey("Cuisine")) {
-                                setCuisine(String.valueOf(data.get("Cuisine")));
+                                cuisineAdapter.addSelectedData(String.valueOf(data.get("Cuisine")));
                             }
 
                             String type = (String) data.get("Type");
@@ -259,13 +249,9 @@ public class AddEditRecipe extends Fragment {
                             instructionInput.setText(String.valueOf(data.get("Instruction")));
 
                             if (data.containsKey("Tags")) {
-                                List<String> tags = new ArrayList<String>();
                                 for (Object tag: (ArrayList) data.get("Tags")) {
-                                    tags.add(Utils.capitalize(tag.toString()));
+                                    tagAdapter.addSelectedData(Utils.capitalize(tag.toString()));
                                 }
-
-                                recipeTagInput.setText(String.join(", ", tags) +
-                                        (tags.size() > 0 ? ", " : ""));
                             }
 
                             dataLoadingBar.setVisibility(View.GONE);
@@ -286,42 +272,12 @@ public class AddEditRecipe extends Fragment {
                 });
     }
 
-    private void setCuisine(String cuisine) {
-        SpinnerAdapter cuisineAdapter = cuisineSpinner.getAdapter();
-        int cuisineAdapterLen = cuisineAdapter.getCount();
-        List<String> cuisines = new ArrayList<String>();
-        for (int index = 0; index < cuisineAdapterLen; index++) {
-            Object cuisineValue = cuisineAdapter.getItem(index);
-            String cuisineStr = cuisineValue.toString();
-            if (cuisineStr.equalsIgnoreCase(cuisine)) {
-                cuisineSpinner.setSelection(index);
-                return;
-            }
-            cuisines.add(cuisineStr);
-        }
-
-        cuisines.add(cuisine);
-        setCuisineAdapter(cuisines);
-
-        cuisineSpinner.setSelection(cuisineAdapterLen);
-    }
-
-    private void setCuisineAdapter(List<String> cuisines) {
-        ArrayAdapter<String> cuisineAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_spinner_item,
-                cuisines
-        );
-
-        cuisineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        cuisineSpinner.setAdapter(cuisineAdapter);
-    }
-
     // Add the typed input as an ingredient
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void onAddIngredient(View view) {
-        EditText ingredientInput = root.findViewById(R.id.ingredient);
-        String ingredient = ingredientInput.getText().toString().trim();
+//        EditText ingredientInput = root.findViewById(R.id.ingredient);
+//        String ingredient = ingredientInput.getText().toString().trim();
+        String ingredient = "";
 
         if (ingredient.isEmpty()) {
             Toast.makeText(getActivity(), "Please provide some input first!", Toast.LENGTH_LONG).show();
@@ -339,11 +295,14 @@ public class AddEditRecipe extends Fragment {
         }
 
         addIngredientChip(ingredient);
-        ingredientInput.setText("");
+//        ingredientInput.setText("");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void addIngredientChip(String ingredient) {
+        // TODO
+        // Ability to set it from adapter
+
         Chip chip = new Chip(getActivity());
         chip.setText(Utils.capitalize(ingredient));
         chip.setId(root.generateViewId());
@@ -371,8 +330,7 @@ public class AddEditRecipe extends Fragment {
                 ((Chip) typeContainer.findViewById(typeChipId)).getText().toString() :
                 "Any").toLowerCase();
 
-        String tempCuisine = cuisineSpinner.getSelectedItem().toString();
-        String cuisine = tempCuisine == SELECT_CUISINE_HINT ? "" : tempCuisine; // User can't choose the hint
+        String cuisine = cuisineAdapter.getSelectedItem();
 
         List<Integer> ingredientChipIds = ingredientContainer.getCheckedChipIds();
         List<String> ingredients = new ArrayList<String>();
@@ -383,19 +341,15 @@ public class AddEditRecipe extends Fragment {
 
         String instructions = instructionInput.getText().toString();
         // We already have imageUri
-        List<String> tempTags = Arrays.asList(recipeTagInput.getText().toString().split(", "));
-        List<String> tags = new ArrayList<String>();
-        for (String tempTag: tempTags) {
-            if (!tempTag.isEmpty()) tags.add(tempTag.toLowerCase()); // Removing the empty strings
-        }
+        List<String> tags = tagAdapter.getSelectedData();
 
         if (name.isEmpty() ||
                 type.isEmpty() ||
-                cuisine.isEmpty() ||
+                cuisine != null ||
                 ingredients.isEmpty() ||
                 instructions.isEmpty() ||
                 recipeImg.getDrawable() == null ||
-                tags.isEmpty()) {
+                tags.size() == 0) {
             // TODO
             // Let the user know which fields to fill specifically
             Toast.makeText(getActivity(), "Please fill in all the fields!", Toast.LENGTH_LONG).show();
@@ -461,44 +415,6 @@ public class AddEditRecipe extends Fragment {
             });
 
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private AutoCompleteAdapter configureFilter(AutoCompleteTextView input, ChipGroup chipGroup) {
-        AutoCompleteAdapter adapter = new AutoCompleteAdapter(getActivity(), new ArrayList<AdapterItem>(), input);
-        adapter.setCustomCreationEnabled(false);
-        input.setAdapter(adapter);
-        input.setTag(R.string.AUTO_COMPLETE_ADAPTER_CONNECTED_ADAPTER_KEY, adapter);
-
-        input.setOnItemClickListener((parent, v, position, id) -> {
-            com.google.android.material.chip.Chip chip = new com.google.android.material.chip.Chip(getActivity());
-            chip.setText(input.getText());
-            chip.setId(root.generateViewId());
-            chip.setCheckable(true);
-            chip.setChecked(true);
-            chip.setCloseIconVisible(true);
-            chip.setOnCloseIconClickListener(chipView -> {
-                chipGroup.removeView(chipView);
-            });
-
-            chipGroup.addView(chip);
-
-            ChipGroup.LayoutParams chipLayoutParams = (ChipGroup.LayoutParams) chip.getLayoutParams();
-            chipLayoutParams.rightMargin = 20;
-
-            input.setText("");
-
-            List<Integer> chipIds = chipGroup.getCheckedChipIds();
-            List<String> list = new ArrayList<String>();
-            for (Integer chipId: chipIds){
-                com.google.android.material.chip.Chip selectedChip = chipGroup.findViewById(chipId);
-                list.add(chip.getText().toString());
-            }
-
-            input.setTag(R.string.AUTO_COMPLETE_ADAPTER_SELECTED_VALUES_KEY, list);
-        });
-
-        return adapter;
     }
 
     private void uploadDocument(Map<String, Object> data) {

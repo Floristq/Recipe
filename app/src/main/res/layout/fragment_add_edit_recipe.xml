@@ -81,13 +81,29 @@
                 android:textStyle="bold"
                 />
 
-            <Spinner
-                android:id="@+id/cuisine"
+            <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="-8dp"
-                />
+                android:layout_height="match_parent"
+                app:flexWrap="wrap"
+                android:background="@drawable/border_bottom"
+                >
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cuisinesContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/cuisinesInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-4dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:completionThreshold="1"
+                    android:hint="Type to add ingredients..."
+                    />
+            </com.google.android.flexbox.FlexboxLayout>
+
 
             <TextView
                 android:layout_width="match_parent"
@@ -99,44 +115,28 @@
                 android:textStyle="bold"
                 />
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:endIconMode="clear_text"
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:flexWrap="wrap"
+                android:background="@drawable/border_bottom"
                 >
-                <EditText
-                    android:id="@+id/ingredient"
-                    android:layout_width="match_parent"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/ingredientsContainer"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="textShortMessage"
-                    android:hint="Type to add ingredients"
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/ingredientsInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="-4dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:completionThreshold="1"
+                    android:hint="Type to add ingredients..."
                     />
-
-                <View
-                    android:layout_width="0sp"
-                    android:layout_height="0sp"
-                    android:layout_weight="1"
-                    />
-
-                <!--
-                    TODO
-                    - Rounded corners
-                    - Spacious / padded ripple effect
-                -->
-                <Button
-                    android:id="@+id/addIngredient"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="-30dp"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:background="@android:drawable/ic_input_add"
-                    app:backgroundTint="#000"
-                    />
-            </LinearLayout>
+            </com.google.android.flexbox.FlexboxLayout>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/ingredientContainer"
@@ -230,7 +230,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/fab_margin"
-                android:paddingStart="3dp"
                 android:text="@string/recipe_tag"
                 android:textSize="18dp"
                 android:textColor="#030001"
@@ -240,7 +239,6 @@
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="4dp"
                 app:flexWrap="wrap"
                 android:background="@drawable/border_bottom"
                 >
@@ -254,6 +252,7 @@
                     android:id="@+id/tagsInput"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="-4dp"
                     android:backgroundTint="@android:color/transparent"
                     android:completionThreshold="1"
                     android:hint="Type to add tags..."
