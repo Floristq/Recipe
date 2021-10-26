@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -24,53 +23,92 @@
                 android:textSize="19dp"
                 android:textStyle="bold" />
 
-            <com.tylersuehr.chips.ChipsInputLayout
-                android:id="@+id/ingredientsChipInput"
+            <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Search for ingredients..."
-                android:layout_marginStart="-9dp"
-                android:layout_marginEnd="-9dp"
-                app:hideKeyboardOnChipClick="false"
-                />
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                app:flexWrap="wrap"
+                >
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/ingredientsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/searchIngredients"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-4dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:completionThreshold="1"
+                    android:hint="Search ingredients..."
+                    />
+            </com.google.android.flexbox.FlexboxLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Cuisines"
                 android:textColor="#030001"
                 android:textSize="19dp"
                 android:textStyle="bold" />
 
-            <com.tylersuehr.chips.ChipsInputLayout
-                android:id="@+id/cuisinesChipInput"
+            <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Filter a cuisine"
-                android:layout_marginStart="-9dp"
-                android:layout_marginEnd="-9dp"
-                app:hideKeyboardOnChipClick="false"
-                app:singleSelection="true"
-                />
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                app:flexWrap="wrap"
+                >
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cuisinesContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/searchCuisines"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-4dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:completionThreshold="1"
+                    android:hint="Search cuisines..."
+                    />
+            </com.google.android.flexbox.FlexboxLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Tags"
                 android:textColor="#030001"
                 android:textSize="19dp"
                 android:textStyle="bold" />
 
-            <com.tylersuehr.chips.ChipsInputLayout
-                android:id="@+id/tagsChipInput"
+            <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Search for tags..."
-                android:layout_marginStart="-9dp"
-                android:layout_marginEnd="-9dp"
-                app:hideKeyboardOnChipClick="false"
-                app:singleSelection="true"
-                />
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                app:flexWrap="wrap"
+                >
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/tagsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/searchTags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-4dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:completionThreshold="1"
+                    android:hint="Search tags..."
+                    />
+            </com.google.android.flexbox.FlexboxLayout>
 
         </LinearLayout>
     </ScrollView>
