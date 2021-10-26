@@ -126,6 +126,13 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
         selectedData.add(value);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void setSelectedData(List<String> data) {
+        for (String item: data) {
+            addSelectedData(item);
+        }
+    }
+
     // Allows to create custom values
     public void setCustomCreationEnabled(boolean value) {
         customCreationEnabled = value;
