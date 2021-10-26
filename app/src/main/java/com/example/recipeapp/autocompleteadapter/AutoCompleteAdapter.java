@@ -32,11 +32,20 @@ import java.util.List;
 public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
     private List<AdapterItem> data;
     private CharSequence constraint = "";
+    private TextView textView = null;
+    private boolean customCreationEnabled = true;
 
     public AutoCompleteAdapter(@NonNull Context context, List<AdapterItem> data) {
         super(context, 0, new ArrayList<>());
 
         setData(data, false);
+    }
+
+    public AutoCompleteAdapter(@NonNull Context context, List<AdapterItem> data, TextView textView) {
+        super(context, 0, new ArrayList<>());
+
+        setData(data, false);
+        this.textView = textView;
     }
 
     // Sets dropdown list data and reloads if applicable
@@ -48,6 +57,11 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
         if (shouldUpdateView) {
             customFilter.filter(constraint);
         }
+    }
+
+    // Allows to create custom values
+    public void setCustomCreationEnabled(boolean value) {
+        customCreationEnabled = value;
     }
 
     // Custom filter helps to display all items containing the filtering text,
@@ -75,12 +89,25 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
                 // Adding the 'superset' (filtering text / constraint in the 'subset' here) items
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                suggestions.add(new AdapterItem(filterPattern, 0));
+                if (customCreationEnabled) suggestions.add(new AdapterItem(filterPattern, 0));
 
+                // Extracting the selected values for this adapter
+                List<String> selectedValues = null;
+                if (textView != null) {
+                    View view = (View) textView;
+                    selectedValues = (List<String>) view.getTag(R.string.AUTO_COMPLETE_ADAPTER_SELECTED_VALUES_KEY);
+                }
+
+                if (selectedValues == null) {
+                    selectedValues = new ArrayList<String>();
+                }
+                
                 for (AdapterItem item : data) {
                     String itemName = item.getLabel().toLowerCase();
 
-                    if (!itemName.equals(filterPattern) && itemName.contains(filterPattern)) {
+                    if (!selectedValues.contains(itemName) &&
+                            (!customCreationEnabled || !itemName.equals(filterPattern)) &&
+                            itemName.contains(filterPattern)) {
                         suggestions.add(item);
                     }
                 }
@@ -130,6 +157,8 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
             int image = item.getImage();
             if (image != 0) {
                 imageView.setImageResource(image);
+            } else {
+                imageView.setVisibility(View.GONE);
             }
         }
 
