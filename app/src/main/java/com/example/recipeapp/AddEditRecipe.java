@@ -38,6 +38,7 @@ import com.example.recipeapp.autocompleteadapter.AdapterItem;
 import com.example.recipeapp.autocompleteadapter.AutoCompleteAdapter;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -89,9 +90,10 @@ public class AddEditRecipe extends Fragment {
     private ImageView recipeImg;
     private Button submitBtn;
     private ChipGroup typeContainer;
+    private AutoCompleteTextView ingredientsInput;
+    private AutoCompleteAdapter ingredientAdapter;
     private AutoCompleteAdapter cuisineAdapter;
     private AutoCompleteAdapter tagAdapter;
-    private ChipGroup ingredientContainer;
     private LinearLayout recipeForm;
     private ProgressBar dataLoadingBar;
 
@@ -152,9 +154,9 @@ public class AddEditRecipe extends Fragment {
         uploadImgBtnContainer = root.findViewById(R.id.uploadImgBtnContainer);
         submitBtn = root.findViewById(R.id.submitBtn);
         typeContainer = root.findViewById(R.id.typeContainer);
-        ingredientContainer = root.findViewById(R.id.ingredientContainer);
         recipeForm = root.findViewById(R.id.recipeForm);
         dataLoadingBar = root.findViewById(R.id.dataLoadingBar);
+        ingredientsInput = root.findViewById(R.id.ingredientsInput);
 
         recipeNameInput = root.findViewById(R.id.recipeName);
         instructionInput = root.findViewById(R.id.instructions);
@@ -167,6 +169,13 @@ public class AddEditRecipe extends Fragment {
 
             typeContainer.addView(chip);
         }
+
+        ingredientAdapter = new AutoCompleteAdapter(
+                activity,
+                ingredientsInput,
+                root.findViewById(R.id.ingredientsContainer)
+        );
+        ingredientAdapter.setData(new String[]{});
 
         cuisineAdapter = new AutoCompleteAdapter(
                 activity,
@@ -181,13 +190,14 @@ public class AddEditRecipe extends Fragment {
                 root.findViewById(R.id.tagsInput),
                 root.findViewById(R.id.tagsContainer)
         );
+        tagAdapter.setCustomCreationEnabled(true);
         tagAdapter.setData(basicTags);
 
         // Attaching events
         cameraBtn.setOnClickListener(this::onCameraBtnClick);
         galleryBtn.setOnClickListener(this::onGalleryBtnClick);
         submitBtn.setOnClickListener(this::onSubmit);
-//        root.findViewById(R.id.addIngredient).setOnClickListener(this::onAddIngredient);
+        root.findViewById(R.id.addIngredient).setOnClickListener(this::onAddIngredient);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -242,7 +252,7 @@ public class AddEditRecipe extends Fragment {
 
                             if (data.containsKey("Ingredients")) {
                                 for (Object ingredient: (ArrayList) data.get("Ingredients")) {
-                                    addIngredientChip(ingredient.toString());
+                                    ingredientAdapter.addSelectedData(ingredient.toString());
                                 }
                             }
 
@@ -275,45 +285,23 @@ public class AddEditRecipe extends Fragment {
     // Add the typed input as an ingredient
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void onAddIngredient(View view) {
-//        EditText ingredientInput = root.findViewById(R.id.ingredient);
-//        String ingredient = ingredientInput.getText().toString().trim();
-        String ingredient = "";
+        String ingredient = ingredientsInput.getText().toString().trim();
 
         if (ingredient.isEmpty()) {
             Toast.makeText(getActivity(), "Please provide some input first!", Toast.LENGTH_LONG).show();
             return;
         } else {
-            String ingredientLC = ingredient.toLowerCase();
-            List<Integer> chipIds = ingredientContainer.getCheckedChipIds();
-            for (Integer chipId: chipIds) {
-                Chip chip = ingredientContainer.findViewById(chipId);
-                if (ingredient.equalsIgnoreCase(chip.getText().toString())) {
+            List<String> ingredients = ingredientAdapter.getSelectedData();
+            for (String item: ingredients) {
+                if (item.equalsIgnoreCase(ingredient)) {
                     Toast.makeText(getActivity(), "Provided ingredient already added!", Toast.LENGTH_LONG).show();
                     return;
                 }
             }
         }
 
-        addIngredientChip(ingredient);
-//        ingredientInput.setText("");
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void addIngredientChip(String ingredient) {
-        // TODO
-        // Ability to set it from adapter
-
-        Chip chip = new Chip(getActivity());
-        chip.setText(Utils.capitalize(ingredient));
-        chip.setId(root.generateViewId());
-        chip.setCheckable(true);
-        chip.setChecked(true);
-        chip.setCloseIconVisible(true);
-        chip.setOnCloseIconClickListener(v -> {
-            ingredientContainer.removeView(v);
-        });
-
-        ingredientContainer.addView(chip);
+        ingredientAdapter.addSelectedData(ingredient);
+        ingredientsInput.setText("");
     }
 
     // Handle submission
@@ -332,12 +320,7 @@ public class AddEditRecipe extends Fragment {
 
         String cuisine = cuisineAdapter.getSelectedItem();
 
-        List<Integer> ingredientChipIds = ingredientContainer.getCheckedChipIds();
-        List<String> ingredients = new ArrayList<String>();
-        for (Integer id: ingredientChipIds){
-            Chip chip = ingredientContainer.findViewById(id);
-            ingredients.add(chip.getText().toString().toLowerCase());
-        }
+        List<String> ingredients = ingredientAdapter.getSelectedData();
 
         String instructions = instructionInput.getText().toString();
         // We already have imageUri
@@ -345,8 +328,8 @@ public class AddEditRecipe extends Fragment {
 
         if (name.isEmpty() ||
                 type.isEmpty() ||
-                cuisine != null ||
-                ingredients.isEmpty() ||
+                cuisine == null ||
+                ingredients.size() == 0 ||
                 instructions.isEmpty() ||
                 recipeImg.getDrawable() == null ||
                 tags.size() == 0) {

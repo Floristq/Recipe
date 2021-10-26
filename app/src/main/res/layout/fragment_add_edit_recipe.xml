@@ -100,7 +100,7 @@
                     android:layout_marginStart="-4dp"
                     android:backgroundTint="@android:color/transparent"
                     android:completionThreshold="1"
-                    android:hint="Type to add ingredients..."
+                    android:hint="Type to set/change cuisine..."
                     />
             </com.google.android.flexbox.FlexboxLayout>
 
@@ -126,7 +126,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
-
                 <AutoCompleteTextView
                     android:id="@+id/ingredientsInput"
                     android:layout_width="wrap_content"
@@ -135,7 +134,20 @@
                     android:backgroundTint="@android:color/transparent"
                     android:completionThreshold="1"
                     android:hint="Type to add ingredients..."
+                    app:layout_flexGrow="1"
                     />
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/addIngredient"
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_input_add"
+                    android:contentDescription="Confirm"
+                    app:backgroundTint="#fff"
+                    app:fabCustomSize="28dp"
+                    app:tint="@color/design_default_color_primary"
+                    app:layout_alignSelf="flex_end"
+                    />
+
             </com.google.android.flexbox.FlexboxLayout>
 
             <com.google.android.material.chip.ChipGroup
