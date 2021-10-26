@@ -86,15 +86,15 @@ public class RecipeFilterFragment extends Fragment {
 
         populateFilter(
                 "ingredients",
-                AutoCompleteAdapter.getInstance(activity, searchIngredientsInput, ingredientsContainer)
+                new AutoCompleteAdapter(activity, searchIngredientsInput, ingredientsContainer)
         );
         populateFilter(
                 "cuisines",
-                AutoCompleteAdapter.getInstance(activity, searchCuisines, cuisinesContainer)
+                new AutoCompleteAdapter(activity, searchCuisines, cuisinesContainer)
         );
         populateFilter(
                 "tags",
-                AutoCompleteAdapter.getInstance(activity, searchTags, tagsContainer)
+                new AutoCompleteAdapter(activity, searchTags, tagsContainer)
         );
 
         confirmBtn.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +140,7 @@ public class RecipeFilterFragment extends Fragment {
                                     list.add(new AdapterItem(item, 0));
                                 }
 
-                                adapter.setData(list, false);
+                                adapter.setData(list);
                             } else {
                                 // TODO
                                 // Handle empty result
