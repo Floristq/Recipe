@@ -7,8 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import android.os.Build;
-import android.os.Looper;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +17,11 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import android.os.Handler;
 
 import com.example.recipeapp.R;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
@@ -41,7 +35,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
     // TODO: Later allow more type of `input`s
     private AutoCompleteTextView input;
 
-    private boolean customCreationEnabled = true;
+    private boolean customCreationEnabled = false;
     private boolean allowMultipleSelection = true;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -51,8 +45,6 @@ public class AutoCompleteAdapter extends ArrayAdapter<AdapterItem> {
         activity = (Activity) context;
         this.input = input;
         this.chipGroup = chipGroup;
-
-        setCustomCreationEnabled(false);
 
         input.setAdapter(this);
 
