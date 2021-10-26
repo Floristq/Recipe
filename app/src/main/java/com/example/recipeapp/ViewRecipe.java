@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -61,6 +62,7 @@ public class ViewRecipe extends Fragment {
     private View root = null;
     private ChipGroup typeContainer;
     private Button searchRecipeBtn;
+    private FloatingActionButton refreshFilterBtn;
     private ProgressBar dataLoadingBar;
     private LinearLayout emptyListLayout;
 
@@ -87,6 +89,7 @@ public class ViewRecipe extends Fragment {
         root = inflater.inflate(R.layout.fragment_view_recipe, container, false);
 
         searchRecipeBtn = root.findViewById(R.id.searchRecipeBtn);
+        refreshFilterBtn = root.findViewById(R.id.refreshFilterBtn);
         typeContainer = root.findViewById(R.id.typeContainer);
         dataLoadingBar = root.findViewById(R.id.dataLoadingBar);
         emptyListLayout = root.findViewById(R.id.emptyListLayout);
@@ -105,6 +108,14 @@ public class ViewRecipe extends Fragment {
         });
 
         searchRecipeBtn.setOnClickListener(this::onSearch);
+        refreshFilterBtn.setOnClickListener(v -> {
+            filteredIngredients = null;
+            filteredCuisines = null;
+            filteredTags = null;
+            typeContainer.clearCheck();
+            refreshFilterBtn.setVisibility(View.GONE);
+            loadRecipeList();
+        });
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -115,7 +126,19 @@ public class ViewRecipe extends Fragment {
         }
 
         root.findViewById(R.id.advancedFilterBtn).setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.recipeFilter);
+            Bundle filterBundle = new Bundle();
+
+            if (filteredIngredients != null) {
+                filterBundle.putStringArrayList("ingredients", (ArrayList<String>) filteredIngredients);
+            }
+            if (filteredCuisines != null) {
+                filterBundle.putStringArrayList("cuisines", (ArrayList<String>) filteredCuisines);
+            }
+            if (filteredTags != null) {
+                filterBundle.putStringArrayList("tags", (ArrayList<String>) filteredTags);
+            }
+
+            Navigation.findNavController(v).navigate(R.id.recipeFilter, filterBundle);
         });
 
         root.findViewById(R.id.addRecipeBtn).setOnClickListener(v -> {
@@ -137,16 +160,25 @@ public class ViewRecipe extends Fragment {
                 if (event.equals(Lifecycle.Event.ON_RESUME)) {
                     SavedStateHandle savedState = navBackStackEntry.getSavedStateHandle();
 
+                    boolean filterFound = false;
+
                     if (savedState.contains("ingredients")) {
                         filteredIngredients = savedState.get("ingredients");
+                        if (filteredIngredients.size() > 0) filterFound = true;
                     }
 
                     if (savedState.contains("tags")) {
                         filteredTags = savedState.get("tags");
+                        if (filteredTags.size() > 0) filterFound = true;
                     }
 
                     if (savedState.contains("cuisines")) {
                         filteredCuisines = savedState.get("cuisines");
+                        if (filteredCuisines.size() > 0) filterFound = true;
+                    }
+
+                    if (filterFound) {
+                        root.findViewById(R.id.refreshFilterBtn).setVisibility(View.VISIBLE);
                     }
                 }
             }

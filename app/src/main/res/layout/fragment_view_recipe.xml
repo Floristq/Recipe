@@ -102,6 +102,17 @@
                     app:fabCustomSize="28dp"
                     app:tint="@color/design_default_color_primary"/>
 
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/refreshFilterBtn"
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_refresh_12"
+                    android:contentDescription="Confirm"
+                    app:backgroundTint="#fff"
+                    app:fabCustomSize="28dp"
+                    android:visibility="gone"
+                    app:tint="@color/design_default_color_primary"/>
+
             </com.google.android.flexbox.FlexboxLayout>
 
             <Button

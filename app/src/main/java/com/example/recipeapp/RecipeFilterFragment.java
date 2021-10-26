@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -84,18 +85,13 @@ public class RecipeFilterFragment extends Fragment {
         FloatingActionButton confirmBtn = root.findViewById(R.id.confirmBtn);
         Activity activity = getActivity();
 
-        populateFilter(
-                "ingredients",
-                new AutoCompleteAdapter(activity, searchIngredientsInput, ingredientsContainer)
-        );
-        populateFilter(
-                "cuisines",
-                new AutoCompleteAdapter(activity, searchCuisines, cuisinesContainer)
-        );
-        populateFilter(
-                "tags",
-                new AutoCompleteAdapter(activity, searchTags, tagsContainer)
-        );
+        AutoCompleteAdapter ingredientAdapter = new AutoCompleteAdapter(activity, searchIngredientsInput, ingredientsContainer);
+        AutoCompleteAdapter cuisineAdapter = new AutoCompleteAdapter(activity, searchCuisines, cuisinesContainer);
+        AutoCompleteAdapter tagAdapter = new AutoCompleteAdapter(activity, searchTags, tagsContainer);
+
+        populateFilter("ingredients", ingredientAdapter);
+        populateFilter("cuisines", cuisineAdapter);
+        populateFilter("tags", tagAdapter);
 
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
