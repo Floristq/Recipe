@@ -37,9 +37,4 @@
         <item>Ham</item>
         <item>Broccoli</item>
     </string-array>
-
-    <string name="AUTO_COMPLETE_ADAPTER_SELECTED_VALUES_KEY">SELECTED_VALUES_KEY</string>
-    <string name="AUTO_COMPLETE_ADAPTER_CONNECTED_ADAPTER_KEY">CONNECTED_ADAPTER_KEY</string>
-
-
 </resources>
