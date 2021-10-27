@@ -51,6 +51,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
@@ -425,6 +426,16 @@ public class AddEditRecipe extends Fragment {
         if (recipeId != null) {
             batch.update(recipeCollectionRef.document(recipeId), data);
         } else {
+            // Increasing recipe count first!
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("Recipes", FieldValue.increment(1));
+
+            batch.set(
+                db.collection("users").document(user.getUid()),
+                userMap,
+                SetOptions.merge()
+            );
+
             data.put("AuthorEmail", user.getEmail());
 
             newRecipeDoc = recipeCollectionRef.document();
