@@ -15,6 +15,7 @@
     app:cardElevation="2dp"
     app:contentPadding="8dp"
     app:cardCornerRadius="1dp"
+    android:layout_marginBottom="2dp"
     android:layout_marginHorizontal="4dp"
     android:orientation="vertical">
 

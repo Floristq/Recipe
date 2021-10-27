@@ -166,7 +166,7 @@ public class Comments extends Fragment {
             public void onClick(View view) {
                 String newMessage = editText.getText().toString();
 
-                if (newMessage.isEmpty()){
+                if (!newMessage.isEmpty()){
                     Map<String, Object> map = new HashMap<>();
 
                     map.put("AuthorName", userName);
