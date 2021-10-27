@@ -1,5 +1,6 @@
 package com.example.recipeapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,18 +16,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.example.recipeapp.autocompleteadapter.AdapterItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -148,33 +155,30 @@ public class Comments extends Fragment {
         }
 
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd LLL, uu");
 
         button.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
+                String newMessage = editText.getText().toString();
 
-                if (!editText.getText().toString().equals("")){
-
+                if (newMessage.isEmpty()){
                     Map<String, Object> map = new HashMap<>();
-
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YY HH:mm:ss");
-                    LocalDateTime now = LocalDateTime.now(ZoneId.of("GMT+11:00"));
-
-                    map.put("Author", dtf.format(now) + " - " + userName + ":");
-                    map.put("Content", editText.getText().toString());
 
                     map.put("AuthorName", userName);
                     map.put("AuthorEmail", userEmail);
-                    map.put("Message", editText.getText().toString());
+                    map.put("Message", newMessage);
                     map.put("Time", System.currentTimeMillis());
 
-                    db.collection("recipes/" + recipeId + "/comments").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    db.collection("recipes/" + recipeId + "/comments")
+                        .add(map)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
+                            }
+                        });
 
                 } else {
                     Toast.makeText(getActivity(), "Your comment can't be empty!", Toast.LENGTH_LONG).show();
@@ -225,14 +229,31 @@ public class Comments extends Fragment {
                     };
 
                     Collections.sort(comments, mapComparator);
+                    List<HashMap<String, String>> adapterComments = new ArrayList<>();
 
-                    SimpleAdapter adapter = new SimpleAdapter(
-                        getContext(),
-                        comments,
-                        R.layout.list_item,
-                        new String[]{"AuthorName", "Time", "Message"},
-                        new int[]{R.id.name, R.id.time, R.id.message}
-                    );
+                    String curDate = "";
+
+                    for (HashMap<String, String> comment: comments) {
+                        LocalDateTime messageDate = LocalDateTime.ofInstant(
+                                Instant.ofEpochMilli(Long.parseLong(comment.get("timeMS"))),
+                                ZoneId.systemDefault()
+                        );
+
+                        String dateStr = dateFormatter.format(messageDate);
+                        if (!dateStr.equals(curDate)) {
+                            HashMap<String, String> item = new HashMap<>();
+                            item.put("dateOnly", "true");
+                            item.put("Date", dateStr);
+
+                            adapterComments.add(item);
+
+                            curDate = dateStr;
+                        }
+
+                        adapterComments.add(comment);
+                    }
+
+                    CommentsAdapter adapter = new CommentsAdapter(getContext(), adapterComments);
 
                     listView.setAdapter(adapter);
                 }
@@ -251,6 +272,40 @@ public class Comments extends Fragment {
             registration.remove();
             registration = null;
         }
+    }
+
+    private class CommentsAdapter extends ArrayAdapter<HashMap<String, String>> {
+
+        public CommentsAdapter(@NonNull Context context, List<HashMap<String, String>> data) {
+            super(context, 0, data);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public View getView(int position, View view, ViewGroup parent) {
+
+            HashMap<String, String> item = (HashMap<String, String>) getItem(position);
+
+            if (item.getOrDefault("dateOnly", "false").equals("true")) {
+                view = LayoutInflater.from(getContext()).inflate(
+                    R.layout.date_view, parent, false
+                );
+
+                ((TextView) view.findViewById(R.id.date)).setText(item.get("Date"));
+
+            } else {
+                view = LayoutInflater.from(getContext()).inflate(
+                    R.layout.list_item, parent, false
+                );
+
+                ((TextView) view.findViewById(R.id.name)).setText(item.get("AuthorName"));
+                ((TextView) view.findViewById(R.id.time)).setText(item.get("Time"));
+                ((TextView) view.findViewById(R.id.message)).setText(item.get("Message"));
+            }
+
+            return view;
+        }
+
     }
 
 
