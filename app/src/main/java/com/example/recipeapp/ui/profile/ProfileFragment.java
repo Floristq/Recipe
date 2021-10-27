@@ -70,9 +70,14 @@ public class ProfileFragment extends Fragment {
 
                                 recipeCount.setText(totalRecipes.toString());
                                 commentCount.setText(totalComments.toString());
-                            }
 
+                            } else {
+                                recipeCount.setText("0");
+                                commentCount.setText("0");
+                            }
                         }
+
+
                     });
 
             user_name.getEditText().setText(user.getDisplayName());
