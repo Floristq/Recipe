@@ -23,6 +23,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
@@ -79,6 +80,7 @@ public class Comments extends Fragment {
     ListView listView;
     String userName;
     String userEmail;
+    LinearLayout emptyConversationView;
 
     String recipeId;
 
@@ -114,6 +116,7 @@ public class Comments extends Fragment {
         button = root.findViewById(R.id.imageButton);
         editText = root.findViewById(R.id.commentText);
         listView = root.findViewById(R.id.listview);
+        emptyConversationView = root.findViewById(R.id.emptyConversationView);
 
         Bundle bundle = this.getArguments();
         if (bundle != null && bundle.containsKey("id")) {
@@ -195,6 +198,12 @@ public class Comments extends Fragment {
                     if (e != null) {
                         Log.w(TAG, "listen:error", e);
                         return;
+                    }
+
+                    if (documentSnapshots.size() == 0) {
+                        emptyConversationView.setVisibility(View.VISIBLE);
+                    } else {
+                        emptyConversationView.setVisibility(View.GONE);
                     }
 
                     List<HashMap<String, String>> comments = new ArrayList<>();
