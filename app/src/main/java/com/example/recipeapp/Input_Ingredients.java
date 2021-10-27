@@ -110,18 +110,6 @@ public class Input_Ingredients extends Fragment {
         bundle.putString("Ingredient4", Fourth_Ingredient.getText().toString());
         bundle.putString("Ingredient5", Fifth_Ingredient.getText().toString());
 
-//        if (!Ingredient_3.toString().equals("")){
-//
-//        }
-//
-//        if (!Ingredient_4.toString().equals("")){
-//
-//        }
-//
-//        if (!Ingredient_5.toString().equals("")){
-//
-//        }
-
         if (Ingredient_1.toString().equals("") || Ingredient_2.toString().equals("")) {
             Toast.makeText(getActivity(), "Please submit at least 2 ingredients!", Toast.LENGTH_LONG).show();
         } else {

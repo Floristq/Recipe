@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -22,10 +22,11 @@
             android:id="@+id/commentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="17"
-            android:hint="Insert your comment here..."
             android:gravity="start|top"
-            android:inputType="textMultiLine" />
+            android:hint="Insert your comment here..."
+            android:inputType="textMultiLine"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
             android:id="@+id/imageButton"
@@ -33,10 +34,14 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/but_back"
-            android:src="@drawable/send_image_foreground" />
+            android:src="@drawable/send_image_foreground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>
+
+<!--    android:ems="17"-->
