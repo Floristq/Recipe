@@ -20,7 +20,7 @@
         app:contentPaddingBottom="6dp"
         app:contentPaddingLeft="8dp"
         app:contentPaddingRight="8dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginVertical="2dp"
         android:gravity="center"
         >
         <TextView
