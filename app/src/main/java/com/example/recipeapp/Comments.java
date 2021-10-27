@@ -40,6 +40,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -65,17 +66,14 @@ public class Comments extends Fragment {
     ImageButton button;
     EditText editText;
     ListView listView;
-    String personName;
+    String userName;
+    String userEmail;
 
     String recipeId;
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private FirebaseAuth mFirebaseAuth;
-
-    private List<String> namesList = new ArrayList<>();
-
-    private List<String> commentsList = new ArrayList<>();
 
     private View root = null;
 
@@ -145,8 +143,11 @@ public class Comments extends Fragment {
         mFirebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mFirebaseAuth.getCurrentUser();
         if (user != null) {
-            personName = user.getDisplayName();
+            userName = user.getDisplayName();
+            userEmail = user.getEmail();
         }
+
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
         button.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -155,90 +156,87 @@ public class Comments extends Fragment {
 
                 if (!editText.getText().toString().equals("")){
 
-                    Map<String, String> map = new HashMap<>();
+                    Map<String, Object> map = new HashMap<>();
 
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YY HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now(ZoneId.of("GMT+11:00"));
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YY HH:mm:ss");
+                    LocalDateTime now = LocalDateTime.now(ZoneId.of("GMT+11:00"));
 
-                map.put("Author", dtf.format(now) + " - " + personName + ":");
-                map.put("Content", editText.getText().toString());
+                    map.put("Author", dtf.format(now) + " - " + userName + ":");
+                    map.put("Content", editText.getText().toString());
 
-                db.collection("recipes/" + recipeId + "/comments").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
+                    map.put("AuthorName", userName);
+                    map.put("AuthorEmail", userEmail);
+                    map.put("Message", editText.getText().toString());
+                    map.put("Time", System.currentTimeMillis());
+
+                    db.collection("recipes/" + recipeId + "/comments").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
                         }
                     });
-                }else{
+
+                } else {
                     Toast.makeText(getActivity(), "Your comment can't be empty!", Toast.LENGTH_LONG).show();
                 }
 
                 try {
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     editText.setText("");
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), "Error: " + e, Toast.LENGTH_LONG).show();
                 }
-
             }
 
         });
 
-        registration = db.collection("recipes/" + recipeId + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException e) {
+        registration = db.collection("recipes/" + recipeId + "/comments")
+            .whereNotEqualTo("Time", 0)
+            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                if (e != null) {
-                    Log.w(TAG, "listen:error", e);
-                    return;
-                }
-
-                namesList.clear();
-                commentsList.clear();
-
-                for(DocumentSnapshot snapshot : documentSnapshots){
-                    namesList.add(snapshot.getString("Author"));
-                    commentsList.add(snapshot.getString("Content"));
-                }
-
-
-                HashMap<String,String> namecomments = new HashMap<>();
-
-
-                for (int i = 0; i < namesList.size(); i++) {
-                    namecomments.put(commentsList.get(i), namesList.get(i));
-                }
-
-
-                List<HashMap<String, String>> listItems =new ArrayList<>();
-
-                SimpleAdapter adapter = new SimpleAdapter(getContext(), listItems, R.layout.list_item,
-                        new String[]{"First Line","Second Line"},
-                        new int[]{R.id.textView1, R.id.textView2});
-
-                Iterator it = namecomments.entrySet().iterator();
-                while (it.hasNext())
-                {
-                    HashMap<String,String> resultsMap = new HashMap<>();
-                    Map.Entry pair = (Map.Entry)it.next();
-                    resultsMap.put("First Line", pair.getValue().toString());
-                    resultsMap.put("Second Line", pair.getKey().toString());
-                    listItems.add(resultsMap);
-                }
-
-                Comparator<Map<String, String>> mapComparator = new Comparator<Map<String, String>>() {
-                    public int compare(Map<String, String> m1, Map<String, String> m2) {
-                        return m1.get("First Line").compareTo(m2.get("First Line"));
+                    if (e != null) {
+                        Log.w(TAG, "listen:error", e);
+                        return;
                     }
-                };
 
-                Collections.sort(listItems, mapComparator);
-                listView.setAdapter(adapter);
+                    List<HashMap<String, String>> comments = new ArrayList<>();
 
+                    for (DocumentSnapshot snapshot : documentSnapshots) {
+                        HashMap<String, String> comment = new HashMap<>();
 
-            }
-        });
+                        long time = (Long) snapshot.get("Time");
+                        LocalDateTime messageDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
+                        comment.put("timeMS", String.valueOf(time));
+                        comment.put("Time", timeFormatter.format(messageDate));
+
+                        comment.put("AuthorName", snapshot.getString("AuthorName"));
+                        comment.put("Message", snapshot.getString("Message"));
+
+                        comments.add(comment);
+                    }
+
+                    Comparator<Map<String, String>> mapComparator = new Comparator<Map<String, String>>() {
+                        public int compare(Map<String, String> comment1, Map<String, String> comment2) {
+                            return comment1.get("timeMS").compareTo(comment2.get("timeMS"));
+                        }
+                    };
+
+                    Collections.sort(comments, mapComparator);
+
+                    SimpleAdapter adapter = new SimpleAdapter(
+                        getContext(),
+                        comments,
+                        R.layout.list_item,
+                        new String[]{"AuthorName", "Time", "Message"},
+                        new int[]{R.id.name, R.id.time, R.id.message}
+                    );
+
+                    listView.setAdapter(adapter);
+                }
+            });
 
         return root;
     }

@@ -18,7 +18,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border_bottom"
+        android:background="@drawable/border_vertical"
         >
         <EditText
             android:id="@+id/commentText"
@@ -27,7 +27,7 @@
             android:minHeight="60dp"
             android:paddingVertical="4dp"
             android:ems="17"
-            android:hint="Insert your comment here..."
+            android:hint="Type a message..."
             android:gravity="start|top"
             android:layout_weight="1"
             android:inputType="textMultiLine"
@@ -45,8 +45,6 @@
             app:tint="@color/design_default_color_primary"
             android:layout_gravity="bottom"
             />
-
-
 
     </LinearLayout>
 
