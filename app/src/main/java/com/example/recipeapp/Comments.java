@@ -234,7 +234,8 @@ public class Comments extends Fragment {
                     Collections.sort(comments, mapComparator);
                     List<HashMap<String, String>> adapterComments = new ArrayList<>();
 
-                    String curDate = "";
+                    String lastDate = "",
+                        lastName = "";
 
                     for (HashMap<String, String> comment: comments) {
                         LocalDateTime messageDate = LocalDateTime.ofInstant(
@@ -243,14 +244,21 @@ public class Comments extends Fragment {
                         );
 
                         String dateStr = dateFormatter.format(messageDate);
-                        if (!dateStr.equals(curDate)) {
+                        if (!dateStr.equals(lastDate)) {
                             HashMap<String, String> item = new HashMap<>();
                             item.put("dateOnly", "true");
                             item.put("Date", dateStr);
 
                             adapterComments.add(item);
 
-                            curDate = dateStr;
+                            lastDate = dateStr;
+                        }
+
+                        String name = comment.get("AuthorName");
+                        if (lastName.equals(name)) {
+                            comment.put("AuthorName", "");
+                        } else {
+                            lastName = name;
                         }
 
                         adapterComments.add(comment);
@@ -315,11 +323,11 @@ public class Comments extends Fragment {
                     char letter = Character.toUpperCase(name.charAt(0));
                     int code = (int) letter;
                     TextDrawable drawable = TextDrawable.builder()
-                            .beginConfig()
-                                .textColor(Color.WHITE)
-                            .endConfig()
                             .buildRound(String.valueOf(letter), colors[(code - 65) % colors.length]);
                     ((ImageView) view.findViewById(R.id.profileImage)).setImageDrawable(drawable);
+                } else {
+                    // This will indicate the same author is commenting!
+                    name = "~";
                 }
 
                 ((TextView) view.findViewById(R.id.name)).setText(name);
