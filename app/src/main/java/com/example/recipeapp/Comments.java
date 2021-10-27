@@ -81,6 +81,7 @@ public class Comments extends Fragment {
     String userName;
     String userEmail;
     LinearLayout emptyConversationView;
+    ProgressBar dataLoadingBar;
 
     String recipeId;
 
@@ -117,6 +118,10 @@ public class Comments extends Fragment {
         editText = root.findViewById(R.id.commentText);
         listView = root.findViewById(R.id.listview);
         emptyConversationView = root.findViewById(R.id.emptyConversationView);
+        dataLoadingBar = root.findViewById(R.id.dataLoadingBar);
+
+        // Determines that the first request to fetch the comments is complete
+        final boolean[] commentInitialized = {false};
 
         Bundle bundle = this.getArguments();
         if (bundle != null && bundle.containsKey("id")) {
@@ -200,10 +205,15 @@ public class Comments extends Fragment {
                         return;
                     }
 
-                    if (documentSnapshots.size() == 0) {
-                        emptyConversationView.setVisibility(View.VISIBLE);
-                    } else {
-                        emptyConversationView.setVisibility(View.GONE);
+                    if (!commentInitialized[0]) {
+                        commentInitialized[0] = true;
+
+                        dataLoadingBar.setVisibility(View.GONE);
+                        if (documentSnapshots.size() == 0) {
+                            emptyConversationView.setVisibility(View.VISIBLE);
+                        } else {
+                            emptyConversationView.setVisibility(View.GONE);
+                        }
                     }
 
                     List<HashMap<String, String>> comments = new ArrayList<>();
