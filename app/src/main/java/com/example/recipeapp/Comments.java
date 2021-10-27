@@ -43,11 +43,14 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.time.Instant;
@@ -68,8 +71,6 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Comments#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class Comments extends Fragment {
 
@@ -89,12 +90,6 @@ public class Comments extends Fragment {
 
     private ListenerRegistration registration;
 
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -103,31 +98,9 @@ public class Comments extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Comments.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Comments newInstance(String param1, String param2) {
-        Comments fragment = new Comments();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -148,7 +121,6 @@ public class Comments extends Fragment {
         }
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mFirebaseAuth.getCurrentUser();
@@ -174,13 +146,29 @@ public class Comments extends Fragment {
                     map.put("Message", newMessage);
                     map.put("Time", System.currentTimeMillis());
 
-                    db.collection("recipes/" + recipeId + "/comments")
-                        .add(map)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Toast.makeText(getActivity(), "Comment posted!", Toast.LENGTH_LONG).show();
-                            }
+                    WriteBatch batch = db.batch();
+
+                    Map<String, Object> userMap = new HashMap<>();
+                    userMap.put("Comments", FieldValue.increment(1));
+
+                    batch.set(
+                        db.collection("users").document(user.getUid()),
+                        userMap,
+                        SetOptions.merge()
+                    );
+
+                    batch.set(
+                        db.collection("recipes/" + recipeId + "/comments").document(),
+                        map
+                    );
+
+                    batch.commit()
+                        .addOnFailureListener(ex -> {
+                            Toast.makeText(
+                                    getActivity(),
+                                    "Server is not responding at this moment, please try again later!",
+                                    Toast.LENGTH_LONG
+                            ).show();
                         });
 
                 } else {
@@ -192,7 +180,7 @@ public class Comments extends Fragment {
                     imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     editText.setText("");
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(), "Error: " + e, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(getActivity(), "Error: " + e, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -272,8 +260,6 @@ public class Comments extends Fragment {
 
         return root;
     }
-
-
 
     @Override
     public void onStop() {
