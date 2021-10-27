@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -54,66 +55,29 @@ public class ProfileFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         if (user != null) {
-            String personName = user.getDisplayName();
-            String personEmail = user.getEmail();
-            user_name.getEditText().setText(personName);
-            email.getEditText().setText(personEmail);
-            Glide.with(this).load(user.getPhotoUrl()).into(img);
-
-            // Initialize recipe list
-            ArrayList<String> recipeList = new ArrayList<String>();
-
-            // get all recipe id
-            db.collection("recipes")
+            db.collection("users")
+                    .document(user.getUid())
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()){
-                                for (QueryDocumentSnapshot document: task.getResult()){
-                                    recipeList.add(document.getId());
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                String totalRecipes = String.valueOf(document.get("Recipes"));
+                                String totalComments = String.valueOf(document.get("Comments"));
 
-                                    // count the recipe number of user
-                                    String authorEmail = document.getString("AuthorEmail");
-                                    if (authorEmail != null && authorEmail.equals(personEmail)){
-                                        recipeSum++;
-                                    }
-                                }
-                                // set the recipe count to the textview
-                                recipeCount.setText(recipeSum.toString());
+                                if (totalRecipes == null) totalRecipes = "0";
+                                if (totalComments == null) totalComments = "0";
 
-                                // get comments from each recipe
-                                for (int i=0; i<recipeList.size(); i++){
-                                    String path = "recipes/"+recipeList.get(i)+"/comments";
-
-                                    db.collection(path)
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    if (task.isSuccessful()){
-                                                        Integer count = 0;
-                                                        for (QueryDocumentSnapshot document: task.getResult()){
-                                                            String author = document.getString("Author");
-                                                            String comment = document.getData().toString();
-//                                                            Log.d("debug", author);
-                                                            if (author.contains(personName)){
-                                                                count++;
-                                                            }
-                                                        }
-                                                        commentSum += count;
-//                                                        Log.d("debug", commentSum.toString());
-                                                        commentCount.setText(commentSum.toString());
-                                                    }
-                                                }
-                                            });
-                                }
-                            }else{
-                                Log.d("debug", "Error getting documents");
-                                Log.d("debug", task.getException().toString());
+                                recipeCount.setText(totalRecipes.toString());
+                                commentCount.setText(totalComments.toString());
                             }
+
                         }
                     });
+
+            user_name.getEditText().setText(user.getDisplayName());
+            email.getEditText().setText(user.getEmail());
+            Glide.with(this).load(user.getPhotoUrl()).into(img);
 
             ((CardView) recipeCount.getParent().getParent()).setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
