@@ -2,6 +2,8 @@ package com.example.recipeapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -27,6 +29,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.recipeapp.autocompleteadapter.AdapterItem;
@@ -276,6 +279,15 @@ public class Comments extends Fragment {
 
     private class CommentsAdapter extends ArrayAdapter<HashMap<String, String>> {
 
+        public final int[] colors = {
+                Color.RED,
+                Color.GREEN,
+                Color.YELLOW,
+                Color.CYAN,
+                Color.GRAY,
+                Color.MAGENTA
+        };
+
         public CommentsAdapter(@NonNull Context context, List<HashMap<String, String>> data) {
             super(context, 0, data);
         }
@@ -298,7 +310,19 @@ public class Comments extends Fragment {
                     R.layout.list_item, parent, false
                 );
 
-                ((TextView) view.findViewById(R.id.name)).setText(item.get("AuthorName"));
+                String name = item.get("AuthorName");
+                if (!name.isEmpty()) {
+                    char letter = Character.toUpperCase(name.charAt(0));
+                    int code = (int) letter;
+                    TextDrawable drawable = TextDrawable.builder()
+                            .beginConfig()
+                                .textColor(Color.WHITE)
+                            .endConfig()
+                            .buildRound(String.valueOf(letter), colors[(code - 65) % colors.length]);
+                    ((ImageView) view.findViewById(R.id.profileImage)).setImageDrawable(drawable);
+                }
+
+                ((TextView) view.findViewById(R.id.name)).setText(name);
                 ((TextView) view.findViewById(R.id.time)).setText(item.get("Time"));
                 ((TextView) view.findViewById(R.id.message)).setText(item.get("Message"));
             }

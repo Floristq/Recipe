@@ -8,12 +8,11 @@
     >
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
         android:id="@+id/profileImage"
         android:layout_centerHorizontal="true"
-        app:tint="@color/design_default_color_primary"
-        android:src="@drawable/ic_menu_profile"
         />
 
 
