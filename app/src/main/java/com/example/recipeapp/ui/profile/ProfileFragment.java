@@ -65,11 +65,11 @@ public class ProfileFragment extends Fragment {
                                 String totalRecipes = String.valueOf(document.get("Recipes"));
                                 String totalComments = String.valueOf(document.get("Comments"));
 
-                                if (totalRecipes == null) totalRecipes = "0";
-                                if (totalComments == null) totalComments = "0";
+                                if (totalRecipes.equals("null")) totalRecipes = "0";
+                                if (totalComments.equals("null")) totalComments = "0";
 
-                                recipeCount.setText(totalRecipes.toString());
-                                commentCount.setText(totalComments.toString());
+                                recipeCount.setText(totalRecipes);
+                                commentCount.setText(totalComments);
 
                             } else {
                                 recipeCount.setText("0");
