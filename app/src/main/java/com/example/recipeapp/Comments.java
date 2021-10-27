@@ -122,6 +122,7 @@ public class Comments extends Fragment {
 
         // Determines that the first request to fetch the comments is complete
         final boolean[] commentInitialized = {false};
+        final boolean[] commentFound = {false};
 
         Bundle bundle = this.getArguments();
         if (bundle != null && bundle.containsKey("id")) {
@@ -207,14 +208,18 @@ public class Comments extends Fragment {
 
                     if (!commentInitialized[0]) {
                         commentInitialized[0] = true;
-
                         dataLoadingBar.setVisibility(View.GONE);
+                    }
+
+                    if (!commentFound[0]) {
                         if (documentSnapshots.size() == 0) {
                             emptyConversationView.setVisibility(View.VISIBLE);
                         } else {
                             emptyConversationView.setVisibility(View.GONE);
+                            commentFound[0] = true;
                         }
                     }
+
 
                     List<HashMap<String, String>> comments = new ArrayList<>();
 
