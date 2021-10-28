@@ -4,14 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,17 +58,41 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         mEmail = findViewById(R.id.inputEmail);
+        mEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+           @Override
+           public void onFocusChange(View v, boolean hasFocus){
+               if(!hasFocus) {
+                   InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                   imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+               }
+           }
+        });
+
         mPassword = findViewById(R.id.inputPassword);
-        mPassword.setTransformationMethod(new PasswordTransformationMethod());
+        mPassword.setTransformationMethod(new AsteriskPasswordTransformationMethod());
+        mPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus){
+                if(!hasFocus) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                }
+            }
+        });
+
         mLoginBtn = findViewById(R.id.btnLogin);
         forgetTextLink = findViewById(R.id.forgotPassword);
         fAuth = FirebaseAuth.getInstance();
+
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
+
 
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Email is required!");
@@ -76,10 +104,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     return;
                 }
 
-                if(password.length() < 8){
-                    mPassword.setError("Password must be longer than 8 characters");
-                    return;
-                }
 
                 //authenticate the user
 
@@ -145,7 +169,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
 
-
         register = (TextView) findViewById(R.id.createNewAccount);
         register.setOnClickListener(this);
         signin = findViewById(R.id.sign_in_button);
@@ -171,6 +194,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+
     }
 
     private void signIn() {
@@ -223,6 +248,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent i = new Intent(Intent.makeMainActivity(new ComponentName(LoginActivity.this, SignupActivity.class)));
         startActivity(i);
     }
+
+    public class AsteriskPasswordTransformationMethod extends PasswordTransformationMethod {
+        @Override
+        public CharSequence getTransformation(CharSequence source, View view) {
+            return new PasswordCharSequence(source);
+        }
+
+        private class PasswordCharSequence implements CharSequence {
+            private CharSequence mSource;
+            public PasswordCharSequence(CharSequence source) {
+                mSource = source; // Store char sequence
+            }
+            public char charAt(int index) {
+                return '*'; // This is the important part
+            }
+            public int length() {
+                return mSource.length(); // Return default
+            }
+            public CharSequence subSequence(int start, int end) {
+                return mSource.subSequence(start, end); // Return default
+            }
+        }
+    };
+
 
 
 }

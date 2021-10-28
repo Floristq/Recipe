@@ -1,11 +1,14 @@
 package com.example.recipeapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -38,9 +41,41 @@ public class SignupActivity extends AppCompatActivity{
         setContentView(R.layout.activity_signup);
 
         mEmail = findViewById(R.id.inputEmailRegister);
+        mEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus){
+                if(!hasFocus) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                }
+            }
+        });
+
         mName = findViewById(R.id.inputNameRegister);
+        mName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus){
+                if(!hasFocus) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                }
+            }
+        });
         mPassword = findViewById(R.id.inputPasswordRegister);
-        mPassword.setTransformationMethod(new PasswordTransformationMethod());
+        mPassword.setTransformationMethod(new AsteriskPasswordTransformationMethod2());
+        mPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus){
+                if(!hasFocus) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                }
+            }
+        });
+
         mRegister = findViewById(R.id.btnLoginRegister);
         fAuth = FirebaseAuth.getInstance();
 
@@ -116,5 +151,29 @@ public class SignupActivity extends AppCompatActivity{
             }
         });
     }
+
+    public class AsteriskPasswordTransformationMethod2 extends PasswordTransformationMethod {
+        @Override
+        public CharSequence getTransformation(CharSequence source, View view) {
+            return new AsteriskPasswordTransformationMethod2.PasswordCharSequence2(source);
+        }
+
+        private class PasswordCharSequence2 implements CharSequence {
+            private CharSequence mSource;
+            public PasswordCharSequence2(CharSequence source) {
+                mSource = source; // Store char sequence
+            }
+            public char charAt(int index) {
+                return '*'; // This is the important part
+            }
+            public int length() {
+                return mSource.length(); // Return default
+            }
+            public CharSequence subSequence(int start, int end) {
+                return mSource.subSequence(start, end); // Return default
+            }
+        }
+    };
+
 
 }
