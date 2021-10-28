@@ -99,6 +99,7 @@
                 android:drawablePadding="10dp"
                 android:ems="10"
                 android:hint="Password"
+                android:inputType="textPassword"
                 android:paddingLeft="20dp"
                 android:paddingTop="13dp"
                 android:paddingRight="20dp"
