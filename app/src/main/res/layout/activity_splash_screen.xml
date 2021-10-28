@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/ThemeOverlay.Recipe.FullscreenContainer"
-    android:background="@drawable/recipebackground"
+    android:background="@drawable/splash"
     tools:context=".SplashScreenActivity">
 
     <!-- The primary full-screen view. Can be replcaed with whatever-->
