@@ -20,25 +20,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.example.recipeapp.autocompleteadapter.AdapterItem;
 import com.example.recipeapp.autocompleteadapter.AutoCompleteAdapter;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -59,11 +53,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -253,7 +245,7 @@ public class AddEditRecipe extends Fragment {
 
                             if (data.containsKey("Ingredients")) {
                                 for (Object ingredient: (ArrayList) data.get("Ingredients")) {
-                                    ingredientAdapter.addSelectedData(ingredient.toString());
+                                    ingredientAdapter.addSelectedData(Utils.capitalize(ingredient.toString()));
                                 }
                             }
 
@@ -321,11 +313,17 @@ public class AddEditRecipe extends Fragment {
 
         String cuisine = cuisineAdapter.getSelectedItem();
 
-        List<String> ingredients = ingredientAdapter.getSelectedData();
+        List<String> ingredients = new ArrayList<>();
+        for (String ingredient: ingredientAdapter.getSelectedData()) {
+            ingredients.add(ingredient.toLowerCase());
+        }
 
         String instructions = instructionInput.getText().toString();
         // We already have imageUri
-        List<String> tags = tagAdapter.getSelectedData();
+        List<String> tags = new ArrayList<>();
+        for (String tag: tagAdapter.getSelectedData()) {
+            tags.add(tag.toLowerCase());
+        }
 
         if (name.isEmpty() ||
                 type.isEmpty() ||
@@ -411,7 +409,7 @@ public class AddEditRecipe extends Fragment {
             batch.update(
                 utilityRef.document("ingredients"),
                 "values",
-                FieldValue.arrayUnion(ingredient.toLowerCase())
+                FieldValue.arrayUnion(ingredient)
             );
         }
 
@@ -419,7 +417,7 @@ public class AddEditRecipe extends Fragment {
             batch.update(
                     utilityRef.document("tags"),
                     "values",
-                    FieldValue.arrayUnion(tag.toLowerCase())
+                    FieldValue.arrayUnion(tag)
             );
         }
 
